@@ -1,0 +1,85 @@
+{
+  "name": "agentinterface",
+  "version": "0.0.2",
+  "description": "Core AgentInterface protocol implementation",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "dev": "tsc --watch",
+    "format": "npm exec prettier --write '**/*.{ts,tsx,js,jsx,json,md}' --ignore-path ../../.prettierignore",
+    "format:check": "npm exec prettier --check '**/*.{ts,tsx,js,jsx,json,md}' --ignore-path ../../.prettierignore",
+    "lint": "npm exec eslint .",
+    "lint:fix": "npm exec eslint . --fix"
+  },
+  "dependencies": {
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "15.5.0",
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "@typescript-eslint/utils": "^8.35.0",
+    "@eslint/js": "^9.30.0",
+    "eslint": "^9.30.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "eslint-plugin-tailwindcss": "^3.18.0",
+    "eslint-plugin-unicorn": "^59.0.1",
+    "globals": "^16.2.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.35.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "keywords": [
+    "react",
+    "ai",
+    "agent",
+    "agentinterface",
+    "aip",
+    "components",
+    "ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iteebz/agentinterface"
+  },
+  "bugs": {
+    "url": "https://github.com/iteebz/agentinterface/issues"
+  },
+  "homepage": "https://github.com/iteebz/agentinterface#readme",
+  "license": "MIT"
+}
