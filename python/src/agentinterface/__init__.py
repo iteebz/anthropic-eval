@@ -1,22 +1,7 @@
-"""
-Agent Interface Protocol (AIP) - Python implementation.
-
-This package provides Python classes and utilities for implementing
-the Agent Interface Protocol in conversational AI applications.
-"""
+"""AgentInterface - AI agents choose UI components."""
 
 __version__ = "0.1.0"
-__author__ = "Tyson Chan"
-__email__ = "itsteebz@gmail.com"
 
-from agentinterface.core.interface_service import (
-    InterfaceService,
-    InterfaceResult,
-    InterfaceStrategy,
-)
+from agentinterface.core.interface_service import get_interface_options, INTERFACE_OPTIONS
 
-__all__ = [
-    "InterfaceService",
-    "InterfaceResult",
-    "InterfaceStrategy",
-]
+__all__ = ["get_interface_options", "INTERFACE_OPTIONS"]

@@ -2,6 +2,6 @@
 Core AIP functionality.
 """
 
-from .interface_service import InterfaceService, InterfaceResult, InterfaceStrategy
+from .interface_service import get_interface_options, INTERFACE_OPTIONS
 
-__all__ = ["InterfaceService", "InterfaceResult", "InterfaceStrategy"]
+__all__ = ["get_interface_options", "INTERFACE_OPTIONS"]

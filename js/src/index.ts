@@ -21,6 +21,9 @@ export * from "./utils";
 // Protocol exports
 export * from "./protocol";
 
+// Registry exports - AUTO-MAGICAL
+export * from "./registry";
+
 // Re-export commonly used items for convenience
 export { validateInterfaceData, isValidInterfaceType } from "./core/validation";
 export { INTERFACE_VALIDATION_SCHEMAS } from "./core/schemas";
