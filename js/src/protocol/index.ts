@@ -7,4 +7,4 @@ export * from "./registry";
 export * from "./core-components";
 
 // Re-export core schemas for convenience
-export { CORE_VALIDATION_SCHEMAS } from "../core/core-schemas";
+export { INTERFACE_SCHEMAS } from "../core/schemas";

@@ -2,9 +2,9 @@
  * Core validation utilities for AgentInterface data
  */
 import { z } from "zod";
-import { INTERFACE_VALIDATION_SCHEMAS, getSafeDefaults } from "./schemas";
+import { INTERFACE_SCHEMAS } from "./schemas";
 
-export type InterfaceType = keyof typeof INTERFACE_VALIDATION_SCHEMAS;
+export type InterfaceType = keyof typeof INTERFACE_SCHEMAS;
 
 /**
  * Validate UI data against the appropriate schema for the given UI type.
@@ -15,21 +15,20 @@ export function validateInterfaceData<T extends InterfaceType>(
 ):
   | {
       success: true;
-      data: z.infer<(typeof INTERFACE_VALIDATION_SCHEMAS)[T]>;
+      data: z.infer<(typeof INTERFACE_SCHEMAS)[T]>;
       error: null;
     }
   | {
       success: false;
-      data: z.infer<(typeof INTERFACE_VALIDATION_SCHEMAS)[T]>;
+      data: z.infer<(typeof INTERFACE_SCHEMAS)[T]>;
       error: string;
     } {
-  const schema = INTERFACE_VALIDATION_SCHEMAS[uiType];
+  const schema = INTERFACE_SCHEMAS[uiType];
 
   if (!schema) {
-    const defaultData = getSafeDefaults(uiType);
     return {
       success: false,
-      data: defaultData,
+      data: {} as z.infer<(typeof INTERFACE_SCHEMAS)[T]>,
       error: `Unknown UI type: ${uiType}`,
     };
   }
@@ -42,7 +41,6 @@ export function validateInterfaceData<T extends InterfaceType>(
       error: null,
     };
   } catch (error) {
-    const defaultData = getSafeDefaults(uiType);
     const errorMessage =
       error instanceof z.ZodError
         ? `Validation failed: ${error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ")}`
@@ -50,7 +48,7 @@ export function validateInterfaceData<T extends InterfaceType>(
 
     return {
       success: false,
-      data: defaultData,
+      data: {} as z.infer<(typeof INTERFACE_SCHEMAS)[T]>,
       error: errorMessage,
     };
   }
@@ -62,5 +60,5 @@ export function validateInterfaceData<T extends InterfaceType>(
 export function isValidInterfaceType(
   interfaceType: string,
 ): interfaceType is InterfaceType {
-  return interfaceType in INTERFACE_VALIDATION_SCHEMAS;
+  return interfaceType in INTERFACE_SCHEMAS;
 }

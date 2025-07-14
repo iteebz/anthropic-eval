@@ -6,7 +6,7 @@ import type { SyntaxHighlighterProps } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 
 interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;

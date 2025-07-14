@@ -1,11 +1,5 @@
-import { type BlogPostData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
-
-export interface InterfaceProps {
-  content: string;
-  interfaceData?: BlogPostData;
-  className?: string;
-}
+import { type BlogPostData, type InterfaceProps } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export function BlogPost({
   content,

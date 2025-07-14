@@ -1,4 +1,4 @@
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export interface InterfaceProps {
   content: string;

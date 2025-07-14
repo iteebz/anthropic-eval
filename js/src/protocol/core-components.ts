@@ -5,7 +5,7 @@
  * across all domains and applications.
  */
 import { componentRegistry } from "./registry";
-import { CORE_VALIDATION_SCHEMAS } from "../core/core-schemas";
+import { INTERFACE_SCHEMAS } from "../core/schemas";
 
 // Register core components
 componentRegistry.register({
@@ -18,7 +18,7 @@ componentRegistry.register({
     "General conversation flow",
     "When no structured data is available",
   ],
-  schema: CORE_VALIDATION_SCHEMAS.markdown,
+  schema: INTERFACE_SCHEMAS.markdown,
   safeDefaults: {},
   category: "core",
   examples: [
@@ -29,7 +29,7 @@ componentRegistry.register({
 });
 
 componentRegistry.register({
-  name: "expandable_detail",
+  name: "expandable-sections",
   description: "Collapsible content sections for detailed information",
   selectionCriteria: [
     "Long-form detailed content (>300 words)",
@@ -37,7 +37,7 @@ componentRegistry.register({
     "Information that should be collapsible for better UX",
     "Detailed explanations with multiple parts",
   ],
-  schema: CORE_VALIDATION_SCHEMAS.expandable_detail,
+  schema: INTERFACE_SCHEMAS["expandable-section"],
   safeDefaults: { sections: [] },
   category: "core",
   examples: [
@@ -48,7 +48,7 @@ componentRegistry.register({
 });
 
 componentRegistry.register({
-  name: "key_insights",
+  name: "key-insights",
   description: "Categorized insights, lessons learned, and principles",
   selectionCriteria: [
     "Lessons learned or key takeaways",
@@ -56,7 +56,7 @@ componentRegistry.register({
     "Categorized insights and observations",
     "Framework or methodology explanations",
   ],
-  schema: CORE_VALIDATION_SCHEMAS.key_insights,
+  schema: INTERFACE_SCHEMAS["key-insights"],
   safeDefaults: { insights: [] },
   category: "core",
   examples: [
@@ -75,7 +75,7 @@ componentRegistry.register({
     "Chronological events or milestones",
     "How did you get here? type questions",
   ],
-  schema: CORE_VALIDATION_SCHEMAS.timeline,
+  schema: INTERFACE_SCHEMAS.timeline,
   safeDefaults: { events: [] },
   category: "core",
   examples: [
@@ -86,32 +86,49 @@ componentRegistry.register({
 });
 
 componentRegistry.register({
-  name: "tech_deep_dive",
+  name: "blog-post",
   description:
-    "Technical explanations with implementation details and code examples",
+    "A structured blog post or article layout",
   selectionCriteria: [
-    "Technical explanations requiring depth",
-    "Implementation details and architecture",
-    "Code examples and technical insights",
-    "How does X work? technical questions",
+    "When the response is a self-contained article or blog post",
+    "Long-form content that reads like an essay or article",
   ],
-  schema: CORE_VALIDATION_SCHEMAS.tech_deep_dive,
+  schema: INTERFACE_SCHEMAS["blog-post"],
   safeDefaults: {
-    title: "Technical Overview",
-    overview: "Content not available",
-    sections: [],
+    title: "",
+    author: "",
+    date: "",
+    content: "",
   },
   category: "core",
   examples: [
-    "Technical architecture explanations",
-    "Implementation deep dives",
-    "Code examples with context",
-    "How did you build X? questions",
+    "Write a blog post about X",
+    "Summarize this topic as an article",
   ],
 });
 
 componentRegistry.register({
-  name: "inline_link",
+  name: "code-snippet",
+  description:
+    "A code snippet with optional title, description, and language",
+  selectionCriteria: [
+    "When providing code examples",
+    "When explaining technical concepts with code",
+  ],
+  schema: INTERFACE_SCHEMAS["code-snippet"],
+  safeDefaults: {
+    language: "",
+    code: "",
+  },
+  category: "core",
+  examples: [
+    "Show me an example of X code",
+    "How do I implement Y in Python?",
+  ],
+});
+
+componentRegistry.register({
+  name: "inline-reference",
   description: "Inline expandable references to persistent artifacts",
   selectionCriteria: [
     "Conversational responses that reference specific artifacts",
@@ -119,7 +136,7 @@ componentRegistry.register({
     "When agent references essays, beliefs, or documentation",
     "Citations that benefit from immediate expansion",
   ],
-  schema: CORE_VALIDATION_SCHEMAS.inline_link,
+  schema: INTERFACE_SCHEMAS["inline-reference"],
   safeDefaults: { references: [] },
   category: "core",
   examples: [

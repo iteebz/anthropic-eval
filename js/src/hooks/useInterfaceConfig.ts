@@ -3,7 +3,7 @@ import {
   useAgentResponseParser,
   type InterfaceConfig,
 } from "./useAgentResponseParser";
-import type { Logger } from "../../core/types";
+import type { Logger } from "../types";
 
 export interface UseInterfaceConfigOptions {
   enablePerformanceMonitoring?: boolean;

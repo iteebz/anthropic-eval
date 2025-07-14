@@ -1,22 +1,17 @@
 import { useCallback } from "react";
 
-import { type InterfaceType, type InterfaceData } from "../core/types";
-import {
-  ComponentErrorBoundary,
-  type ComponentErrorContext,
-} from "./ComponentErrorBoundary";
-import { useInterfaceConfig } from "./hooks";
-import {
-  LoadingState,
-  ErrorState,
-  EmptyState,
-  ComponentNotFound,
-} from "./components";
+import { type InterfaceType, type InterfaceData } from "../types";
+import { ComponentErrorBoundary, ComponentErrorContext } from "./common/ComponentErrorBoundary";
+import { useInterfaceConfig } from "../hooks";
+import { LoadingState } from "./common/LoadingState";
+import { ErrorState } from "./common/ErrorState";
+import { EmptyState } from "./common/EmptyState";
+import { ComponentNotFound } from "./common/ComponentNotFound";
 import {
   createComponentProps,
   type RendererComponentProps,
-} from "./utils/componentProps";
-import type { Logger } from "../core/types";
+} from "../utils/componentProps";
+import type { Logger } from "../types";
 
 /**
  * Props for the AgentInterfaceRenderer component
@@ -133,7 +128,7 @@ export const AgentInterfaceRenderer = ({
     return <EmptyState className={className} />;
   }
 
-  const Component = components[interfaceConfig.type];
+  const Component = components[interfaceConfig.type as keyof typeof components];
 
   if (!Component) {
     logger?.warn(

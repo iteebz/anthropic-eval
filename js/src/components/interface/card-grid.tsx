@@ -1,12 +1,5 @@
-import { type CardGridData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
-
-export interface InterfaceProps {
-  content: string;
-  interfaceData?: CardGridData;
-  className?: string;
-  onSendMessage?: (message: string) => void;
-}
+import { type CardGridData, type InterfaceProps } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export function CardGrid({
   content,

@@ -10,10 +10,10 @@ export * from "./core/validation";
 export type { InterfaceType, InterfaceData } from "./types";
 
 // React component exports
-export * from "./react";
+export { AgentInterfaceRenderer } from "./components/AgentInterfaceRenderer";
 
 // Component exports
-export * from "./components";
+export * from "./components/interface";
 
 // Utility exports
 export * from "./utils";
@@ -26,4 +26,4 @@ export * from "./registry";
 
 // Re-export commonly used items for convenience
 export { validateInterfaceData, isValidInterfaceType } from "./core/validation";
-export { INTERFACE_VALIDATION_SCHEMAS } from "./core/schemas";
+export { INTERFACE_SCHEMAS } from "./core/schemas";

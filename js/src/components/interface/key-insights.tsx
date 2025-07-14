@@ -1,5 +1,5 @@
-import { type KeyInsightsData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { type KeyInsightsData } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export interface InterfaceProps {
   content: string;

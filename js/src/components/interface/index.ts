@@ -5,12 +5,11 @@
  * that need to be provided by the consuming application.
  */
 
+export { BlogPost } from "./blog-post";
 export { CardGrid } from "./card-grid";
-export { ExpandableDetail } from "./expandable-detail";
-export { InlineLink } from "./inline-link";
+export { CodeSnippet } from "./code-snippet";
+export { ExpandableSection } from "./expandable-section";
+export { InlineReference } from "./inline-reference";
 export { KeyInsights } from "./key-insights";
-export { MarkdownRenderer } from "./MarkdownRenderer";
-export { TechDeepDive } from "./tech-deep-dive";
+export { MarkdownRenderer } from "../render/MarkdownRenderer";
 export { Timeline } from "./timeline";
-
-export * from "../portfolio";

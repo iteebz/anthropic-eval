@@ -3,9 +3,6 @@
  * Scans components, builds registry automatically
  */
 
-import { readdirSync } from 'fs';
-import { join } from 'path';
-
 export interface ComponentInfo {
   name: string;
   description: string;
@@ -16,7 +13,7 @@ const COMPONENT_DESCRIPTIONS = {
   'markdown': 'Default text/conversation',
   'card-grid': 'Multiple items as visual cards',
   'timeline': 'Chronological events',
-  'expandable-sections': 'Collapsible sections',
+  'expandable-section': 'Collapsible sections',
   'key-insights': 'Categorized insights/principles',
   'code-snippet': 'Code with syntax highlighting',
   'blog-post': 'Article/post layout',
@@ -24,43 +21,26 @@ const COMPONENT_DESCRIPTIONS = {
 };
 
 /**
- * Auto-discover components via filesystem reflection
+ * Build registry from explicitly provided components.
  */
-export function buildRegistry(componentsPath = './components', enabledComponents?: string[]): Record<string, ComponentInfo> {
+export function buildRegistry(components: Record<string, any>, enabledComponents?: string[]): Record<string, ComponentInfo> {
   const registry: Record<string, ComponentInfo> = {};
   
-  try {
-    const files = readdirSync(componentsPath).filter(f => 
-      f.endsWith('.tsx') && 
-      f !== 'index.ts' && 
-      f !== 'MarkdownRenderer.tsx' &&
-      !f.startsWith('ui/')
-    );
+  for (const key in components) {
+    if (Object.prototype.hasOwnProperty.call(components, key)) {
+      const kebabName = key.replace(/([A-Z])/g, "-$1").toLowerCase();
 
-    for (const file of files) {
-      const name = file.replace('.tsx', '').replace('-', '_');
-      const kebabName = file.replace('.tsx', '');
-      
       // Skip if opt-in list provided and component not enabled
       if (enabledComponents && !enabledComponents.includes(kebabName)) {
         continue;
       }
 
-      try {
-        const component = require(join(componentsPath, file));
-        const componentExport = component[Object.keys(component)[0]]; // Get first export
-        
-        registry[kebabName] = {
-          name: kebabName,
-          description: COMPONENT_DESCRIPTIONS[kebabName as keyof typeof COMPONENT_DESCRIPTIONS] || 'Custom component',
-          component: componentExport
-        };
-      } catch (error) {
-        console.warn(`Failed to load component ${file}:`, error);
-      }
+      registry[kebabName] = {
+        name: kebabName,
+        description: COMPONENT_DESCRIPTIONS[kebabName as keyof typeof COMPONENT_DESCRIPTIONS] || 'Custom component',
+        component: components[key]
+      };
     }
-  } catch (error) {
-    console.warn('Failed to build auto-registry:', error);
   }
 
   return registry;
@@ -69,8 +49,8 @@ export function buildRegistry(componentsPath = './components', enabledComponents
 /**
  * Get agent prompt for available components
  */
-export function getAgentOptions(enabledComponents?: string[]): string {
-  const registry = buildRegistry('./components', enabledComponents);
+export function getAgentOptions(components: Record<string, any>, enabledComponents?: string[]): string {
+  const registry = buildRegistry(components, enabledComponents);
   
   return Object.entries(registry)
     .map(([key, info]) => `${key}: ${info.description}`)

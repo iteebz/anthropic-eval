@@ -35,8 +35,8 @@ export const TimelineDataSchema = z.object({
   }))
 });
 
-// Expandable Detail
-export const ExpandableDetailDataSchema = z.object({
+// Expandable Section
+export const ExpandableSectionDataSchema = z.object({
   sections: z.array(z.object({
     title: z.string(),
     content: z.string(),
@@ -53,20 +53,8 @@ export const KeyInsightsDataSchema = z.object({
   }))
 });
 
-// Tech Deep Dive
-export const TechDeepDiveDataSchema = z.object({
-  title: z.string(),
-  overview: z.string(),
-  sections: z.array(z.object({
-    title: z.string(),
-    content: z.string(),
-    code_example: z.string().optional(),
-    insight: z.string().optional()
-  }))
-});
-
-// Inline Link
-export const InlineLinkDataSchema = z.object({
+// Inline References
+export const InlineReferencesDataSchema = z.object({
   references: z.array(z.object({
     id: z.string(),
     title: z.string(),
@@ -78,15 +66,36 @@ export const InlineLinkDataSchema = z.object({
   }))
 });
 
+// Blog Post
+export const BlogPostDataSchema = z.object({
+  title: z.string(),
+  author: z.string(),
+  date: z.string(),
+  summary: z.string().optional(),
+  content: z.string(),
+  tags: z.array(z.string()).optional(),
+});
+
+// Code Snippet
+export const CodeSnippetDataSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  language: z.string(),
+  code: z.string(),
+  caption: z.string().optional(),
+});
+
 // Markdown (empty)
 export const MarkdownDataSchema = z.object({});
 
 export const INTERFACE_SCHEMAS = {
   markdown: MarkdownDataSchema,
-  card_grid: CardGridDataSchema,
+  "card-grid": CardGridDataSchema,
   timeline: TimelineDataSchema,
-  expandable_detail: ExpandableDetailDataSchema,
-  key_insights: KeyInsightsDataSchema,
-  tech_deep_dive: TechDeepDiveDataSchema,
-  inline_link: InlineLinkDataSchema
+  "expandable-section": ExpandableSectionDataSchema,
+  "key-insights": KeyInsightsDataSchema,
+  "inline-reference": InlineReferencesDataSchema,
+  "blog-post": BlogPostDataSchema,
+  "code-snippet": CodeSnippetDataSchema,
 };
+

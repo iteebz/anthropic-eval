@@ -1,4 +1,4 @@
-import { type InterfaceData } from "../../types";
+import { type InterfaceData } from "../types";
 
 export interface RendererComponentProps<
   T extends InterfaceData = InterfaceData,

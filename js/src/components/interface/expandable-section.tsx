@@ -1,23 +1,17 @@
-import { type ExpandableDetailData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { type ExpandableSectionData, type InterfaceProps } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible";
+} from "../ui/collapsible";
 
-export interface InterfaceProps {
-  content: string;
-  interfaceData?: ExpandableDetailData;
-  className?: string;
-}
-
-export function ExpandableDetail({
+export function ExpandableSection({
   content,
   interfaceData,
   className,
 }: InterfaceProps) {
-  const data = interfaceData as ExpandableDetailData;
+  const data = interfaceData as ExpandableSectionData;
   const sections = data?.sections || [];
 
   return (

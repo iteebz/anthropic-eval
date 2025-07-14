@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { type InlineReferencesData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { type InlineReferencesData } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export interface InterfaceProps {
   content: string;
@@ -8,7 +8,7 @@ export interface InterfaceProps {
   className?: string;
 }
 
-export function InlineReferences({
+export function InlineReference({
   content,
   interfaceData,
   className,

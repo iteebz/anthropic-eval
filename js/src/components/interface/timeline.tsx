@@ -1,11 +1,5 @@
-import { type TimelineData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
-
-export interface InterfaceProps {
-  content: string;
-  interfaceData?: TimelineData;
-  className?: string;
-}
+import { type TimelineData, type TimelineEvent, type InterfaceProps } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export function Timeline({
   content,
@@ -25,7 +19,7 @@ export function Timeline({
 
       {events.length > 0 && (
         <div className="space-y-4">
-          {events.map((event, index) => (
+          {events.map((event: TimelineEvent, index: number) => (
             <div key={index} className="border-l-2 border-gray-300 pl-4">
               <div className="font-medium">{event.title}</div>
               <div className="text-sm text-gray-600">{event.date}</div>

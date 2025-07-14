@@ -9,54 +9,48 @@ export * from "./schemas";
 export * from "./validation";
 
 // Core primitive components
-export { CardGrid } from "../components/card-grid";
-export { ExpandableDetail } from "../components/expandable-detail";
-export { InlineLink } from "../components/inline-link";
-export { KeyInsights } from "../components/key-insights";
-export { MarkdownRenderer } from "../components/MarkdownRenderer";
-export { TechDeepDive } from "../components/tech-deep-dive";
-export { Timeline } from "../components/timeline";
+export { CardGrid } from "../components/interface/card-grid";
+export { ExpandableSection } from "../components/interface/expandable-section";
+export { InlineReference } from "../components/interface/inline-reference";
+export { KeyInsights } from "../components/interface/key-insights";
+export { MarkdownRenderer } from "../components/render/MarkdownRenderer";
+export { Timeline } from "../components/interface/timeline";
 
 // Core primitive registry
-import { CardGrid } from "../components/card-grid";
-import { ExpandableDetail } from "../components/expandable-detail";
-import { InlineLink } from "../components/inline-link";
-import { KeyInsights } from "../components/key-insights";
-import { MarkdownRenderer } from "../components/MarkdownRenderer";
-import { TechDeepDive } from "../components/tech-deep-dive";
-import { Timeline } from "../components/timeline";
-import { RendererComponentProps } from "../react/utils/componentProps";
+import { CardGrid } from "../components/interface/card-grid";
+import { ExpandableSection } from "../components/interface/expandable-section";
+import { InlineReference } from "../components/interface/inline-reference";
+import { KeyInsights } from "../components/interface/key-insights";
+import { MarkdownRenderer } from "../components/render/MarkdownRenderer";
+import { Timeline } from "../components/interface/timeline";
+import { RendererComponentProps } from "../utils/componentProps";
 import {
   type CardGridData,
-  type ExpandableDetailData,
+  type ExpandableSectionData,
   type KeyInsightsData,
   type TimelineData,
-  type TechDeepDiveData,
   type MarkdownData,
-  type InlineLinkData,
+  type InlineReferencesData,
 } from "../types";
 
 export const CoreComponentRegistry = {
   markdown: MarkdownRenderer as React.ComponentType<
     RendererComponentProps<MarkdownData>
   >,
-  card_grid: CardGrid as React.ComponentType<
+  "card-grid": CardGrid as React.ComponentType<
     RendererComponentProps<CardGridData>
   >,
-  expandable_detail: ExpandableDetail as React.ComponentType<
-    RendererComponentProps<ExpandableDetailData>
+  "expandable-section": ExpandableSection as React.ComponentType<
+    RendererComponentProps<ExpandableSectionData>
   >,
-  key_insights: KeyInsights as React.ComponentType<
+  "key-insights": KeyInsights as React.ComponentType<
     RendererComponentProps<KeyInsightsData>
   >,
   timeline: Timeline as React.ComponentType<
     RendererComponentProps<TimelineData>
   >,
-  tech_deep_dive: TechDeepDive as React.ComponentType<
-    RendererComponentProps<TechDeepDiveData>
-  >,
-  inline_link: InlineLink as React.ComponentType<
-    RendererComponentProps<InlineLinkData>
+  "inline-reference": InlineReference as React.ComponentType<
+    RendererComponentProps<InlineReferencesData>
   >,
 } as const;
 

@@ -1,5 +1,5 @@
-import { type CodeSnippetData } from "../types";
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { type CodeSnippetData } from "../../types";
+import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export interface InterfaceProps {
   content: string;

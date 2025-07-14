@@ -2,12 +2,13 @@
  * AgentInterface Registry - Zero Bullshit
  */
 
-export { buildRegistry, getAgentOptions, type ComponentInfo } from './auto';
+import { buildRegistry, getAgentOptions } from './auto';
+import { CoreComponentRegistry } from "../core";
 
 // Plug-and-play integration
 export function createAgentInterface(enabledComponents?: string[]) {
   return {
-    getOptions: () => getAgentOptions(enabledComponents),
-    getRegistry: () => buildRegistry('./components', enabledComponents)
+    getOptions: () => getAgentOptions(CoreComponentRegistry, enabledComponents),
+    getRegistry: () => buildRegistry(CoreComponentRegistry, enabledComponents)
   };
 }
