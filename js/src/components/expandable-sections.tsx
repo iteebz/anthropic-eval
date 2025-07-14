@@ -17,7 +17,6 @@ export function ExpandableDetail({
   interfaceData,
   className,
 }: InterfaceProps) {
-  // interface_data should already be validated by the registry
   const data = interfaceData as ExpandableDetailData;
   const sections = data?.sections || [];
 
@@ -33,17 +32,11 @@ export function ExpandableDetail({
         <div className="space-y-2">
           {sections.map((section, index) => (
             <Collapsible key={index} defaultOpen={section.defaultExpanded}>
-              <div className="rounded-lg border border-zinc-700 bg-zinc-800/30">
-                <CollapsibleTrigger className="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-zinc-800/50 [&[data-state=open]>span:last-child]:rotate-90">
-                  <span className="font-medium text-zinc-100">
-                    {section.title}
-                  </span>
-                  <span className="text-zinc-400 transition-transform duration-200">
-                    ▶
-                  </span>
+              <div className="border rounded-lg">
+                <CollapsibleTrigger className="w-full p-3 text-left border-b">
+                  <div className="font-medium">{section.title}</div>
                 </CollapsibleTrigger>
-
-                <CollapsibleContent className="border-t border-zinc-700">
+                <CollapsibleContent>
                   <div className="p-3">
                     <MarkdownRenderer content={section.content} />
                   </div>

@@ -32,8 +32,8 @@ export const useAgentResponseParser = ({
 
       try {
         const parsed = parseAgentResponse(response);
-        const interfaceType = parsed.interface_type || "markdown";
-        const content = parsed.response || parsed.raw_content;
+        const interfaceType = parsed.interface_type;
+        const content = parsed.raw_content;
 
         // Validate interface type
         if (!isValidInterfaceType(interfaceType)) {
