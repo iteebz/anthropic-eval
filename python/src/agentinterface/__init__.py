@@ -13,6 +13,10 @@ from agentinterface.selector import (
     KeyInsightsComponentConfig,
     CodeSnippetComponentConfig,
     BlogPostComponentConfig,
+    ContactFormComponentConfig,
+    ProjectCardComponentConfig,
+    SkillsDisplayComponentConfig,
+    ImageGalleryComponentConfig,
 )
 
 __all__ = [
@@ -27,4 +31,8 @@ __all__ = [
     "KeyInsightsComponentConfig",
     "CodeSnippetComponentConfig",
     "BlogPostComponentConfig",
+    "ContactFormComponentConfig",
+    "ProjectCardComponentConfig",
+    "SkillsDisplayComponentConfig",
+    "ImageGalleryComponentConfig",
 ]

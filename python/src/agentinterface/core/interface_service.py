@@ -8,7 +8,11 @@ INTERFACE_OPTIONS = {
     "key_insights": "Categorized insights/principles",
     "code_snippet": "Code with syntax highlighting",
     "blog_post": "Article/post layout",
-    "inline_reference": "Expandable references"
+    "inline_reference": "Expandable references",
+    "contact_form": "Contact form with validation",
+    "project_card": "Project showcase with tech stack",
+    "skills_display": "Skills visualization with levels",
+    "image_gallery": "Image gallery with accessibility"
 }
 
 def get_interface_options(enabled_components=None):
