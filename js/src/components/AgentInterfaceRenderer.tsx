@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { type InterfaceType, type InterfaceData } from "../types";
-import { ComponentErrorBoundary, ComponentErrorContext } from "./common/ComponentErrorBoundary";
+import { InterfaceErrorBoundary, InterfaceErrorContext } from "./common/InterfaceErrorBoundary";
 import { useInterfaceConfig } from "../hooks";
 import { LoadingState } from "./common/LoadingState";
 import { ErrorState } from "./common/ErrorState";
@@ -58,7 +58,7 @@ export interface AgentInterfaceRendererProps {
   onError?: (
     error: Error,
     errorInfo: React.ErrorInfo,
-    context: ComponentErrorContext,
+    context: InterfaceErrorContext,
   ) => void;
 
   /**
@@ -92,7 +92,7 @@ export const AgentInterfaceRenderer = ({
     (
       error: Error,
       errorInfo: React.ErrorInfo,
-      context: ComponentErrorContext,
+      context: InterfaceErrorContext,
     ) => {
       logger?.error("AgentInterfaceRenderer error", {
         error: {
@@ -151,14 +151,14 @@ export const AgentInterfaceRenderer = ({
   );
 
   return (
-    <ComponentErrorBoundary
+    <InterfaceErrorBoundary
       interfaceType={interfaceConfig.type}
-      content={interfaceConfig.content}
+      fallbackContent={interfaceConfig.content}
       interfaceData={interfaceConfig.data}
       showDebugInfo={showErrorDetails}
       onError={handleError}
     >
       <Component {...componentProps} />
-    </ComponentErrorBoundary>
+    </InterfaceErrorBoundary>
   );
 };

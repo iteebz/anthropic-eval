@@ -11,6 +11,8 @@ export type { InterfaceType, InterfaceData } from "./types";
 
 // React component exports
 export { AgentInterfaceRenderer } from "./components/AgentInterfaceRenderer";
+export { InterfaceErrorBoundary } from "./components/common/InterfaceErrorBoundary";
+export type { InterfaceErrorBoundaryProps, InterfaceErrorContext } from "./components/common/InterfaceErrorBoundary";
 
 // Component exports
 export * from "./components/interface";
