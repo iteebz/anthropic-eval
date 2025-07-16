@@ -32,3 +32,6 @@ export * from "./registry";
 // Re-export commonly used items for convenience
 export { validateInterfaceData, isValidInterfaceType } from "./core/validation";
 export { INTERFACE_SCHEMAS } from "./core/schemas";
+
+// Development exports (only available in development)
+export * from "./dev";
