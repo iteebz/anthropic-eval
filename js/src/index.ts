@@ -7,7 +7,8 @@
 
 // Core exports
 export * from "./core/validation";
-export type { InterfaceType, InterfaceData } from "./types";
+export * from "./core/inline-components";
+export type { InterfaceType, InterfaceData, ComponentConfig } from "./types";
 
 // React component exports
 export { AgentInterfaceRenderer } from "./components/AgentInterfaceRenderer";
@@ -16,6 +17,8 @@ export type { InterfaceErrorBoundaryProps, InterfaceErrorContext } from "./compo
 
 // Component exports
 export * from "./components/interface";
+export { MarkdownRenderer } from "./components/render/MarkdownRenderer";
+export { InlineComponentFallback } from "./components/common/InlineComponentFallback";
 
 // Utility exports
 export * from "./utils";

@@ -5,6 +5,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import type { SyntaxHighlighterProps } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
+import { remarkInlineComponents, InlineComponent } from "../../core/remark-inline-components";
+import type { ComponentResolver } from "../../core/inline-components";
 
 import { cn } from "../../lib/utils";
 
@@ -18,11 +20,15 @@ interface MarkdownRendererProps {
   content: string;
   className?: string;
   onSendMessage?: (message: string) => void;
+  componentResolver?: ComponentResolver;
+  enableInlineComponents?: boolean;
 }
 
 export function MarkdownRenderer({
   content,
   className = "",
+  componentResolver,
+  enableInlineComponents = false,
 }: MarkdownRendererProps) {
   const components: Components = {
     // Handle code blocks with syntax highlighting
@@ -112,7 +118,17 @@ export function MarkdownRenderer({
     p({ children }: { children?: React.ReactNode }) {
       return <p className="my-1.5 leading-snug">{children}</p>;
     },
+    // Handle inline components
+    InlineComponent({ config, resolved }: { config: string; resolved?: string }) {
+      return <InlineComponent config={config} resolved={resolved} />;
+    },
   };
+
+  // Setup remark plugins
+  const remarkPlugins = [remarkGfm];
+  if (enableInlineComponents && componentResolver) {
+    remarkPlugins.push([remarkInlineComponents, { resolver: componentResolver }]);
+  }
 
   return (
     <div
@@ -121,7 +137,7 @@ export function MarkdownRenderer({
         className,
       )}
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown remarkPlugins={remarkPlugins} components={components}>
         {content}
       </ReactMarkdown>
     </div>

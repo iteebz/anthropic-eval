@@ -12,6 +12,7 @@ import {
   BlogPostDataSchema,
   CodeSnippetDataSchema,
 } from "../core/schemas";
+import { InlineComponentConfig } from "../core/inline-components";
 
 // Core data types
 export type ExpandableSectionData = z.infer<typeof ExpandableSectionDataSchema>;
@@ -95,6 +96,23 @@ export type ComponentProps =
   | MarkdownProps
   | InlineReferenceProps
   | CodeSnippetProps;
+
+// Discriminated union for component configuration
+export type ComponentConfig = 
+  | { type: 'card-grid'; data: CardGridData; config: InlineComponentConfig }
+  | { type: 'expandable-section'; data: ExpandableSectionData; config: InlineComponentConfig }
+  | { type: 'key-insights'; data: KeyInsightsData; config: InlineComponentConfig }
+  | { type: 'timeline'; data: TimelineData; config: InlineComponentConfig }
+  | { type: 'blog-post'; data: BlogPostData; config: InlineComponentConfig }
+  | { type: 'markdown'; data: MarkdownData; config: InlineComponentConfig }
+  | { type: 'inline-reference'; data: InlineReferencesData; config: InlineComponentConfig }
+  | { type: 'code-snippet'; data: CodeSnippetData; config: InlineComponentConfig };
+
+// Enhanced interface props with inline component support
+export interface EnhancedInterfaceProps extends InterfaceProps {
+  inlineComponents?: Map<string, ComponentConfig>;
+  componentResolver?: (type: InterfaceType, slug: string) => Promise<InterfaceData | null>;
+}
 
 // Logger interface
 export interface Logger {
