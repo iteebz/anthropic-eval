@@ -1,6 +1,6 @@
 {
   "name": "agentinterface",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Core AgentInterface protocol implementation",
   "type": "module",
   "main": "dist/index.js",
