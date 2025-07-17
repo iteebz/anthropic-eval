@@ -1,76 +1,67 @@
 /**
  * AIP Component Registry - Auto-magical component discovery and registration
+ * ZERO CEREMONY - everything auto-discovered via filesystem reflection
  */
 
-import { 
-  CardGrid, 
-  CodeSnippet, 
-  ContactForm,
-  ExpandableSection, 
-  ImageGallery,
-  InlineReference, 
-  KeyInsights, 
-  Timeline,
-} from '../components/interface'
-import { MarkdownRenderer } from '../components/render/MarkdownRenderer'
-import type { RendererComponentProps } from '../utils/componentProps'
+// NEW: Auto-magical imports
+export { useAIP, getMagicRegistry, MagicRegistry } from './magic';
+export { getDiscoveredComponents, buildRegistry, getAgentOptions, getComponent } from './auto';
+export type { ComponentInfo, ComponentMetadata, MagicRegistryConfig } from './magic';
 
-// Enhanced markdown component with inline component support
-const MarkdownComponent = ({ content }: { content?: string }) => (
-  <MarkdownRenderer 
-    content={content || ''} 
-    enableInlineComponents={true}
-  />
-)
-
-// AIP Core Components - auto-discovered
-const AIP_CORE_COMPONENTS: Record<string, React.ComponentType<RendererComponentProps>> = {
-  markdown: MarkdownComponent,
-  'card-grid': CardGrid,
-  'code-snippet': CodeSnippet,
-  'contact-form': ContactForm,
-  'expandable-section': ExpandableSection,
-  'image-gallery': ImageGallery,
-  'inline-reference': InlineReference,
-  'key-insights': KeyInsights,
-  timeline: Timeline,
-}
-
-// Extension registry for domain-specific components
-const EXTENSION_REGISTRY: Record<string, React.ComponentType<RendererComponentProps>> = {}
+// Legacy support - gradually migrate consumers to useAIP()
+import { getMagicRegistry } from './magic';
+import type { RendererComponentProps } from '../utils/componentProps';
 
 /**
- * Register extension components with AIP
- */
-export const registerComponents = (components: Record<string, React.ComponentType<RendererComponentProps>>) => {
-  Object.assign(EXTENSION_REGISTRY, components)
-}
-
-/**
- * Get all registered components (core + extensions)
+ * Legacy: Get all registered components (core + extensions)
+ * @deprecated Use useAIP() instead for magical zero-ceremony experience
  */
 export const getComponentRegistry = () => {
-  return { ...AIP_CORE_COMPONENTS, ...EXTENSION_REGISTRY }
-}
+  const registry = getMagicRegistry();
+  const components: Record<string, React.ComponentType<RendererComponentProps>> = {};
+  
+  for (const [name, info] of Object.entries(registry.components)) {
+    components[name] = info.component;
+  }
+  
+  return components;
+};
 
 /**
- * Check if a component type is valid
+ * Legacy: Register extension components with AIP
+ * @deprecated Use useAIP().register() instead
+ */
+export const registerComponents = (components: Record<string, React.ComponentType<RendererComponentProps>>) => {
+  const registry = getMagicRegistry();
+  
+  for (const [name, component] of Object.entries(components)) {
+    registry.register(name, component);
+  }
+};
+
+/**
+ * Legacy: Check if a component type is valid
+ * @deprecated Use useAIP().availableComponents.includes() instead
  */
 export const isValidInterfaceType = (type: string): boolean => {
-  const registry = getComponentRegistry()
-  return type in registry
-}
+  const registry = getMagicRegistry();
+  return registry.availableComponents.includes(type);
+};
 
 /**
- * Get component names for each category
+ * Legacy: Get component names for each category
+ * @deprecated Use useAIP().availableComponents instead
  */
 export const getComponentTypes = () => {
+  const registry = getMagicRegistry();
+  const all = registry.availableComponents;
+  
   return {
-    core: Object.keys(AIP_CORE_COMPONENTS),
-    extensions: Object.keys(EXTENSION_REGISTRY),
-    all: Object.keys(getComponentRegistry())
-  }
-}
+    core: all.filter(name => registry.components[name]?.metadata?.category !== 'custom'),
+    extensions: all.filter(name => registry.components[name]?.metadata?.category === 'custom'),
+    all
+  };
+};
 
-// Export core components for convenience
-export { AIP_CORE_COMPONENTS }
+// Export for convenience - but prefer useAIP()
+export const AIP_CORE_COMPONENTS = getComponentRegistry();

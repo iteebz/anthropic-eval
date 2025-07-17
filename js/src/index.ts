@@ -2,8 +2,12 @@
  * @agentinterface/react - Main entry point
  *
  * Agent-driven dynamic UI selection system for React applications.
- * Analyzes content and selects appropriate UI components automatically.
+ * AUTO-MAGICAL: Zero ceremony component discovery and registration.
  */
+
+// 🎯 MAGICAL SINGLE IMPORT - Everything you need
+export { useAIP } from "./registry/magic";
+export type { MagicRegistryConfig, ComponentInfo, ComponentMetadata } from "./registry/magic";
 
 // Core exports
 export * from "./core/validation";
@@ -16,7 +20,7 @@ export { AgentInterfaceRenderer } from "./components/AgentInterfaceRenderer";
 export { InterfaceErrorBoundary } from "./components/common/InterfaceErrorBoundary";
 export type { InterfaceErrorBoundaryProps, InterfaceErrorContext } from "./components/common/InterfaceErrorBoundary";
 
-// Component exports
+// Component exports (auto-discovered, but available for tree-shaking)
 export * from "./components/interface";
 export { MarkdownRenderer } from "./components/render/MarkdownRenderer";
 export { InlineComponentFallback } from "./components/common/InlineComponentFallback";
@@ -36,3 +40,9 @@ export { INTERFACE_SCHEMAS } from "./core/schemas";
 
 // Development exports (only available in development)
 export * from "./dev";
+
+// Playground exports
+export { AIPPlayground, PlaygroundApp } from "./playground";
+
+// Error handling exports
+export * from "./core/error-handling";

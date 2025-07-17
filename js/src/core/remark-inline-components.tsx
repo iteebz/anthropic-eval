@@ -1,3 +1,4 @@
+import React from 'react';
 import { visit } from 'unist-util-visit';
 import type { Plugin } from 'unified';
 import type { Root, Text } from 'mdast';

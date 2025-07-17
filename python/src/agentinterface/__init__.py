@@ -1,20 +1,38 @@
-"""AgentInterface - AI agents choose UI components."""
+"""AgentInterface - AI agents choose UI components with zero ceremony"""
 
 __version__ = "0.1.0"
 
-from agentinterface.core.interface_service import get_interface_options, INTERFACE_OPTIONS
-from agentinterface.selector import ComponentSelector
-from agentinterface.registry import ComponentConfig, register_component_type, make_component_config, COMPONENT_REGISTRY
-from agentinterface.inline_resolver import InlineComponentResolver, create_inline_resolver
+# 🎯 MAGICAL SINGLE IMPORT - Everything you need
+from .registry import (
+    select_component,
+    get_component_options, 
+    MagicSelector,
+    get_interface_options,
+    make_component_config,
+    register_component,
+    get_available_components,
+    ComponentConfig,
+    ComponentMetadata,
+    ComponentCategory
+)
+
+# Legacy compatibility (gradually migrate to magic imports)
+from .inline_resolver import InlineComponentResolver, create_inline_resolver
 
 __all__ = [
-    "get_interface_options", 
-    "INTERFACE_OPTIONS",
-    "ComponentSelector",
-    "ComponentConfig",
-    "register_component_type",
+    # 🎯 MAGICAL INTERFACE - Use these!
+    "select_component",
+    "get_component_options", 
+    "MagicSelector",
+    "get_interface_options",
     "make_component_config",
-    "COMPONENT_REGISTRY",
+    "register_component",
+    "get_available_components",
+    "ComponentConfig",
+    "ComponentMetadata", 
+    "ComponentCategory",
+    
+    # Inline component support
     "InlineComponentResolver",
     "create_inline_resolver",
 ]

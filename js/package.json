@@ -24,6 +24,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "playground": "open src/playground/browser.html",
     "format": "npm exec prettier --write '**/*.{ts,tsx,js,jsx,json,md}' --ignore-path ../../.prettierignore",
     "format:check": "npm exec prettier --check '**/*.{ts,tsx,js,jsx,json,md}' --ignore-path ../../.prettierignore",
     "lint": "npm exec eslint .",
