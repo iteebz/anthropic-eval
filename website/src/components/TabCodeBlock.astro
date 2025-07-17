@@ -1,0 +1,99 @@
+---
+import CodeBlock from "./CodeBlock.astro";
+
+export interface CodeTab {
+	label: string;
+	language: string;
+	code: string;
+	filename?: string;
+}
+
+export interface Props {
+	tabs: CodeTab[];
+	defaultTab?: number;
+	showLineNumbers?: boolean;
+}
+
+const { 
+	tabs, 
+	defaultTab = 0,
+	showLineNumbers = false
+} = Astro.props;
+
+const id = `tabs-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div class="overflow-hidden rounded-xl border border-gray-700 bg-gray-900">
+	<!-- Tab navigation -->
+	<div class="flex border-b border-gray-700">
+		{tabs.map((tab, index) => (
+			<button
+				class:list={[
+					"px-4 py-2 text-sm font-medium",
+					index === defaultTab 
+						? "bg-gray-800 text-white border-b-2 border-blue-500" 
+						: "text-gray-400 hover:text-white hover:bg-gray-800/50"
+				]}
+				data-tab-button
+				data-tab-id={`${id}-${index}`}
+				data-tab-default={index === defaultTab}
+			>
+				{tab.label}
+			</button>
+		))}
+	</div>
+	
+	<!-- Tab content -->
+	{tabs.map((tab, index) => (
+		<div 
+			class:list={[
+				"tab-content",
+				{ "hidden": index !== defaultTab }
+			]}
+			data-tab-content
+			data-tab-id={`${id}-${index}`}
+		>
+			<CodeBlock
+				code={tab.code}
+				language={tab.language}
+				filename={tab.filename}
+				showLineNumbers={showLineNumbers}
+				copyable={true}
+			/>
+		</div>
+	))}
+</div>
+
+<script>
+	// Initialize tabs
+	document.addEventListener('DOMContentLoaded', () => {
+		const tabButtons = document.querySelectorAll('[data-tab-button]');
+		
+		tabButtons.forEach(button => {
+			button.addEventListener('click', () => {
+				const tabId = button.getAttribute('data-tab-id');
+				const tabGroup = tabId?.split('-').slice(0, -1).join('-');
+				
+				if (tabId && tabGroup) {
+					// Hide all tabs in this group
+					document.querySelectorAll(`[data-tab-content][data-tab-id^="${tabGroup}"]`)
+						.forEach(tab => tab.classList.add('hidden'));
+					
+					// Show the selected tab
+					const selectedTab = document.querySelector(`[data-tab-content][data-tab-id="${tabId}"]`);
+					selectedTab?.classList.remove('hidden');
+					
+					// Update button styles
+					document.querySelectorAll(`[data-tab-button][data-tab-id^="${tabGroup}"]`)
+						.forEach(btn => {
+							btn.classList.remove('bg-gray-800', 'text-white', 'border-b-2', 'border-blue-500');
+							btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-800/50');
+						});
+					
+					button.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-800/50');
+					button.classList.add('bg-gray-800', 'text-white', 'border-b-2', 'border-blue-500');
+				}
+			});
+		});
+	});
+</script>

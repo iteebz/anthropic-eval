@@ -1,0 +1,49 @@
+---
+import DocLayout from "../../components/DocLayout.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
+
+const title = "Installation - AgentInterface Documentation";
+const description = "Learn how to install and set up AgentInterface in your projects.";
+
+const pythonInstall = `pip install agentinterface`;
+const jsInstall = `npm install agentinterface`;
+const yarnInstall = `yarn add agentinterface`;
+const pnpmInstall = `pnpm add agentinterface`;
+---
+
+<DocLayout 
+	title={title}
+	description={description}
+	canonicalUrl="https://agentinterface.dev/docs/installation"
+	keywords="agentinterface installation, setup, python, javascript"
+>
+	<h1 class="mb-8 text-4xl font-bold">Installation</h1>
+	
+	<div class="prose prose-invert max-w-none">
+		<p class="text-xl mb-8">
+			AgentInterface is available for both Python and JavaScript. Choose the installation method that best fits your project.
+		</p>
+		
+		<h2 class="text-2xl font-bold mt-12 mb-4">Python</h2>
+		<p>Install AgentInterface using pip:</p>
+		<CodeBlock code={pythonInstall} language="bash" />
+		
+		<h2 class="text-2xl font-bold mt-12 mb-4">JavaScript / TypeScript</h2>
+		<p>Install AgentInterface using your preferred package manager:</p>
+		
+		<h3 class="text-xl font-bold mt-6 mb-2">npm</h3>
+		<CodeBlock code={jsInstall} language="bash" />
+		
+		<h3 class="text-xl font-bold mt-6 mb-2">yarn</h3>
+		<CodeBlock code={yarnInstall} language="bash" />
+		
+		<h3 class="text-xl font-bold mt-6 mb-2">pnpm</h3>
+		<CodeBlock code={pnpmInstall} language="bash" />
+		
+		<h2 class="text-2xl font-bold mt-12 mb-4">Next Steps</h2>
+		<p>
+			Once you've installed AgentInterface, you can start using it in your project. Check out the 
+			<a href="/docs/quickstart" class="text-blue-400 hover:text-blue-300">Quick Start</a> guide to learn how to create your first agent UI.
+		</p>
+	</div>
+</DocLayout>

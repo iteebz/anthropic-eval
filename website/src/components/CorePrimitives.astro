@@ -1,0 +1,63 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import Card from "./Card.astro";
+---
+
+<section class="px-6 py-24 sm:px-8 lg:px-16">
+	<div class="mx-auto max-w-6xl">
+		<SectionHeader
+			title="Core Primitives"
+			subtitle="The building blocks of the AgentInterface protocol"
+		/>
+		
+		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<Card
+				title="Response"
+				description="The container for all components in an agent's response. Provides methods for adding components and converting to JSON."
+				icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>'
+				variant="primary"
+				href="/docs/primitives/response"
+			/>
+			
+			<Card
+				title="Component"
+				description="The base class for all UI components. Defines the common properties and methods that all components share."
+				icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>'
+				variant="primary"
+				href="/docs/primitives/component"
+			/>
+			
+			<Card
+				title="Action"
+				description="Defines interactive behaviors that components can trigger, such as button clicks, form submissions, and more."
+				icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>'
+				variant="primary"
+				href="/docs/primitives/action"
+			/>
+			
+			<Card
+				title="Renderer"
+				description="Transforms AgentInterface responses into actual UI components for different frameworks and platforms."
+				icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+				variant="secondary"
+				href="/docs/primitives/renderer"
+			/>
+			
+			<Card
+				title="Protocol"
+				description="The specification that defines how agents communicate with UI renderers, ensuring consistency across implementations."
+				icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>'
+				variant="secondary"
+				href="/docs/primitives/protocol"
+			/>
+			
+			<Card
+				title="Extensions"
+				description="Custom components and behaviors that extend the core protocol for specific use cases and domains."
+				icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>'
+				variant="secondary"
+				href="/docs/primitives/extensions"
+			/>
+		</div>
+	</div>
+</section>

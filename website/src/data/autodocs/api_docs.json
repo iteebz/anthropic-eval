@@ -1,0 +1,302 @@
+{
+  "python": {
+    "package": {
+      "name": "agentinterface",
+      "version": "0.1.0",
+      "docstring": "AgentInterface - AI agents choose UI components."
+    },
+    "modules": {
+      "core": {
+        "name": "core",
+        "docstring": "Core AIP functionality.",
+        "classes": [],
+        "functions": [
+          {
+            "name": "get_interface_options",
+            "docstring": "Get agent options with opt-in filtering.",
+            "module": "agentinterface.core.interface_service",
+            "signature": "(enabled_components=None)"
+          }
+        ]
+      },
+      "selector": {
+        "name": "selector",
+        "docstring": "ComponentSelector - Maps intent signals to AIP components.",
+        "classes": [
+          {
+            "name": "ComponentConfig",
+            "docstring": "Base configuration for AIP components.",
+            "module": "agentinterface.registry",
+            "methods": [
+              {
+                "name": "copy",
+                "docstring": "Returns a copy of the model.\n\n!!! warning \"Deprecated\"\n    This method is now deprecated; use `model_copy` instead.\n\nIf you need `include` or `exclude`, use:\n\n```python {test=\"skip\" lint=\"skip\"}\ndata = self.model_dump(include=include, exclude=exclude, round_trip=True)\ndata = {**data, **(update or {})}\ncopied = self.model_validate(data)\n```\n\nArgs:\n    include: Optional set or mapping specifying which fields to include in the copied model.\n    exclude: Optional set or mapping specifying which fields to exclude in the copied model.\n    update: Optional dictionary of field-value pairs to override field values in the copied model.\n    deep: If True, the values of fields that are Pydantic models will be deep-copied.\n\nReturns:\n    A copy of the model with included, excluded and updated fields as specified.",
+                "signature": "(self, *, include: 'AbstractSetIntStr | MappingIntStrAny | None' = None, exclude: 'AbstractSetIntStr | MappingIntStrAny | None' = None, update: 'Dict[str, Any] | None' = None, deep: 'bool' = False) -> 'Self'"
+              },
+              {
+                "name": "dict",
+                "docstring": "",
+                "signature": "(self, *, include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False) -> 'Dict[str, Any]'"
+              },
+              {
+                "name": "json",
+                "docstring": "",
+                "signature": "(self, *, include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False, encoder: 'Callable[[Any], Any] | None' = PydanticUndefined, models_as_dict: 'bool' = PydanticUndefined, **dumps_kwargs: 'Any') -> 'str'"
+              },
+              {
+                "name": "model_copy",
+                "docstring": "Usage docs: https://docs.pydantic.dev/2.10/concepts/serialization/#model_copy\n\nReturns a copy of the model.\n\nArgs:\n    update: Values to change/add in the new model. Note: the data is not validated\n        before creating the new model. You should trust this data.\n    deep: Set to `True` to make a deep copy of the model.\n\nReturns:\n    New model instance.",
+                "signature": "(self, *, update: 'Mapping[str, Any] | None' = None, deep: 'bool' = False) -> 'Self'"
+              },
+              {
+                "name": "model_dump",
+                "docstring": "Usage docs: https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump\n\nGenerate a dictionary representation of the model, optionally specifying which fields to include or exclude.\n\nArgs:\n    mode: The mode in which `to_python` should run.\n        If mode is 'json', the output will only contain JSON serializable types.\n        If mode is 'python', the output may contain non-JSON-serializable Python objects.\n    include: A set of fields to include in the output.\n    exclude: A set of fields to exclude from the output.\n    context: Additional context to pass to the serializer.\n    by_alias: Whether to use the field's alias in the dictionary key if defined.\n    exclude_unset: Whether to exclude fields that have not been explicitly set.\n    exclude_defaults: Whether to exclude fields that are set to their default value.\n    exclude_none: Whether to exclude fields that have a value of `None`.\n    round_trip: If True, dumped values should be valid as input for non-idempotent types such as Json[T].\n    warnings: How to handle serialization errors. False/\"none\" ignores them, True/\"warn\" logs errors,\n        \"error\" raises a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError].\n    serialize_as_any: Whether to serialize fields with duck-typing serialization behavior.\n\nReturns:\n    A dictionary representation of the model.",
+                "signature": "(self, *, mode: \"Literal['json', 'python'] | str\" = 'python', include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, context: 'Any | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False, round_trip: 'bool' = False, warnings: \"bool | Literal['none', 'warn', 'error']\" = True, serialize_as_any: 'bool' = False) -> 'dict[str, Any]'"
+              },
+              {
+                "name": "model_dump_json",
+                "docstring": "Usage docs: https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump_json\n\nGenerates a JSON representation of the model using Pydantic's `to_json` method.\n\nArgs:\n    indent: Indentation to use in the JSON output. If None is passed, the output will be compact.\n    include: Field(s) to include in the JSON output.\n    exclude: Field(s) to exclude from the JSON output.\n    context: Additional context to pass to the serializer.\n    by_alias: Whether to serialize using field aliases.\n    exclude_unset: Whether to exclude fields that have not been explicitly set.\n    exclude_defaults: Whether to exclude fields that are set to their default value.\n    exclude_none: Whether to exclude fields that have a value of `None`.\n    round_trip: If True, dumped values should be valid as input for non-idempotent types such as Json[T].\n    warnings: How to handle serialization errors. False/\"none\" ignores them, True/\"warn\" logs errors,\n        \"error\" raises a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError].\n    serialize_as_any: Whether to serialize fields with duck-typing serialization behavior.\n\nReturns:\n    A JSON string representation of the model.",
+                "signature": "(self, *, indent: 'int | None' = None, include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, context: 'Any | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False, round_trip: 'bool' = False, warnings: \"bool | Literal['none', 'warn', 'error']\" = True, serialize_as_any: 'bool' = False) -> 'str'"
+              },
+              {
+                "name": "model_post_init",
+                "docstring": "Override this method to perform additional initialization after `__init__` and `model_construct`.\nThis is useful if you want to do some validation that requires the entire model to be initialized.",
+                "signature": "(self, _BaseModel__context: 'Any') -> 'None'"
+              },
+              {
+                "name": "to_json",
+                "docstring": "",
+                "signature": "(self) -> Dict[str, Any]"
+              }
+            ],
+            "init_signature": "(self, /, **data: 'Any') -> 'None'"
+          },
+          {
+            "name": "ComponentSelector",
+            "docstring": "Maps intent signals to appropriate AIP components.",
+            "module": "agentinterface.selector",
+            "methods": [
+              {
+                "name": "get_available_components",
+                "docstring": "Get list of all available component types.",
+                "signature": "(self) -> List[str]"
+              },
+              {
+                "name": "register_intent_mapping",
+                "docstring": "Register a new intent -> component mapping.",
+                "signature": "(self, intent: str, component_type: str)"
+              },
+              {
+                "name": "select",
+                "docstring": "Select appropriate component based on intent signals and content.",
+                "signature": "(self, intent_signals: Dict[str, Any], content: str) -> agentinterface.registry.ComponentConfig"
+              }
+            ],
+            "init_signature": "(self)"
+          }
+        ],
+        "functions": [
+          {
+            "name": "get_available_components",
+            "docstring": "Get list of all available component types.",
+            "module": "agentinterface.registry",
+            "signature": "() -> List[str]"
+          },
+          {
+            "name": "make_component_config",
+            "docstring": "Create a component config using the registry.",
+            "module": "agentinterface.registry",
+            "signature": "(component_type: str, signals: Dict[str, Any], content: str) -> agentinterface.registry.ComponentConfig"
+          }
+        ]
+      },
+      "registry": {
+        "name": "registry",
+        "docstring": "Component registry - Auto-discoverable and extensible.",
+        "classes": [
+          {
+            "name": "ComponentConfig",
+            "docstring": "Base configuration for AIP components.",
+            "module": "agentinterface.registry",
+            "methods": [
+              {
+                "name": "copy",
+                "docstring": "Returns a copy of the model.\n\n!!! warning \"Deprecated\"\n    This method is now deprecated; use `model_copy` instead.\n\nIf you need `include` or `exclude`, use:\n\n```python {test=\"skip\" lint=\"skip\"}\ndata = self.model_dump(include=include, exclude=exclude, round_trip=True)\ndata = {**data, **(update or {})}\ncopied = self.model_validate(data)\n```\n\nArgs:\n    include: Optional set or mapping specifying which fields to include in the copied model.\n    exclude: Optional set or mapping specifying which fields to exclude in the copied model.\n    update: Optional dictionary of field-value pairs to override field values in the copied model.\n    deep: If True, the values of fields that are Pydantic models will be deep-copied.\n\nReturns:\n    A copy of the model with included, excluded and updated fields as specified.",
+                "signature": "(self, *, include: 'AbstractSetIntStr | MappingIntStrAny | None' = None, exclude: 'AbstractSetIntStr | MappingIntStrAny | None' = None, update: 'Dict[str, Any] | None' = None, deep: 'bool' = False) -> 'Self'"
+              },
+              {
+                "name": "dict",
+                "docstring": "",
+                "signature": "(self, *, include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False) -> 'Dict[str, Any]'"
+              },
+              {
+                "name": "json",
+                "docstring": "",
+                "signature": "(self, *, include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False, encoder: 'Callable[[Any], Any] | None' = PydanticUndefined, models_as_dict: 'bool' = PydanticUndefined, **dumps_kwargs: 'Any') -> 'str'"
+              },
+              {
+                "name": "model_copy",
+                "docstring": "Usage docs: https://docs.pydantic.dev/2.10/concepts/serialization/#model_copy\n\nReturns a copy of the model.\n\nArgs:\n    update: Values to change/add in the new model. Note: the data is not validated\n        before creating the new model. You should trust this data.\n    deep: Set to `True` to make a deep copy of the model.\n\nReturns:\n    New model instance.",
+                "signature": "(self, *, update: 'Mapping[str, Any] | None' = None, deep: 'bool' = False) -> 'Self'"
+              },
+              {
+                "name": "model_dump",
+                "docstring": "Usage docs: https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump\n\nGenerate a dictionary representation of the model, optionally specifying which fields to include or exclude.\n\nArgs:\n    mode: The mode in which `to_python` should run.\n        If mode is 'json', the output will only contain JSON serializable types.\n        If mode is 'python', the output may contain non-JSON-serializable Python objects.\n    include: A set of fields to include in the output.\n    exclude: A set of fields to exclude from the output.\n    context: Additional context to pass to the serializer.\n    by_alias: Whether to use the field's alias in the dictionary key if defined.\n    exclude_unset: Whether to exclude fields that have not been explicitly set.\n    exclude_defaults: Whether to exclude fields that are set to their default value.\n    exclude_none: Whether to exclude fields that have a value of `None`.\n    round_trip: If True, dumped values should be valid as input for non-idempotent types such as Json[T].\n    warnings: How to handle serialization errors. False/\"none\" ignores them, True/\"warn\" logs errors,\n        \"error\" raises a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError].\n    serialize_as_any: Whether to serialize fields with duck-typing serialization behavior.\n\nReturns:\n    A dictionary representation of the model.",
+                "signature": "(self, *, mode: \"Literal['json', 'python'] | str\" = 'python', include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, context: 'Any | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False, round_trip: 'bool' = False, warnings: \"bool | Literal['none', 'warn', 'error']\" = True, serialize_as_any: 'bool' = False) -> 'dict[str, Any]'"
+              },
+              {
+                "name": "model_dump_json",
+                "docstring": "Usage docs: https://docs.pydantic.dev/2.10/concepts/serialization/#modelmodel_dump_json\n\nGenerates a JSON representation of the model using Pydantic's `to_json` method.\n\nArgs:\n    indent: Indentation to use in the JSON output. If None is passed, the output will be compact.\n    include: Field(s) to include in the JSON output.\n    exclude: Field(s) to exclude from the JSON output.\n    context: Additional context to pass to the serializer.\n    by_alias: Whether to serialize using field aliases.\n    exclude_unset: Whether to exclude fields that have not been explicitly set.\n    exclude_defaults: Whether to exclude fields that are set to their default value.\n    exclude_none: Whether to exclude fields that have a value of `None`.\n    round_trip: If True, dumped values should be valid as input for non-idempotent types such as Json[T].\n    warnings: How to handle serialization errors. False/\"none\" ignores them, True/\"warn\" logs errors,\n        \"error\" raises a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError].\n    serialize_as_any: Whether to serialize fields with duck-typing serialization behavior.\n\nReturns:\n    A JSON string representation of the model.",
+                "signature": "(self, *, indent: 'int | None' = None, include: 'IncEx | None' = None, exclude: 'IncEx | None' = None, context: 'Any | None' = None, by_alias: 'bool' = False, exclude_unset: 'bool' = False, exclude_defaults: 'bool' = False, exclude_none: 'bool' = False, round_trip: 'bool' = False, warnings: \"bool | Literal['none', 'warn', 'error']\" = True, serialize_as_any: 'bool' = False) -> 'str'"
+              },
+              {
+                "name": "model_post_init",
+                "docstring": "Override this method to perform additional initialization after `__init__` and `model_construct`.\nThis is useful if you want to do some validation that requires the entire model to be initialized.",
+                "signature": "(self, _BaseModel__context: 'Any') -> 'None'"
+              },
+              {
+                "name": "to_json",
+                "docstring": "",
+                "signature": "(self) -> Dict[str, Any]"
+              }
+            ],
+            "init_signature": "(self, /, **data: 'Any') -> 'None'"
+          }
+        ],
+        "functions": [
+          {
+            "name": "get_available_components",
+            "docstring": "Get list of all available component types.",
+            "module": "agentinterface.registry",
+            "signature": "() -> List[str]"
+          },
+          {
+            "name": "make_component_config",
+            "docstring": "Create a component config using the registry.",
+            "module": "agentinterface.registry",
+            "signature": "(component_type: str, signals: Dict[str, Any], content: str) -> agentinterface.registry.ComponentConfig"
+          },
+          {
+            "name": "register_component_type",
+            "docstring": "Register a new component type with the registry.",
+            "module": "agentinterface.registry",
+            "signature": "(component_type: str, default_props: Dict[str, Any] = None, prop_generators: Dict[str, Callable] = None)"
+          }
+        ]
+      },
+      "inline_resolver": {
+        "name": "inline_resolver",
+        "docstring": "Inline Component Resolver - Core pattern for resolving {{type:slug}} syntax\n\nThis is the standard way any Python app resolves inline components.",
+        "classes": [
+          {
+            "name": "InlineComponentConfig",
+            "docstring": "Parsed inline component configuration",
+            "module": "agentinterface.inline_resolver",
+            "methods": [],
+            "init_signature": "(self, type: str, slug: str, label: Optional[str] = None, mode: str = 'expand', params: Dict[str, str] = None, original: str = '') -> None"
+          },
+          {
+            "name": "InlineComponentResolver",
+            "docstring": "Resolves inline components using pluggable resolver functions",
+            "module": "agentinterface.inline_resolver",
+            "methods": [
+              {
+                "name": "find_inline_components",
+                "docstring": "Find all inline components in text",
+                "signature": "(self, text: str) -> List[agentinterface.inline_resolver.InlineComponentConfig]"
+              },
+              {
+                "name": "parse_inline_component",
+                "docstring": "Parse inline component syntax: {{type:slug|label=Custom|mode=expand}}",
+                "signature": "(self, syntax: str) -> Optional[agentinterface.inline_resolver.InlineComponentConfig]"
+              },
+              {
+                "name": "process_text",
+                "docstring": "Process text containing inline components",
+                "signature": "(self, text: str) -> Dict[str, Any]"
+              },
+              {
+                "name": "resolve_component",
+                "docstring": "Resolve a single inline component",
+                "signature": "(self, config: agentinterface.inline_resolver.InlineComponentConfig) -> agentinterface.inline_resolver.ResolvedComponent"
+              }
+            ],
+            "init_signature": "(self, resolver: Callable[[str, str], Awaitable[Optional[Dict[str, Any]]]])"
+          },
+          {
+            "name": "ResolvedComponent",
+            "docstring": "Resolved inline component with data or fallback",
+            "module": "agentinterface.inline_resolver",
+            "methods": [],
+            "init_signature": "(self, config: agentinterface.inline_resolver.InlineComponentConfig, data: Optional[Dict[str, Any]] = None, fallback: Optional[str] = None, error: Optional[str] = None) -> None"
+          }
+        ],
+        "functions": [
+          {
+            "name": "create_inline_resolver",
+            "docstring": "Convenience function to create resolver",
+            "module": "agentinterface.inline_resolver",
+            "signature": "(resolver_fn: Callable[[str, str], Awaitable[Optional[Dict[str, Any]]]]) -> agentinterface.inline_resolver.InlineComponentResolver"
+          }
+        ]
+      }
+    }
+  },
+  "javascript": {
+    "package": {
+      "name": "agentinterface",
+      "version": "0.1.0",
+      "docstring": "AgentInterface JavaScript implementation"
+    },
+    "modules": {
+      "core": {
+        "name": "core",
+        "docstring": "Core functionality for AgentInterface",
+        "classes": [
+          {
+            "name": "AgentInterface",
+            "docstring": "Main class for creating agent interfaces",
+            "module": "agentinterface.core",
+            "methods": [
+              {
+                "name": "createResponse",
+                "docstring": "Create a new response object",
+                "signature": "()"
+              }
+            ],
+            "init_signature": "(options?: AgentInterfaceOptions)"
+          }
+        ],
+        "functions": []
+      },
+      "components": {
+        "name": "components",
+        "docstring": "UI components for AgentInterface",
+        "classes": [
+          {
+            "name": "Text",
+            "docstring": "Simple text component",
+            "module": "agentinterface.components",
+            "methods": [],
+            "init_signature": "(text: string)"
+          },
+          {
+            "name": "Markdown",
+            "docstring": "Markdown component for formatted text",
+            "module": "agentinterface.components",
+            "methods": [],
+            "init_signature": "(markdown: string)"
+          },
+          {
+            "name": "Button",
+            "docstring": "Interactive button component",
+            "module": "agentinterface.components",
+            "methods": [],
+            "init_signature": "(options: { text: string, action: string })"
+          }
+        ],
+        "functions": []
+      }
+    }
+  }
+}

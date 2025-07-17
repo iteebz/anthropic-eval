@@ -1,0 +1,83 @@
+---
+import Layout from "./Layout.astro";
+import { docsNavigation } from "../data/navigation";
+
+export interface Props {
+	title: string;
+	description: string;
+	ogImage?: string;
+	canonicalUrl: string;
+	keywords?: string;
+}
+
+const {
+	title,
+	description,
+	ogImage,
+	canonicalUrl,
+	keywords
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+---
+
+<Layout
+	title={title}
+	description={description}
+	ogImage={ogImage}
+	canonicalUrl={canonicalUrl}
+	keywords={keywords}
+>
+	<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+		<div class="flex flex-col lg:flex-row">
+			<!-- Sidebar -->
+			<aside class="lg:w-64 flex-shrink-0 border-r border-gray-800 pr-8 py-6 hidden lg:block">
+				<nav class="space-y-8">
+					{docsNavigation.map((section) => (
+						<div>
+							<h3 class="text-sm font-medium text-gray-400 uppercase tracking-wider">
+								{section.title}
+							</h3>
+							<ul class="mt-3 space-y-2">
+								{section.children?.map((item) => (
+									<li>
+										<a 
+											href={item.href} 
+											class={`${currentPath === item.href ? 'text-blue-400' : 'text-gray-300 hover:text-white'}`}
+										>
+											{item.title}
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
+					))}
+				</nav>
+			</aside>
+			
+			<!-- Mobile navigation dropdown (shown on small screens) -->
+			<div class="mb-8 lg:hidden">
+				<label for="docs-nav" class="block text-sm font-medium text-gray-400 mb-2">Navigation</label>
+				<select 
+					id="docs-nav" 
+					class="bg-gray-800 border border-gray-700 text-white rounded-md w-full py-2 px-3"
+					onchange="window.location.href = this.value"
+				>
+					{docsNavigation.flatMap((section) => [
+						<option disabled>{section.title}</option>,
+						...(section.children?.map((item) => (
+							<option value={item.href} selected={currentPath === item.href}>
+								{item.title}
+							</option>
+						)) || [])
+					])}
+				</select>
+			</div>
+			
+			<!-- Main content -->
+			<main class="flex-1 py-6 lg:pl-8">
+				<slot />
+			</main>
+		</div>
+	</div>
+</Layout>

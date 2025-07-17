@@ -1,0 +1,28 @@
+---
+import Layout from "../components/Layout.astro";
+import Hero from "../components/Hero.astro";
+import QuickStart from "../components/QuickStart.astro";
+import Features from "../components/Features.astro";
+import ArchitectureOverview from "../components/ArchitectureOverview.astro";
+import CodeExamples from "../components/CodeExamples.astro";
+import CorePrimitives from "../components/CorePrimitives.astro";
+import CallToAction from "../components/CallToAction.astro";
+
+const title = "AgentInterface - Direct Agent-to-Component Communication";
+const description = "The first protocol for structured agent-to-UI communication. Agents reason about high-level UI components and output structured JSON that renders directly—no interpretation layer.";
+---
+
+<Layout 
+	title={title}
+	description={description}
+	canonicalUrl="https://agentinterface.dev/"
+	keywords="agent interface, UI components, AI agents, structured communication, agent protocol"
+>
+	<Hero />
+	<QuickStart />
+	<Features />
+	<ArchitectureOverview />
+	<CodeExamples />
+	<CorePrimitives />
+	<CallToAction />
+</Layout>
