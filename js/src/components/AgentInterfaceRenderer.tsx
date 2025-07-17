@@ -11,6 +11,7 @@ import {
   createComponentProps,
   type RendererComponentProps,
 } from "../utils/componentProps";
+import { RecursiveRenderer } from "./RecursiveRenderer";
 import type { Logger } from "../types";
 
 /**
@@ -65,6 +66,16 @@ export interface AgentInterfaceRendererProps {
    * Custom logger instance
    */
   logger?: Logger;
+
+  /**
+   * Enable recursive rendering for nested components
+   */
+  enableRecursiveRendering?: boolean;
+
+  /**
+   * Maximum depth for recursive rendering
+   */
+  maxRecursiveDepth?: number;
 }
 
 /**
@@ -82,6 +93,8 @@ export const AgentInterfaceRenderer = ({
   enablePerformanceMonitoring,
   onError,
   logger,
+  enableRecursiveRendering = false,
+  maxRecursiveDepth = 10,
 }: AgentInterfaceRendererProps) => {
   const { interfaceConfig, isLoading, error } = useInterfaceConfig(
     agentResponse,
@@ -148,6 +161,14 @@ export const AgentInterfaceRenderer = ({
     interfaceConfig.data as InterfaceData, // Cast here
     className,
     onSendMessage,
+    enableRecursiveRendering && (interfaceConfig.data as any)?.children ? (
+      <RecursiveRenderer
+        content={(interfaceConfig.data as any).children}
+        depth={1}
+        maxDepth={maxRecursiveDepth}
+        onSendMessage={onSendMessage}
+      />
+    ) : undefined,
   );
 
   return (

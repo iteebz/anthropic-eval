@@ -17,11 +17,16 @@ export type { InterfaceType, InterfaceData, ComponentConfig } from "./types";
 
 // React component exports
 export { AgentInterfaceRenderer } from "./components/AgentInterfaceRenderer";
+export { RecursiveRenderer } from "./components/RecursiveRenderer";
 export { InterfaceErrorBoundary } from "./components/common/InterfaceErrorBoundary";
 export type { InterfaceErrorBoundaryProps, InterfaceErrorContext } from "./components/common/InterfaceErrorBoundary";
+export { ThemeProvider, ThemeToggle, ThemeSelect, CustomPropertyEditor, useAIPTheme } from "./components/common/ThemeProvider";
+export { useTheme } from "./hooks/useTheme";
+export type { ThemeMode, ThemeConfig, UseThemeResult } from "./hooks/useTheme";
 
 // Component exports (auto-discovered, but available for tree-shaking)
 export * from "./components/interface";
+export * from "./components/compound/CompoundComponents";
 export { MarkdownRenderer } from "./components/render/MarkdownRenderer";
 export { InlineComponentFallback } from "./components/common/InlineComponentFallback";
 
