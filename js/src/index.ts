@@ -8,6 +8,7 @@
 // Core exports
 export * from "./core/validation";
 export * from "./core/inline-components";
+export * from "./core/component-resolver";
 export type { InterfaceType, InterfaceData, ComponentConfig } from "./types";
 
 // React component exports
