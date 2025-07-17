@@ -48,45 +48,87 @@ export class RecursiveComponentParser {
     }
 
     const components: ParsedComponent[] = [];
-    const tokenRegex = /\{\{([^}]+)\}\}/g;
-    let match;
-    let lastIndex = 0;
-
-    while ((match = tokenRegex.exec(input)) !== null) {
-      const [fullMatch, tokenContent] = match;
-      const startIndex = match.index;
-
-      // Add text before the token
-      if (startIndex > lastIndex) {
-        const textContent = input.slice(lastIndex, startIndex);
-        if (textContent.trim()) {
-          components.push(this.createTextComponent(textContent));
+    const tokens = this.tokenize(input);
+    
+    for (const token of tokens) {
+      if (token.type === 'text') {
+        if (token.content.trim()) {
+          components.push(this.createTextComponent(token.content));
         }
-      }
-
-      try {
-        const parsed = this.parseToken(tokenContent, depth);
-        components.push(parsed);
-      } catch (error) {
-        if (this.strictMode) {
-          throw error;
+      } else if (token.type === 'component') {
+        try {
+          const parsed = this.parseToken(token.content, depth);
+          components.push(parsed);
+        } catch (error) {
+          if (this.strictMode) {
+            throw error;
+          }
+          // In non-strict mode, treat as literal text
+          components.push(this.createTextComponent(`{{${token.content}}}`));
         }
-        // In non-strict mode, treat as literal text
-        components.push(this.createTextComponent(fullMatch));
-      }
-
-      lastIndex = tokenRegex.lastIndex;
-    }
-
-    // Add remaining text
-    if (lastIndex < input.length) {
-      const textContent = input.slice(lastIndex);
-      if (textContent.trim()) {
-        components.push(this.createTextComponent(textContent));
       }
     }
 
     return components;
+  }
+
+  /**
+   * Tokenize input handling nested braces properly
+   */
+  private tokenize(input: string): Array<{type: 'text' | 'component', content: string}> {
+    const tokens: Array<{type: 'text' | 'component', content: string}> = [];
+    let i = 0;
+    let currentText = '';
+
+    while (i < input.length) {
+      if (input[i] === '{' && input[i + 1] === '{') {
+        // Found start of component token
+        if (currentText) {
+          tokens.push({ type: 'text', content: currentText });
+          currentText = '';
+        }
+
+        // Find matching closing braces
+        let braceCount = 1;
+        let j = i + 2;
+        let tokenContent = '';
+
+        while (j < input.length && braceCount > 0) {
+          if (input[j] === '{' && input[j + 1] === '{') {
+            braceCount++;
+            tokenContent += input[j] + input[j + 1];
+            j += 2;
+          } else if (input[j] === '}' && input[j + 1] === '}') {
+            braceCount--;
+            if (braceCount > 0) {
+              tokenContent += input[j] + input[j + 1];
+            }
+            j += 2;
+          } else {
+            tokenContent += input[j];
+            j++;
+          }
+        }
+
+        if (braceCount === 0) {
+          tokens.push({ type: 'component', content: tokenContent });
+          i = j;
+        } else {
+          // Unmatched braces, treat as text
+          currentText += input[i];
+          i++;
+        }
+      } else {
+        currentText += input[i];
+        i++;
+      }
+    }
+
+    if (currentText) {
+      tokens.push({ type: 'text', content: currentText });
+    }
+
+    return tokens;
   }
 
   private parseToken(tokenContent: string, depth: number): ParsedComponent {
@@ -95,7 +137,18 @@ export class RecursiveComponentParser {
     const nestedContent = nestedParts.join('|');
 
     // Parse component definition: "component:data" or "component"
-    const [type, dataStr] = componentDef.split(':');
+    // Handle JSON properly by finding the first colon, not splitting on all colons
+    const colonIndex = componentDef.indexOf(':');
+    let type: string;
+    let dataStr: string | undefined;
+    
+    if (colonIndex === -1) {
+      type = componentDef;
+      dataStr = undefined;
+    } else {
+      type = componentDef.substring(0, colonIndex);
+      dataStr = componentDef.substring(colonIndex + 1);
+    }
     
     if (!type) {
       throw new Error('Component type is required');
