@@ -33,6 +33,10 @@ export { InlineComponentFallback } from "./components/common/InlineComponentFall
 // Utility exports
 export * from "./utils";
 
+// Parser exports - PRODUCTION-READY RECURSIVE SYNTAX
+export { RecursiveComponentParser, createParser, parseComponent, parseWithValidation } from "./parser/recursive";
+export type { ParsedComponent, ParserOptions } from "./parser/recursive";
+
 // Protocol exports
 export * from "./protocol";
 
@@ -45,6 +49,12 @@ export { INTERFACE_SCHEMAS } from "./core/schemas";
 
 // Development exports (only available in development)
 export * from "./dev";
+
+// Testing exports - THEME INTEGRATION TESTING
+export { createThemeIntegrationTester, testComponentThemes } from "./testing/theme-integration";
+export { ThemeTestingPanel } from "./testing/ThemeTestingPanel";
+export { runThemeTests, runComponentTest } from "./testing/run-theme-tests";
+export type { ThemeTestResult, ThemeTestConfig } from "./testing/theme-integration";
 
 // Playground exports
 export { AIPPlayground, PlaygroundApp } from "./playground";
