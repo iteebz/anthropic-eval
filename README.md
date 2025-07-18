@@ -8,55 +8,74 @@
 > **Let agents compose interfaces.**
 
 ```python
-# Agent specifies interface explicitly
+# Agent chooses UI based on context
 from agentinterface import aip_response
 
 response = aip_response("timeline", {"events": sales_data})
-# Returns: JSON spec for timeline component
+# Returns: {"type": "timeline", "data": {"events": [...]}}
 ```
 
 ```typescript
-// React renders the interface
+// React renders whatever agent chose
 import { AgentInterfaceRenderer } from "agentinterface";
 
-<AgentInterfaceRenderer agentResponse={response} components={registry} />;
+<AgentInterfaceRenderer agentResponse={response} />;
 ```
+
+## 💡 The Core Insight
+
+**Traditional**: Human codes "if sales_data then render_chart()"
+**AgentInterface**: Agent decides "this sales data should be a timeline because it's event-based"
+
+**Agents become the controller** - They choose the optimal UI based on:
+- Data characteristics (events → timeline, products → cards)
+- User context (technical vs casual audience)
+- Conversation flow (detailed vs summary view)
 
 ## 🚀 What It Solves
 
-- **🎯 Explicit protocol** - Agents specify components via AIP (Agent Interface Protocol)
-- **🔄 Auto-discovery** - Components register themselves, no manual wiring
+- **🎯 Agent-as-controller** - Agents decide presentation layer, not just data
+- **🔄 Auto-discovery** - Agents learn new components automatically
 - **🎨 Rich rendering** - Timeline, cards, code, forms, galleries out of the box
-- **🧩 Composable** - Slot-based architecture for complex layouts
+- **🧩 Contextual choice** - Same data, different UI based on context
 - **🛡️ Resilient** - Error boundaries and graceful fallbacks
 - **📱 Cross-platform** - Python responds, React renders
 - **🔥 Zero-ceremony extensibility** - Write component, register, done
 - **🚀 Infinite domain customization** - Portfolio, e-commerce, analytics, docs
-- **🧠 Agentic AI power** - Agents automatically use new components
 
 ## 📐 How It Works
 
-**Agent Side (Python)** - Explicit component specification
+**1. Agent gets component specs** - Knows what UI components are available
+
+```python
+# Agent receives format instructions like:
+# "Available components: timeline, card-grid, chart..."
+# "Use timeline for chronological data, cards for collections..."
+```
+
+**2. Agent chooses optimal UI** - Based on data + context
 
 ```python
 from agentinterface import aip_response
 
-# Agent specifies component and data
-response = aip_response("card-grid", {"cards": dashboard_data})
-# Returns: JSON spec for card-grid component
+# Same sales data, different contexts:
+# For analyst: "Show me Q4 performance"
+response = aip_response("chart", {"data": sales_data, "type": "bar"})
+
+# For manager: "What happened in Q4?"
+response = aip_response("timeline", {"events": sales_events})
+
+# Returns: {"type": "timeline", "data": {"events": [...]}}
 ```
 
-**Client Side (React)** - Component to rendered interface
+**3. React renders agent's choice** - No hardcoded UI logic
 
 ```typescript
 import { AgentInterfaceRenderer } from "agentinterface";
 
-// Render whatever the agent selected
-<AgentInterfaceRenderer
-  agentResponse={response}
-  components={registry}
-  onSendMessage={handleMessage}
-/>;
+// Agent chose timeline? Renders timeline.
+// Agent chose chart? Renders chart.
+<AgentInterfaceRenderer agentResponse={response} />;
 ```
 
 ## 📦 Installation
@@ -75,34 +94,34 @@ npm install agentinterface
 pnpm add agentinterface
 ```
 
-## ✨ Example Usage
+## ✨ Contextual Decision Making
 
-**Agent Response → Component Specification**
+**Same data, different UI based on context:**
 
 ```python
-from agentinterface import aip_response
+# User: "Show me the team"
+# Agent thinks: "Names + photos = card layout"
+response = aip_response("card-grid", {"cards": team_data})
 
-# Agent specifies timeline for engagement data
-response = aip_response("timeline", {"events": engagement_data})
+# User: "When did everyone join?"
+# Agent thinks: "Chronological data = timeline"
+response = aip_response("timeline", {"events": join_dates})
 
-# Agent specifies card-grid for products
-response = aip_response("card-grid", {"cards": product_data})
+# User: "Who's the most senior?"
+# Agent thinks: "Rankings = table with sorting"
+response = aip_response("table", {"data": seniority_data, "sortBy": "years"})
 ```
 
-**Component → Rendered Interface**
+**Auto-discovery in action:**
 
-```typescript
-import { AgentInterfaceRenderer } from "agentinterface";
+```python
+# Register new component
+register_component("org-chart", description="Hierarchical team structure")
 
-function ChatMessage({ response }) {
-  return (
-    <AgentInterfaceRenderer
-      agentResponse={response}
-      components={registry}
-      onSendMessage={sendMessage}
-    />
-  );
-}
+# Agent immediately starts using it:
+# User: "Show me the reporting structure"
+# Agent: "Hierarchy = org-chart component"
+response = aip_response("org-chart", {"nodes": hierarchy_data})
 ```
 
 ## 🧩 Available Interfaces
@@ -130,69 +149,101 @@ function ChatMessage({ response }) {
 - `progress-tracker` - Step-by-step progress indicators
 - `inline-reference` - Expandable reference links
 
-## 🔥 Why AIP is Revolutionary for Agentic AI
+## 🔥 Why Agent-as-Controller Changes Everything
 
-**Zero-Ceremony Extensibility** - The game-changer for AI agents
+**The Paradigm Shift** - From "display this data" to "choose how to display this data"
+
+```python
+# OLD WAY: Human hardcodes UI logic
+if data_type == "events":
+    return render_timeline(events)
+elif data_type == "products":
+    return render_cards(products)
+
+# NEW WAY: Agent chooses based on context
+# Agent automatically decides timeline vs cards vs table
+# based on data characteristics + user context
+response = agent.respond(user_query)  # Agent picks optimal UI
+```
+
+**Zero-Ceremony Extensibility** - Write component, agent uses it
 
 ```typescript
-// Step 1: Write a React component (5 minutes)
+// Step 1: Write a React component
 export function ProjectCard({ data }) {
   return <div className="project-card">{data.title}</div>
 }
 
-// Step 2: Register it (1 line)
-registerComponents({ 'project-card': ProjectCard })
+// Step 2: Register with semantic description
+register_component("project-card", {
+  description: "Showcase individual projects with tech stack",
+  triggers: ["projects", "portfolio", "work"]
+})
 
 // Step 3: Agent automatically uses it (0 code changes)
-// Agent: aip_response("project-card", {title: "My Project"})
+// User: "Show me your projects"
+// Agent: *sees "projects" trigger* → uses project-card
 ```
 
-**Infinite Domain Customization** - Build for any vertical
+**Contextual Intelligence** - Same data, optimal UI for each context
 
 ```python
-# Portfolio Domain
-aip_response("technical-competencies", {"skills": expert_skills})
-aip_response("project-card", {"title": "AI Platform", "tech": ["Python", "React"]})
+# Technical audience: "Show me the system architecture"
+# Agent chooses: detailed diagram with code snippets
+aip_response("architecture-diagram", {"components": system_data})
 
-# E-commerce Domain  
-aip_response("product-catalog", {"products": inventory})
-aip_response("shopping-cart", {"items": cart_items})
+# Business audience: "Show me the system overview"
+# Agent chooses: high-level flowchart with business value
+aip_response("process-flow", {"steps": business_flow})
 
-# Analytics Domain
-aip_response("dashboard-metrics", {"kpis": performance_data})
-aip_response("trend-analysis", {"timeseries": metrics})
+# Same underlying data, contextually optimal presentation
 ```
 
-**Scalable Complexity** - Same API, any complexity
-
-```typescript
-// Simple: 61-line BlogPost component
-<BlogPost data={{title: "Post", content: "Content"}} />
-
-// Complex: 260-line TechnicalCompetencies with matrix/timeline views
-<TechnicalCompetencies data={{displayFormat: "matrix", competencies: skills}} />
-
-// Agent doesn't care - identical API for both
-```
-
-**Agentic AI Superpowers** - Agents get smarter automatically
-
-- **Context-aware rendering** - Technical vs casual audience
-- **Multi-turn conversations** - Remember user preferences  
-- **Personalized experiences** - No hardcoded logic required
-- **Domain expertise** - Agents choose optimal interfaces
-
-## 🔧 Extensibility
-
-**The Power Pattern** - Write once, agents use forever
+**Infinite Domain Customization** - Any vertical, any complexity
 
 ```python
-# Register domain-specific components
+# Portfolio: Agent chooses project-card for showcasing work
+# E-commerce: Agent chooses product-catalog for browsing
+# Analytics: Agent chooses dashboard-metrics for KPIs
+# Medical: Agent chooses patient-timeline for history
+# Legal: Agent chooses case-summary for documents
+
+# Agent learns your domain and chooses appropriate UIs
+```
+
+## 🔧 Format Instructions - How Agents Learn Components
+
+**The Secret Sauce** - Agents get dynamic component specifications
+
+```python
+# When agent starts, it receives instructions like:
+"""
+Available components:
+- timeline: {"type": "timeline", "data": {"events": [...]}} 
+  Use for chronological data, history, progress
+- card-grid: {"type": "card-grid", "data": {"cards": [...]}}
+  Use for collections, galleries, team members
+- chart: {"type": "chart", "data": {"data": [...], "type": "bar"}}
+  Use for analytics, metrics, comparisons
+"""
+
+# Agent uses these specs to make optimal choices
+# No hardcoded logic - agent decides based on context
+```
+
+**Register Once, Agent Uses Forever**
+
+```python
+# Register domain-specific component
 register_component(ComponentConfig(
     name="financial-dashboard",
-    description="Real-time financial metrics",
-    triggers=["portfolio", "stocks", "trading"]
+    description="Real-time financial metrics with charts",
+    triggers=["portfolio", "stocks", "trading", "performance"]
 ))
+
+# Agent immediately starts using it:
+# User: "How's my portfolio performing?"
+# Agent: *sees "portfolio" trigger* → chooses financial-dashboard
 ```
 
 ## 📚 Documentation

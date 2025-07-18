@@ -28,6 +28,9 @@ from .inline_resolver import (
     ResolvedComponent
 )
 
+# 🎯 PROTOCOL INTERFACE - Format instructions for external systems
+from .protocol import get_format_instructions, register_format_extension
+
 __all__ = [
     # AIP Protocol
     "aip_response",
@@ -48,4 +51,8 @@ __all__ = [
     "InlineComponentResolver",
     "InlineComponentConfig", 
     "ResolvedComponent",
+    
+    # Protocol Interface
+    "get_format_instructions",
+    "register_format_extension",
 ]
