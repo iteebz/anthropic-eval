@@ -1,7 +1,7 @@
 {
   "name": "agentinterface",
   "version": "0.1.0",
-  "description": "Core AgentInterface protocol implementation",
+  "description": "AI agents choose UI components with zero ceremony.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -80,11 +80,16 @@
   "keywords": [
     "react",
     "ai",
-    "agent",
+    "agents",
+    "interface",
+    "ui",
+    "components",
+    "protocol",
+    "rendering",
     "agentinterface",
     "aip",
-    "components",
-    "ui"
+    "typescript",
+    "conversational"
   ],
   "repository": {
     "type": "git",

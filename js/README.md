@@ -1,26 +1,104 @@
-# AgentInterface
+# AgentInterface React
 
-AI agents choose UI components. Auto-registry. Zero ceremony.
+[![npm version](https://badge.fury.io/js/agentinterface.svg)](https://badge.fury.io/js/agentinterface)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
+> **Interface rendering for AI agents.**
 
 ```typescript
-import { createAgentInterface } from 'agentinterface';
+import { AgentInterfaceRenderer } from 'agentinterface';
 
-// Opt-in components
-const ai = createAgentInterface(['markdown', 'card-grid', 'timeline']);
-
-// Agent gets clean options string
-const options = ai.getOptions();
+<AgentInterfaceRenderer 
+  agentResponse={response} 
+  components={registry}
+/>
 ```
 
-## Components
+## 🎨 Rendering Interfaces
 
-Auto-discovered from filesystem. Add component = immediately available.
+AgentInterface renders rich UI components selected by AI agents:
 
-- `markdown` - Default text
-- `card-grid` - Visual cards  
-- `timeline` - Events
-- `expandable-sections` - Collapsible
-- `key-insights` - Categorized insights
-- `code-snippet` - Code with highlighting
-- `blog-post` - Article layout
-- `inline-reference` - Expandable refs
+- **Component renderer** - `AgentInterfaceRenderer` handles all interface types
+- **Auto registry** - Components register themselves automatically
+- **Error boundaries** - Graceful fallbacks when rendering fails
+- **Theme integration** - Built-in light/dark mode support
+
+## ✨ Example Usage
+
+**Basic Rendering**
+```typescript
+import { AgentInterfaceRenderer, registerComponents } from 'agentinterface';
+
+function ChatMessage({ response }) {
+  return (
+    <AgentInterfaceRenderer
+      agentResponse={response}
+      components={getComponentRegistry()}
+      onSendMessage={(msg) => sendMessage(msg)}
+    />
+  );
+}
+```
+
+**Custom Components**
+```typescript
+import { RendererComponentProps } from 'agentinterface';
+
+function MyComponent({ content, interfaceData }: RendererComponentProps) {
+  return <div>{content}</div>;
+}
+
+// Register custom component
+registerComponents({
+  'my-component': MyComponent
+});
+```
+
+**Error Boundaries**
+```typescript
+import { InterfaceErrorBoundary } from 'agentinterface';
+
+<InterfaceErrorBoundary fallbackContent="Error loading component">
+  <AgentInterfaceRenderer {...props} />
+</InterfaceErrorBoundary>
+```
+
+## 📦 Installation
+
+```bash
+npm install agentinterface
+```
+
+**Peer Dependencies**
+```bash
+npm install react react-dom
+```
+
+## 🧩 Supported Components
+
+**Core Components** - markdown, card-grid, timeline, key-insights, expandable-section  
+**Rich Components** - blog-post, code-snippet, contact-form, image-gallery, comparison-table  
+**Interactive Components** - conversation-thread, decision-tree, progress-tracker, inline-reference  
+
+## 🔧 Extensibility
+
+```typescript
+// Custom components auto-register
+registerComponents({
+  'custom-chart': ChartComponent,
+  'custom-table': TableComponent
+});
+
+// Check if component exists
+if (isValidInterfaceType('custom-chart')) {
+  // Component is registered
+}
+```
+
+## 📄 License
+
+MIT - Build whatever you want.
+
+---
+
+**AgentInterface React: Interface rendering for AI agents.**

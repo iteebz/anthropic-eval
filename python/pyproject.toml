@@ -5,13 +5,13 @@ build-backend = "poetry.core.masonry.api"
 [project]
 name = "agentinterface"
 version = "0.1.0"
-description = "Agent Interface Protocol (AIP) - Component selection and rendering for conversational AI"
+description = "AI agents choose UI components with zero ceremony."
 authors = [{ name = "Tyson Chan", email = "tyson.chan@proton.me" }]
 readme = "README.md"
 license = "MIT"
 homepage = "https://agentinterface.dev"
 repository = "https://github.com/iteebz/agentinterface"
-keywords = ["ai", "agent", "interface", "ui", "conversational", "protocol", "components"]
+keywords = ["ai", "agents", "interface", "ui", "components", "protocol", "selection", "rendering", "react", "conversational", "aip", "magic"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
