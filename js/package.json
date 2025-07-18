@@ -5,12 +5,11 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "agentinterface": "./dist/cli/index.js"
+  },
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    }
+    ".": "./dist/index.js"
   },
   "files": [
     "dist",
@@ -18,7 +17,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/build-registry.mjs && tsup",
     "prepublishOnly": "npm run build",
     "dev": "tsc --watch",
     "test": "vitest",
@@ -68,6 +67,7 @@
     "globals": "^16.2.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.35.0",
     "vitest": "^3.2.4"

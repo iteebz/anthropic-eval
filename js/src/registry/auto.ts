@@ -24,36 +24,72 @@ export interface ComponentMetadata {
   schema?: z.ZodSchema<any>;
 }
 
+import { PRIMITIVE_COMPONENTS } from './primitives';
+
 /**
  * Auto-discover components via filesystem reflection
  */
 function _discoverComponents(): Record<string, ComponentInfo> {
   const registry: Record<string, ComponentInfo> = {};
   
-  // Auto-magical discovery: scan filesystem and build registry
-  const componentModules = import.meta.glob('../components/interface/*.tsx', { eager: true });
+  for (const [name, component] of Object.entries(PRIMITIVE_COMPONENTS)) {
+    const metadata = _extractComponentMetadata(component, name);
+    registry[name] = {
+      name,
+      description: metadata.description || _inferDescription(name),
+      component,
+      type: name as InterfaceType,
+      metadata
+    };
+  }
   
-  for (const [path, module] of Object.entries(componentModules)) {
-    const filename = path.split('/').pop()?.replace('.tsx', '') || '';
-    const kebabName = filename.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return registry;
+}
+
+/**
+ * Manual registry fallback for build environments
+ */
+function _getManualRegistry(): Record<string, ComponentInfo> {
+  // Import all components manually
+  const registry: Record<string, ComponentInfo> = {};
+  
+  // This will be populated by the build process
+  try {
+    const components = {
+      'card-grid': require('../components/interface/card-grid.tsx'),
+      'code-snippet': require('../components/interface/code-snippet.tsx'),
+      'comparison-table': require('../components/interface/comparison-table.tsx'),
+      'contact-form': require('../components/interface/contact-form.tsx'),
+      'conversation-thread': require('../components/interface/conversation-thread.tsx'),
+      'decision-tree': require('../components/interface/decision-tree.tsx'),
+      'expandable-section': require('../components/interface/expandable-section.tsx'),
+      'image-gallery': require('../components/interface/image-gallery.tsx'),
+      'inline-reference': require('../components/interface/inline-reference.tsx'),
+      'key-insights': require('../components/interface/key-insights.tsx'),
+      'markdown': require('../components/interface/markdown.tsx'),
+      'progress-tracker': require('../components/interface/progress-tracker.tsx'),
+      'timeline': require('../components/interface/timeline.tsx')
+    };
     
-    const moduleExports = module as any;
-    const componentName = Object.keys(moduleExports).find(key => 
-      key !== 'default' && typeof moduleExports[key] === 'function'
-    );
-    
-    if (componentName && moduleExports[componentName]) {
-      const component = moduleExports[componentName];
-      const metadata = _extractComponentMetadata(component, filename);
-      
-      registry[kebabName] = {
-        name: kebabName,
-        description: metadata.description || _inferDescription(kebabName),
-        component,
-        type: kebabName as InterfaceType,
-        metadata
-      };
+    for (const [name, module] of Object.entries(components)) {
+      const componentName = Object.keys(module).find(key => 
+        key !== 'default' && typeof module[key] === 'function'
+      );
+      if (componentName && module[componentName]) {
+        const component = module[componentName];
+        const metadata = _extractComponentMetadata(component, name);
+        
+        registry[name] = {
+          name,
+          description: metadata.description || _inferDescription(name),
+          component,
+          type: name as InterfaceType,
+          metadata
+        };
+      }
     }
+  } catch (error) {
+    console.warn('Manual registry failed:', error);
   }
   
   return registry;

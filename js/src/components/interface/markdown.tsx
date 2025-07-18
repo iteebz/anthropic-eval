@@ -1,4 +1,12 @@
+import { z } from 'zod';
+import { registerComponent } from '../../registry/unified';
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
+
+const MarkdownSchema = z.object({
+  content: z.string(),
+  className: z.string().optional(),
+  onSendMessage: z.function().optional()
+});
 
 export interface InterfaceProps {
   content: string;
@@ -19,3 +27,10 @@ export function Markdown({
     />
   );
 }
+
+// Register with unified registry
+registerComponent({
+  type: 'markdown',
+  schema: MarkdownSchema,
+  render: Markdown
+});

@@ -4,7 +4,7 @@ import {
   isValidInterfaceType,
 } from "../core/validation";
 import { type InterfaceType, type InterfaceData } from "../types";
-import { parseAgentResponse } from "@/utils/parsing";
+import { parseAgentResponse } from "../utils/parsing";
 import type { Logger } from "../types";
 
 export interface InterfaceConfig {

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { z } from 'zod'
+import React, { useState } from 'react';
+import { z } from 'zod';
+import { registerComponent } from '../../registry/unified';
 
 const ContactFormSchema = z.object({
   fields: z.array(z.object({
@@ -12,15 +13,12 @@ const ContactFormSchema = z.object({
   action: z.string().optional(),
   submitText: z.string().optional(),
   className: z.string().optional()
-})
+});
 
-type ContactFormData = z.infer<typeof ContactFormSchema>
+type ContactFormData = z.infer<typeof ContactFormSchema>;
 
-interface ContactFormProps {
-  data: ContactFormData
-}
-
-export function ContactForm({ data }: ContactFormProps) {
+export function ContactForm(props: ContactFormData) {
+  const data = props;
   const [formData, setFormData] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -128,68 +126,49 @@ export function ContactForm({ data }: ContactFormProps) {
     <div className={`max-w-2xl mx-auto ${data.className || ''}`}>
       <form onSubmit={handleSubmit} className="space-y-6">
         {data.fields.map((field) => {
-          const isRequired = field.required ?? false
-          const hasError = isRequired && !formData[field.name] && submitStatus === 'error'
+          const isRequired = field.required ?? false;
+          const hasError = isRequired && !formData[field.name] && submitStatus === 'error';
           
           return (
             <div key={field.name} className="space-y-2">
-              <label 
-                htmlFor={field.name}
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                {field.label}
-                {isRequired && <span className="text-red-500 ml-1">*</span>}
+              <label htmlFor={field.name} className="block text-sm font-medium">
+                {field.label}{isRequired && <span className="text-red-500 ml-1">*</span>}
               </label>
               {renderField(field)}
               {hasError && (
-                <p 
-                  id={`${field.name}-error`}
-                  className="text-sm text-red-600 dark:text-red-400"
-                  role="alert"
-                >
-                  {field.label} is required
-                </p>
+                <p className="text-sm text-red-600">{field.label} is required</p>
               )}
             </div>
-          )
+          );
         })}
 
         {submitStatus === 'success' && (
-          <div 
-            className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-4"
-            role="alert"
-          >
-            <div className="flex items-center">
-              <div className="text-green-400 mr-2">✓</div>
-              <p className="text-sm text-green-800 dark:text-green-200">
-                Message sent successfully! I'll get back to you soon.
-              </p>
-            </div>
+          <div className="bg-green-50 border border-green-200 rounded p-4">
+            <span className="text-green-600">✓ Message sent successfully!</span>
           </div>
         )}
 
         {submitStatus === 'error' && (
-          <div 
-            className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4"
-            role="alert"
-          >
-            <div className="flex items-center">
-              <div className="text-red-400 mr-2">✗</div>
-              <p className="text-sm text-red-800 dark:text-red-200">
-                There was an error sending your message. Please try again.
-              </p>
-            </div>
+          <div className="bg-red-50 border border-red-200 rounded p-4">
+            <span className="text-red-600">✗ Error sending message. Please try again.</span>
           </div>
         )}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-4 rounded"
         >
           {isSubmitting ? 'Sending...' : (data.submitText || 'Send Message')}
         </button>
       </form>
     </div>
-  )
+  );
 }
+
+// Register with unified registry
+registerComponent({
+  type: 'contact-form',
+  schema: ContactFormSchema,
+  render: ContactForm
+});

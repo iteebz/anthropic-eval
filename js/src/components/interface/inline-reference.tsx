@@ -1,20 +1,25 @@
-import { useState } from "react";
-import { type InlineReferencesData } from "../../types";
+import React, { useState } from "react";
+import { z } from 'zod';
+import { registerComponent } from '../../registry/unified';
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
-export interface InterfaceProps {
-  content: string;
-  interfaceData?: InlineReferencesData;
-  className?: string;
-}
+const InlineReferenceSchema = z.object({
+  references: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    type: z.string(),
+    excerpt: z.string(),
+    content: z.string(),
+    url: z.string().optional()
+  })),
+  content: z.string().optional(),
+  className: z.string().optional()
+});
 
-export function InlineReference({
-  content,
-  interfaceData,
-  className,
-}: InterfaceProps) {
-  const data = interfaceData as InlineReferencesData;
-  const references = data?.references || [];
+type InlineReferenceData = z.infer<typeof InlineReferenceSchema>;
+
+export function InlineReference(props: InlineReferenceData) {
+  const { references = [], content, className } = props;
   const [expandedRefs, setExpandedRefs] = useState<Set<string>>(new Set());
 
   const toggleExpanded = (refId: string) => {
@@ -31,10 +36,8 @@ export function InlineReference({
 
   return (
     <div className={className}>
-      <div className="mb-4">
-        <MarkdownRenderer content={content} />
-      </div>
-
+      {content && <MarkdownRenderer content={content} className="mb-4" />}
+      
       {references.length > 0 && (
         <div className="space-y-2">
           <div className="text-sm font-medium text-gray-700">References:</div>
@@ -53,16 +56,14 @@ export function InlineReference({
                   <div className="text-sm text-gray-600 mb-2">{reference.excerpt}</div>
                   <MarkdownRenderer content={reference.content} />
                   {reference.url && (
-                    <div className="mt-2">
-                      <a
-                        href={reference.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline text-xs"
-                      >
-                        View source →
-                      </a>
-                    </div>
+                    <a
+                      href={reference.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline text-xs block mt-2"
+                    >
+                      View source →
+                    </a>
                   )}
                 </div>
               )}
@@ -73,3 +74,10 @@ export function InlineReference({
     </div>
   );
 }
+
+// Register with unified registry
+registerComponent({
+  type: 'inline-reference',
+  schema: InlineReferenceSchema,
+  render: InlineReference
+});

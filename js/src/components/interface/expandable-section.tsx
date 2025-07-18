@@ -1,3 +1,5 @@
+import { z } from 'zod';
+import { registerComponent } from '../../registry/unified';
 import { type ExpandableSectionData, type InterfaceProps } from "../../types";
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
 import {
@@ -5,6 +7,16 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+
+const ExpandableSectionSchema = z.object({
+  sections: z.array(z.object({
+    title: z.string(),
+    content: z.string(),
+    defaultExpanded: z.boolean().optional()
+  })),
+  content: z.string().optional(),
+  className: z.string().optional()
+});
 
 export function ExpandableSection({
   content,
@@ -43,3 +55,10 @@ export function ExpandableSection({
     </div>
   );
 }
+
+// Register with unified registry
+registerComponent({
+  type: 'expandable-sections',
+  schema: ExpandableSectionSchema,
+  render: (props) => <ExpandableSection sections={props.sections} content={props.content} className={props.className} />
+});

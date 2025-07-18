@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   useAgentResponseParser,
   type InterfaceConfig,
@@ -21,17 +21,24 @@ export const useInterfaceConfig = (
 
   const { parseResponse } = useAgentResponseParser({
     ...options,
-    onError: setError,
+    onError: useCallback((err: Error | undefined) => setError(err), []),
   });
 
   useEffect(() => {
+    // DEBUG LOGGING START
+    // eslint-disable-next-line no-console
+    console.log('[useInterfaceConfig] effect triggered', { agentResponse });
     setIsLoading(true);
     setError(undefined);
 
     try {
       const config = parseResponse(agentResponse);
+      // eslint-disable-next-line no-console
+      console.log('[useInterfaceConfig] parseResponse result', { config });
       setInterfaceConfig(config);
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[useInterfaceConfig] parseResponse error', err);
       setError(err instanceof Error ? err : new Error(String(err)));
       options.logger?.error("Failed to process agent response", {
         error: {
@@ -44,6 +51,8 @@ export const useInterfaceConfig = (
       });
     } finally {
       setIsLoading(false);
+      // eslint-disable-next-line no-console
+      console.log('[useInterfaceConfig] effect finished, isLoading set to false');
     }
   }, [agentResponse, parseResponse, options.logger]);
 

@@ -1,5 +1,18 @@
+import { z } from 'zod';
+import { registerComponent } from '../../registry/unified';
 import { type TimelineData, type TimelineEvent, type InterfaceProps } from "../../types";
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
+
+const TimelineSchema = z.object({
+  events: z.array(z.object({
+    date: z.string(),
+    title: z.string(),
+    description: z.string(),
+    type: z.string().optional()
+  })),
+  content: z.string().optional(),
+  className: z.string().optional()
+});
 
 export function Timeline({
   content,
@@ -33,3 +46,10 @@ export function Timeline({
     </div>
   );
 }
+
+// Register with unified registry
+registerComponent({
+  type: 'timeline',
+  schema: TimelineSchema,
+  render: (props) => <Timeline events={props.events} content={props.content} className={props.className} />
+});

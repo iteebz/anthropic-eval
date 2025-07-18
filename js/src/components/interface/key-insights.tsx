@@ -1,5 +1,18 @@
+import { z } from 'zod';
+import { registerComponent } from '../../registry/unified';
+import { KeyInsightsDataSchema } from '../../core/schemas';
 import { type KeyInsightsData } from "../../types";
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
+
+const KeyInsightsSchema = z.object({
+  insights: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.string().optional()
+  })),
+  content: z.string().optional(),
+  className: z.string().optional()
+});
 
 export interface InterfaceProps {
   content: string;
@@ -39,3 +52,10 @@ export function KeyInsights({
     </div>
   );
 }
+
+// Register with unified registry
+registerComponent({
+  type: 'key-insights',
+  schema: KeyInsightsSchema,
+  render: (props) => <KeyInsights insights={props.insights} content={props.content} className={props.className} />
+});
