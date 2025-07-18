@@ -269,7 +269,7 @@ export class RecursiveComponentParser {
       try {
         InterfaceComponentSchema.parse(component);
       } catch (error) {
-        errors.push(`Invalid component at ${path}: ${error.message}`);
+        errors.push(`Invalid component at ${path}: ${(error as Error).message}`);
         return;
       }
 

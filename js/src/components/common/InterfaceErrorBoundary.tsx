@@ -5,7 +5,7 @@
  * and detailed error reporting. Designed to be shadcn-quality and work out of the box.
  */
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+// import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
 export interface InterfaceErrorBoundaryProps {
   children: ReactNode;
@@ -116,7 +116,7 @@ export class InterfaceErrorBoundary extends Component<InterfaceErrorBoundaryProp
               
               {fallbackContent && (
                 <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded border border-red-200 dark:border-red-700">
-                  <MarkdownRenderer content={fallbackContent} />
+                  <pre className="whitespace-pre-wrap text-sm">{fallbackContent}</pre>
                 </div>
               )}
 

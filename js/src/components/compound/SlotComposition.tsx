@@ -478,15 +478,20 @@ export function validateSlotUsage(
   const extractFills = (children: ReactNode) => {
     Children.forEach(children, (child) => {
       if (isValidElement(child) && child.type === Fill) {
-        fills.add(child.props.slot);
+        const props = child.props as any;
+        fills.add(props.slot);
       }
-      if (isValidElement(child) && child.props.children) {
-        extractFills(child.props.children);
+      if (isValidElement(child)) {
+        const props = child.props as any;
+        if (props.children) {
+          extractFills(props.children);
+        }
       }
     });
   };
   
-  extractFills(component.props.children);
+  const componentProps = component.props as any;
+  extractFills(componentProps.children);
   
   // Check required slots
   requiredSlots.forEach(slot => {
@@ -506,4 +511,3 @@ export function validateSlotUsage(
 }
 
 // Export all slot components
-export { SlotContext, SlotProvider, Slot, Fill, withSlots };

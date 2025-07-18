@@ -1,57 +1,67 @@
-/**
- * Compound Components - Shadcn-based Compositions
- * 
- * Simple re-exports of shadcn components with composition patterns.
- * Replaces 420 lines of reinvented wheels with proper shadcn usage.
- */
+import React from 'react';
 
-// Re-export shadcn components with compound naming for backward compatibility
-export { 
-  Card as CompoundCard,
-  CardHeader as CompoundCardHeader, 
-  CardContent as CompoundCardContent,
-  CardFooter as CompoundCardFooter,
-  CardTitle as CompoundCardTitle,
-  CardDescription as CompoundCardDescription 
-} from '../ui/card';
-
-export { 
-  Collapsible as CompoundCollapsible,
-  CollapsibleTrigger as CompoundCollapsibleTrigger,
-  CollapsibleContent as CompoundCollapsibleContent 
-} from '../ui/collapsible';
-
-export { Badge as CompoundBadge } from '../ui/badge';
-
-// Keep the compound component props interface for backward compatibility
 export interface CompoundComponentProps {
   children: React.ReactNode;
   className?: string;
 }
 
-// Simple compound patterns using shadcn primitives
-export interface CompoundLayoutProps extends CompoundComponentProps {
-  orientation?: 'horizontal' | 'vertical';
+// Compound Card Pattern
+export interface CompoundCardProps extends CompoundComponentProps {
+  variant?: 'default' | 'outlined' | 'elevated';
 }
 
-export function CompoundLayout({ 
+export function CompoundCard({ 
   children, 
   className = '',
-  orientation = 'vertical' 
-}: CompoundLayoutProps) {
-  const orientationClasses = {
-    horizontal: 'flex flex-row gap-4',
-    vertical: 'flex flex-col gap-4'
+  variant = 'default'
+}: CompoundCardProps) {
+  const variantClasses = {
+    default: 'aip-card',
+    outlined: 'aip-card aip-border',
+    elevated: 'aip-card aip-shadow-lg'
   };
 
   return (
-    <div className={`${orientationClasses[orientation]} ${className}`}>
+    <div className={`${variantClasses[variant]} ${className}`}>
       {children}
     </div>
   );
 }
 
-// Simple compound list using proper semantic markup
+CompoundCard.Header = function CardHeader({ 
+  children, 
+  className = '' 
+}: CompoundComponentProps) {
+  return (
+    <div className={`aip-card-header border-b aip-border-primary aip-p-md ${className}`}>
+      {children}
+    </div>
+  );
+};
+
+CompoundCard.Body = function CardBody({ 
+  children, 
+  className = '' 
+}: CompoundComponentProps) {
+  return (
+    <div className={`aip-card-body aip-p-md ${className}`}>
+      {children}
+    </div>
+  );
+};
+
+CompoundCard.Footer = function CardFooter({ 
+  children, 
+  className = '' 
+}: CompoundComponentProps) {
+  return (
+    <div className={`aip-card-footer border-t aip-border-primary aip-p-md ${className}`}>
+      {children}
+    </div>
+  );
+};
+
+// Compound List Pattern
 export interface CompoundListProps extends CompoundComponentProps {
   ordered?: boolean;
   spacing?: 'tight' | 'normal' | 'loose';
@@ -64,45 +74,129 @@ export function CompoundList({
   spacing = 'normal'
 }: CompoundListProps) {
   const spacingClasses = {
-    tight: 'space-y-1',
-    normal: 'space-y-2', 
-    loose: 'space-y-4'
+    tight: 'aip-gap-xs',
+    normal: 'aip-gap-sm',
+    loose: 'aip-gap-md'
   };
 
   const Tag = ordered ? 'ol' : 'ul';
   
   return (
-    <Tag className={`${spacingClasses[spacing]} ${className}`}>
+    <Tag className={`aip-list flex flex-col ${spacingClasses[spacing]} ${className}`}>
       {children}
     </Tag>
   );
 }
 
-export interface CompoundListItemProps extends CompoundComponentProps {
-  active?: boolean;
-  disabled?: boolean;
-}
-
-export function CompoundListItem({ 
+CompoundList.Item = function ListItem({ 
   children, 
   className = '',
   active = false,
   disabled = false 
-}: CompoundListItemProps) {
-  const stateClasses = active ? 'bg-accent text-accent-foreground' : '';
+}: CompoundComponentProps & { active?: boolean; disabled?: boolean }) {
+  const stateClasses = active ? 'aip-bg-primary aip-text-inverse' : 'aip-text-primary';
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
   
   return (
-    <li className={`p-2 rounded-md transition-colors ${stateClasses} ${disabledClasses} ${className}`}>
+    <li className={`aip-list-item aip-p-sm aip-rounded ${stateClasses} ${disabledClasses} ${className}`}>
       {children}
     </li>
   );
+};
+
+// Simple Form Components (no complex context)
+export interface FormProps extends CompoundComponentProps {
+  onSubmit?: (e: React.FormEvent) => void;
 }
 
-// Assign sub-components for compound pattern
-CompoundList.Item = CompoundListItem;
-CompoundCard.Header = CompoundCardHeader;
-CompoundCard.Content = CompoundCardContent;
-CompoundCard.Footer = CompoundCardFooter;
-CompoundCard.Title = CompoundCardTitle;
-CompoundCard.Description = CompoundCardDescription;
+export function CompoundForm({ 
+  children, 
+  className = '',
+  onSubmit 
+}: FormProps) {
+  return (
+    <form className={`aip-form space-y-4 ${className}`} onSubmit={onSubmit}>
+      {children}
+    </form>
+  );
+}
+
+CompoundForm.Field = function FormField({ 
+  children, 
+  className = '',
+  label,
+  error,
+  required = false
+}: CompoundComponentProps & { 
+  label?: string; 
+  error?: string; 
+  required?: boolean; 
+}) {
+  return (
+    <div className={`aip-form-field ${className}`}>
+      {label && (
+        <label className="aip-form-label aip-text-sm aip-font-medium aip-text-secondary block mb-1">
+          {label}
+          {required && <span className="aip-text-error ml-1">*</span>}
+        </label>
+      )}
+      {children}
+      {error && (
+        <div className="aip-form-error aip-text-xs aip-text-error mt-1">
+          {error}
+        </div>
+      )}
+    </div>
+  );
+};
+
+CompoundForm.Input = function FormInput({ 
+  className = '',
+  name,
+  type = 'text',
+  placeholder,
+  required = false,
+  onChange
+}: { 
+  className?: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <input
+      className={`aip-input ${className}`}
+      name={name}
+      type={type}
+      placeholder={placeholder}
+      required={required}
+      onChange={onChange}
+    />
+  );
+};
+
+CompoundForm.Button = function FormButton({ 
+  children, 
+  className = '',
+  type = 'submit',
+  variant = 'primary'
+}: CompoundComponentProps & { 
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary';
+}) {
+  const variantClasses = {
+    primary: 'aip-button-primary',
+    secondary: 'aip-button-secondary'
+  };
+
+  return (
+    <button 
+      type={type}
+      className={`aip-button ${variantClasses[variant]} ${className}`}
+    >
+      {children}
+    </button>
+  );
+};

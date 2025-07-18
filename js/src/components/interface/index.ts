@@ -12,5 +12,5 @@ export { ExpandableSection } from "./expandable-section";
 export { ImageGallery } from "./image-gallery";
 export { InlineReference } from "./inline-reference";
 export { KeyInsights } from "./key-insights";
-export { MarkdownRenderer } from "../render/MarkdownRenderer";
+// export { MarkdownRenderer } from "../render/MarkdownRenderer";
 export { Timeline } from "./timeline";
