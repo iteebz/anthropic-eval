@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Playground Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .playground {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .header h1 {
+            color: #1f2937;
+            margin: 0 0 8px 0;
+        }
+        
+        .header p {
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .panel {
+            background: #f9fafb;
+            border-radius: 6px;
+            padding: 16px;
+        }
+        
+        .panel h3 {
+            margin: 0 0 12px 0;
+            color: #374151;
+        }
+        
+        .theme-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .theme-btn {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .theme-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .theme-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        .theme-btn.active:hover {
+            background: #2563eb;
+        }
+        
+        .input-area {
+            width: 100%;
+            height: 120px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .render-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 6px;
+            padding: 20px;
+            min-height: 120px;
+            background: #fafafa;
+        }
+        
+        .component {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 8px 0;
+        }
+        
+        .component.card {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .component.button {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .component.button:hover {
+            background: #2563eb;
+        }
+        
+        .component.modal {
+            border: 2px solid #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+        
+        .dark {
+            background: #1f2937;
+            color: #f9fafb;
+        }
+        
+        .dark .playground {
+            background: #374151;
+            color: #f9fafb;
+        }
+        
+        .dark .panel {
+            background: #4b5563;
+        }
+        
+        .dark .theme-btn {
+            background: #6b7280;
+            color: #f9fafb;
+            border-color: #6b7280;
+        }
+        
+        .dark .render-area {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+        
+        .dark .component {
+            background: #6b7280;
+            border-color: #9ca3af;
+        }
+        
+        .status {
+            margin-top: 16px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .status.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .status.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="playground">
+        <div class="header">
+            <h1>🎮 Component Playground</h1>
+            <p>Interactive showcase for recursive parsing and component rendering</p>
+        </div>
+        
+        <div class="controls">
+            <div class="panel">
+                <h3>Theme Controls</h3>
+                <div class="theme-buttons">
+                    <button class="theme-btn active" data-theme="light">Light</button>
+                    <button class="theme-btn" data-theme="dark">Dark</button>
+                    <button class="theme-btn" data-theme="auto">Auto</button>
+                </div>
+                
+                <h3 style="margin-top: 16px;">Examples</h3>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <button class="theme-btn" data-example="basic-card">Basic Card</button>
+                    <button class="theme-btn" data-example="nested-buttons">Nested Buttons</button>
+                    <button class="theme-btn" data-example="complex-layout">Complex Layout</button>
+                    <button class="theme-btn" data-example="modal-example">Modal Example</button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Component Input</h3>
+                <textarea 
+                    class="input-area" 
+                    placeholder="Enter component syntax here..."
+                    id="componentInput"
+                >{{card:{"title":"Hello World","variant":"default"}|content=Welcome to the playground!}}</textarea>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h3>Rendered Output</h3>
+            <div class="render-area" id="renderArea">
+                <div class="component card">
+                    <h4>Hello World</h4>
+                    <p>Welcome to the playground!</p>
+                </div>
+            </div>
+            <div class="status success" id="status">✅ Component rendered successfully</div>
+        </div>
+    </div>
+
+    <script>
+        // Simple component parser and renderer
+        class ComponentParser {
+            parse(input) {
+                // Simple regex-based parsing for demo
+                const componentRegex = /\{\{([^:]+):([^}]+)\|?([^}]*)\}\}/g;
+                const components = [];
+                let match;
+                
+                while ((match = componentRegex.exec(input)) !== null) {
+                    const type = match[1];
+                    const dataStr = match[2];
+                    const content = match[3] || '';
+                    
+                    let data = {};
+                    try {
+                        data = JSON.parse(dataStr);
+                    } catch (e) {
+                        data = { value: dataStr };
+                    }
+                    
+                    components.push({ type, data, content });
+                }
+                
+                return components;
+            }
+        }
+        
+        class ComponentRenderer {
+            render(components) {
+                return components.map(comp => {
+                    switch (comp.type) {
+                        case 'card':
+                            return `
+                                <div class="component card">
+                                    <h4>${comp.data.title || 'Card'}</h4>
+                                    <p>${comp.content || 'Card content'}</p>
+                                </div>
+                            `;
+                        case 'button':
+                            return `
+                                <div class="component button">
+                                    ${comp.data.text || 'Button'}
+                                </div>
+                            `;
+                        case 'modal':
+                            return `
+                                <div class="component modal">
+                                    <h4>${comp.data.title || 'Modal'}</h4>
+                                    <p>${comp.content || 'Modal content'}</p>
+                                </div>
+                            `;
+                        default:
+                            return `
+                                <div class="component">
+                                    <strong>${comp.type}</strong>: ${JSON.stringify(comp.data)}
+                                </div>
+                            `;
+                    }
+                }).join('');
+            }
+        }
+        
+        // Initialize playground
+        const parser = new ComponentParser();
+        const renderer = new ComponentRenderer();
+        const input = document.getElementById('componentInput');
+        const renderArea = document.getElementById('renderArea');
+        const status = document.getElementById('status');
+        
+        const examples = {
+            'basic-card': '{{card:{"title":"Hello World","variant":"default"}|content=Welcome to the playground!}}',
+            'nested-buttons': '{{card:{"title":"Actions"}|content=Click here}} {{button:{"text":"Primary"}} {{button:{"text":"Secondary"}}}',
+            'complex-layout': '{{card:{"title":"Dashboard"}|content=Status: Active}} {{card:{"title":"Stats"}|content=All systems operational}}',
+            'modal-example': '{{modal:{"title":"Confirm Action","size":"md"}|content=Are you sure you want to continue?}} {{button:{"text":"Yes"}} {{button:{"text":"No"}}'
+        };
+        
+        function updateRender() {
+            try {
+                const components = parser.parse(input.value);
+                if (components.length === 0) {
+                    renderArea.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 40px;">No components to render</div>';
+                    updateStatus('No components found', 'error');
+                } else {
+                    renderArea.innerHTML = renderer.render(components);
+                    updateStatus(`✅ ${components.length} component(s) rendered successfully`, 'success');
+                }
+            } catch (error) {
+                renderArea.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                updateStatus(`❌ Render error: ${error.message}`, 'error');
+            }
+        }
+        
+        function updateStatus(message, type) {
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+        
+        function setTheme(theme) {
+            document.body.className = theme === 'dark' ? 'dark' : '';
+            document.querySelectorAll('[data-theme]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+        
+        // Event listeners
+        input.addEventListener('input', updateRender);
+        
+        document.querySelectorAll('[data-theme]').forEach(btn => {
+            btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+        });
+        
+        document.querySelectorAll('[data-example]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                input.value = examples[btn.dataset.example];
+                updateRender();
+            });
+        });
+        
+        // Initial render
+        updateRender();
+        
+        // Add test hooks for automation
+        window.playgroundAPI = {
+            setInput: (value) => {
+                input.value = value;
+                updateRender();
+            },
+            getStatus: () => status.textContent,
+            getRenderedCount: () => renderArea.children.length,
+            setTheme: setTheme,
+            getTheme: () => document.body.className === 'dark' ? 'dark' : 'light'
+        };
+    </script>
+</body>
+</html>

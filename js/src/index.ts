@@ -35,7 +35,7 @@ export * from "./utils";
 
 // Parser exports - PRODUCTION-READY RECURSIVE SYNTAX
 export { RecursiveComponentParser, createParser, parseComponent, parseWithValidation } from "./parser/recursive";
-export type { ParsedComponent, ParserOptions } from "./parser/recursive";
+export type { InterfaceComponent, ParserOptions } from "./parser/recursive";
 
 // Protocol exports
 export * from "./protocol";
@@ -50,14 +50,18 @@ export { INTERFACE_SCHEMAS } from "./core/schemas";
 // Development exports (only available in development)
 export * from "./dev";
 
-// Testing exports - THEME INTEGRATION TESTING
+// Testing exports - COMPREHENSIVE TESTING SUITE
 export { createThemeIntegrationTester, testComponentThemes } from "./testing/theme-integration";
 export { ThemeTestingPanel } from "./testing/ThemeTestingPanel";
 export { runThemeTests, runComponentTest } from "./testing/run-theme-tests";
-export type { ThemeTestResult, ThemeTestConfig } from "./testing/theme-integration";
+export { createDarkModeValidator, validateDarkMode } from "./testing/dark-mode-validator";
+export { runDarkModeValidation } from "./testing/run-dark-mode-tests";
+export { ErrorHandler, globalErrorHandler, withErrorHandling, withAsyncErrorHandling, logError, logWarning, logInfo, logDebug } from "./testing/error-handler";
+export { TestCoverageAnalyzer, createTestCoverageAnalyzer, analyzeTestCoverage } from "./testing/test-coverage";
+export type { ThemeTestResult, ThemeTestConfig, DarkModeValidation, ErrorLog, ErrorContext, TestCoverage, TestResult } from "./testing/theme-integration";
 
 // Playground exports
-export { AIPPlayground, PlaygroundApp } from "./playground";
+export { ComponentPlayground } from "./playground";
 
 // Error handling exports
 export * from "./core/error-handling";

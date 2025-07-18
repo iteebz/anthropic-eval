@@ -2,7 +2,7 @@ import React from 'react';
 import { useAIP } from '../registry/magic';
 import { type InterfaceType } from '../types';
 import { createRecursiveProps } from '../utils/componentProps';
-import { RecursiveComponentParser, ParsedComponent, ParserOptions } from '../parser/recursive';
+import { RecursiveComponentParser, InterfaceComponent, ParserOptions } from '../parser/recursive';
 
 export interface RecursiveRendererProps {
   content: any;
