@@ -1,7 +1,6 @@
-"""Registry - Auto-magical component discovery and selection"""
+"""Registry - Auto-magical component discovery (no AI magic)"""
 
-# 🎯 MAGICAL SINGLE IMPORT - Everything you need
-from .magic import select_component, get_component_options, MagicSelector
+# 🎯 AUTO-REGISTRY - Zero ceremony component discovery
 from .auto import (
     get_interface_options,
     make_component_config,
@@ -9,21 +8,18 @@ from .auto import (
     get_available_components,
     ComponentConfig,
     ComponentMetadata,
-    ComponentCategory
+    ComponentCategory,
+    AutoRegistry
 )
 
 __all__ = [
-    # Magic interface
-    "select_component",
-    "get_component_options", 
-    "MagicSelector",
-    
-    # Auto registry
+    # Auto registry (keep the good stuff)
     "get_interface_options",
     "make_component_config",
     "register_component",
     "get_available_components",
     "ComponentConfig",
     "ComponentMetadata",
-    "ComponentCategory"
+    "ComponentCategory",
+    "AutoRegistry"
 ]

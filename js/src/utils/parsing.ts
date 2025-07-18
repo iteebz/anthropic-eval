@@ -1,29 +1,22 @@
 /**
- * Minimal agent response parsing
+ * Explicit AIP response parsing - Pure JSON
  */
 
 export function parseAgentResponse(response: string) {
-  const typeMatch = response.match(/INTERFACE_TYPE:\s*(\w+)/);
-  const dataMatch = response.match(/INTERFACE_DATA:\s*({.*?})/s);
-  
-  let data = {};
-  if (dataMatch) {
-    try {
-      data = JSON.parse(dataMatch[1]);
-    } catch (e) {
-      console.warn("Invalid INTERFACE_DATA JSON");
-    }
+  try {
+    // Try direct JSON parse first
+    const config = JSON.parse(response);
+    return {
+      interface_type: config.type || "markdown",
+      interface_data: config.props || {},
+      raw_content: config.content || ""
+    };
+  } catch (e) {
+    // Fallback to markdown for non-JSON responses
+    return {
+      interface_type: "markdown",
+      interface_data: {},
+      raw_content: response
+    };
   }
-
-  // Clean content by removing directives
-  const content = response
-    .replace(/INTERFACE_TYPE:.*?\n/, '')
-    .replace(/INTERFACE_DATA:.*?(?=\n\n|\n[A-Z]|\Z)/s, '')
-    .trim();
-
-  return {
-    interface_type: typeMatch?.[1] || "markdown",
-    interface_data: data,
-    raw_content: content || response
-  };
 }

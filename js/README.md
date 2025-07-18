@@ -20,6 +20,7 @@ AgentInterface renders rich UI components selected by AI agents:
 
 - **Component renderer** - `AgentInterfaceRenderer` handles all interface types
 - **Auto registry** - Components register themselves automatically
+- **AIP Protocol** - Parses JSON responses from explicit component specification
 - **Error boundaries** - Graceful fallbacks when rendering fails
 - **Theme integration** - Built-in light/dark mode support
 
@@ -42,7 +43,7 @@ function ChatMessage({ response }) {
 
 **Custom Components**
 ```typescript
-import { RendererComponentProps } from 'agentinterface';
+import { RendererComponentProps, registerComponents } from 'agentinterface';
 
 function MyComponent({ content, interfaceData }: RendererComponentProps) {
   return <div>{content}</div>;
@@ -83,7 +84,7 @@ npm install react react-dom
 ## 🔧 Extensibility
 
 ```typescript
-// Custom components auto-register
+// Register custom components
 registerComponents({
   'custom-chart': ChartComponent,
   'custom-table': TableComponent

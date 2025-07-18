@@ -3,53 +3,52 @@
 [![PyPI version](https://badge.fury.io/py/agentinterface.svg)](https://badge.fury.io/py/agentinterface)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-> **Component selection for AI agents.**
+> **Explicit component specification for AI agents.**
 
 ```python
-from agentinterface import select_component
+from agentinterface import aip_response
 
-result = select_component("Show quarterly sales by region")
-# Returns: card-grid component with structured data
+response = aip_response("card-grid", {"cards": sales_data})
+# Returns: JSON spec for card-grid component
 ```
 
-## 🎛️ Choosing Components
+## 🎛️ Specifying Components
 
-AgentInterface analyzes agent intent and selects the appropriate UI component:
+AgentInterface provides explicit protocol for component specification:
 
-- **Magic selection** - `select_component()` picks the right interface automatically
-- **Intent analysis** - Understands what agents want to display
+- **AIP Protocol** - `aip_response()` creates JSON spec for any component
+- **Component helpers** - `aip_card()`, `aip_markdown()`, `aip_chart()` convenience functions
 - **Component registry** - Extensible catalog of available interfaces
-- **Prompt integration** - `get_interface_options()` for agent prompting
+- **Zero ceremony** - Auto-discovery keeps DX magical
 
 ## ✨ Example Usage
 
-**Magic Component Selection**
+**Explicit Component Specification**
 
 ```python
-from agentinterface import select_component
+from agentinterface import aip_response, aip_card
 
-# Automatic selection
-result = select_component("Display user analytics dashboard")
+# Direct specification
+response = aip_response("card-grid", {"cards": dashboard_data})
 
-# With preferences
-result = select_component(
-    "Q4 sales performance by team",
-    preferred_types=['card-grid', 'timeline']
-)
+# Convenience helpers
+response = aip_card("Sales Team Q4", {
+    "metrics": sales_metrics,
+    "trend": "up"
+})
 ```
 
-**Component Options for Prompting**
+**Component Registry for Discovery**
 
 ```python
-from agentinterface import get_interface_options
+from agentinterface import get_available_components
 
-# Get clean descriptions for agent prompts
-options = get_interface_options(['markdown', 'card-grid', 'timeline'])
+# Get all registered components
+components = get_available_components()
 
-# Returns:
-# markdown: Default text/conversation
-# card-grid: Multiple items as visual cards
-# timeline: Chronological events
+# Returns component metadata:
+# {"markdown": {"description": "Default text/conversation", ...},
+#  "card-grid": {"description": "Multiple items as visual cards", ...}}
 ```
 
 **Custom Components**

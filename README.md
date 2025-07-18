@@ -8,11 +8,11 @@
 > **Let agents compose interfaces.**
 
 ```python
-# Agent describes intent
-from agentinterface import select_component
+# Agent specifies interface explicitly
+from agentinterface import aip_response
 
-component = select_component("Show quarterly sales trends")
-# Returns: timeline component with structured data
+response = aip_response("timeline", {"events": sales_data})
+# Returns: JSON spec for timeline component
 ```
 
 ```typescript
@@ -24,23 +24,26 @@ import { AgentInterfaceRenderer } from "agentinterface";
 
 ## 🚀 What It Solves
 
-- **🎯 Intent to interface** - Agents describe what they want, get the right UI component
+- **🎯 Explicit protocol** - Agents specify components via AIP (Agent Interface Protocol)
 - **🔄 Auto-discovery** - Components register themselves, no manual wiring
 - **🎨 Rich rendering** - Timeline, cards, code, forms, galleries out of the box
 - **🧩 Composable** - Slot-based architecture for complex layouts
 - **🛡️ Resilient** - Error boundaries and graceful fallbacks
-- **📱 Cross-platform** - Python selects, React renders
+- **📱 Cross-platform** - Python responds, React renders
+- **🔥 Zero-ceremony extensibility** - Write component, register, done
+- **🚀 Infinite domain customization** - Portfolio, e-commerce, analytics, docs
+- **🧠 Agentic AI power** - Agents automatically use new components
 
 ## 📐 How It Works
 
-**Agent Side (Python)** - Intent to component selection
+**Agent Side (Python)** - Explicit component specification
 
 ```python
-from agentinterface import select_component
+from agentinterface import aip_response
 
-# Agent describes what it wants to show
-result = select_component("Display user analytics dashboard")
-# Returns: appropriate component with structured data
+# Agent specifies component and data
+response = aip_response("card-grid", {"cards": dashboard_data})
+# Returns: JSON spec for card-grid component
 ```
 
 **Client Side (React)** - Component to rendered interface
@@ -74,17 +77,16 @@ pnpm add agentinterface
 
 ## ✨ Example Usage
 
-**Agent Intent → Component Selection**
+**Agent Response → Component Specification**
 
 ```python
-from agentinterface import select_component
+from agentinterface import aip_response
 
-# Agent expresses what it wants to show
-result = select_component("Show user engagement metrics over time")
-# Returns: timeline component with engagement data
+# Agent specifies timeline for engagement data
+response = aip_response("timeline", {"events": engagement_data})
 
-result = select_component("Display top performing products")
-# Returns: card-grid component with product cards
+# Agent specifies card-grid for products
+response = aip_response("card-grid", {"cards": product_data})
 ```
 
 **Component → Rendered Interface**
@@ -128,26 +130,68 @@ function ChatMessage({ response }) {
 - `progress-tracker` - Step-by-step progress indicators
 - `inline-reference` - Expandable reference links
 
-## 🔧 Extensibility
+## 🔥 Why AIP is Revolutionary for Agentic AI
 
-**Custom Components**
+**Zero-Ceremony Extensibility** - The game-changer for AI agents
 
 ```typescript
-// Register your own interfaces
-registerComponents({
-  "my-dashboard": MyDashboardComponent,
-});
+// Step 1: Write a React component (5 minutes)
+export function ProjectCard({ data }) {
+  return <div className="project-card">{data.title}</div>
+}
+
+// Step 2: Register it (1 line)
+registerComponents({ 'project-card': ProjectCard })
+
+// Step 3: Agent automatically uses it (0 code changes)
+// Agent: aip_response("project-card", {title: "My Project"})
 ```
 
-**Custom Selection Logic**
+**Infinite Domain Customization** - Build for any vertical
 
 ```python
-from agentinterface import register_component, ComponentConfig
+# Portfolio Domain
+aip_response("technical-competencies", {"skills": expert_skills})
+aip_response("project-card", {"title": "AI Platform", "tech": ["Python", "React"]})
 
+# E-commerce Domain  
+aip_response("product-catalog", {"products": inventory})
+aip_response("shopping-cart", {"items": cart_items})
+
+# Analytics Domain
+aip_response("dashboard-metrics", {"kpis": performance_data})
+aip_response("trend-analysis", {"timeseries": metrics})
+```
+
+**Scalable Complexity** - Same API, any complexity
+
+```typescript
+// Simple: 61-line BlogPost component
+<BlogPost data={{title: "Post", content: "Content"}} />
+
+// Complex: 260-line TechnicalCompetencies with matrix/timeline views
+<TechnicalCompetencies data={{displayFormat: "matrix", competencies: skills}} />
+
+// Agent doesn't care - identical API for both
+```
+
+**Agentic AI Superpowers** - Agents get smarter automatically
+
+- **Context-aware rendering** - Technical vs casual audience
+- **Multi-turn conversations** - Remember user preferences  
+- **Personalized experiences** - No hardcoded logic required
+- **Domain expertise** - Agents choose optimal interfaces
+
+## 🔧 Extensibility
+
+**The Power Pattern** - Write once, agents use forever
+
+```python
+# Register domain-specific components
 register_component(ComponentConfig(
-    name="custom-viz",
-    description="Data visualization interface",
-    triggers=["chart", "graph", "analytics"]
+    name="financial-dashboard",
+    description="Real-time financial metrics",
+    triggers=["portfolio", "stocks", "trading"]
 ))
 ```
 

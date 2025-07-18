@@ -2,37 +2,50 @@
 
 __version__ = "0.1.0"
 
-# 🎯 MAGICAL SINGLE IMPORT - Everything you need
+# 🎯 EXPLICIT AIP PROTOCOL - Zero ceremony, pure function
+from .aip import (
+    aip_response,
+    aip_markdown,
+    aip_card,
+    aip_chart
+)
+
+# 🎯 AUTO-REGISTRY - Zero ceremony component discovery
 from .registry import (
-    select_component,
-    get_component_options, 
-    MagicSelector,
-    get_interface_options,
-    make_component_config,
     register_component,
     get_available_components,
     ComponentConfig,
     ComponentMetadata,
-    ComponentCategory
+    ComponentCategory,
+    AutoRegistry
 )
 
-# Legacy compatibility (gradually migrate to magic imports)
-from .inline_resolver import InlineComponentResolver, create_inline_resolver
+# 🎯 INLINE RESOLVER - Progressive disclosure narrative→components
+from .inline_resolver import (
+    create_inline_resolver,
+    InlineComponentResolver,
+    InlineComponentConfig,
+    ResolvedComponent
+)
 
 __all__ = [
-    # 🎯 MAGICAL INTERFACE - Use these!
-    "select_component",
-    "get_component_options", 
-    "MagicSelector",
-    "get_interface_options",
-    "make_component_config",
+    # AIP Protocol
+    "aip_response",
+    "aip_markdown", 
+    "aip_card",
+    "aip_chart",
+    
+    # Auto-Registry (keep the good stuff)
     "register_component",
     "get_available_components",
     "ComponentConfig",
-    "ComponentMetadata", 
+    "ComponentMetadata",
     "ComponentCategory",
+    "AutoRegistry",
     
-    # Inline component support
-    "InlineComponentResolver",
+    # Inline Resolver - Progressive disclosure
     "create_inline_resolver",
+    "InlineComponentResolver",
+    "InlineComponentConfig", 
+    "ResolvedComponent",
 ]
