@@ -33,11 +33,12 @@ export function Timeline({
       {events.length > 0 && (
         <div className="space-y-4">
           {events.map((event: TimelineEvent, index: number) => (
-            <div key={index} className="border-l-2 border-gray-300 pl-4">
+            <div key={index} className="border-l-2 border-primary/30 pl-4 relative">
+              <div className="absolute -left-1.5 top-0 w-3 h-3 bg-primary rounded-full"></div>
               <div className="font-medium">{event.title}</div>
-              <div className="text-sm text-gray-600">{event.date}</div>
+              <div className="text-sm text-muted-foreground">{event.date}</div>
               {event.description && (
-                <div className="text-sm mt-1">{event.description}</div>
+                <div className="text-sm mt-1 text-muted-foreground">{event.description}</div>
               )}
             </div>
           ))}

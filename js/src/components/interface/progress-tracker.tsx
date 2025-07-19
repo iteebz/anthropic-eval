@@ -30,11 +30,11 @@ export function ProgressTracker(props: ProgressTrackerData) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'text-gray-500 bg-gray-50';
-      case 'in_progress': return 'text-blue-500 bg-blue-50';
-      case 'completed': return 'text-green-500 bg-green-50';
-      case 'failed': return 'text-red-500 bg-red-50';
-      default: return 'text-gray-500 bg-gray-50';
+      case 'pending': return 'text-muted-foreground bg-muted/30';
+      case 'in_progress': return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20';
+      case 'completed': return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20';
+      case 'failed': return 'text-destructive bg-destructive/10';
+      default: return 'text-muted-foreground bg-muted/30';
     }
   };
 
@@ -54,11 +54,11 @@ export function ProgressTracker(props: ProgressTrackerData) {
       <div className="mb-4">
         <div className="flex justify-between mb-2">
           <span className="text-sm font-medium">Progress</span>
-          <span className="text-sm text-gray-600">{progress}%</span>
+          <span className="text-sm text-muted-foreground">{progress}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-muted rounded-full h-2">
           <div 
-            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+            className="bg-primary h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -72,7 +72,7 @@ export function ProgressTracker(props: ProgressTrackerData) {
               <div>
                 <h4 className="font-medium">{step.title}</h4>
                 {step.description && (
-                  <p className="text-sm text-gray-600 mt-1">{step.description}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{step.description}</p>
                 )}
               </div>
             </div>

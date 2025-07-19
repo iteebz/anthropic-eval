@@ -2,6 +2,8 @@ import React from 'react';
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
 
 const CardSchema = z.object({
   title: z.string(),
@@ -31,36 +33,44 @@ export function CardGrid(props: CardGridData) {
       {content && <MarkdownRenderer content={content} className="mb-4" />}
       <div className="grid gap-4 md:grid-cols-2">
         {cards.map((card, i) => (
-          <div key={i} className="border rounded-lg p-4">
-            <h3 className="font-medium mb-2">{card.title}</h3>
-            <p className="text-sm text-gray-600 mb-3">{card.description}</p>
-            {card.tags && (
-              <div className="flex flex-wrap gap-1 mb-3">
-                {card.tags.map((tag, j) => (
-                  <span key={j} className="text-xs bg-gray-100 px-2 py-1 rounded">{tag}</span>
-                ))}
-              </div>
-            )}
-            {card.links && (
-              <div className="flex gap-2">
-                {card.links.map((link, k) => (
-                  <button
-                    key={k}
-                    onClick={() => {
-                      if (link.type === "action" && onSendMessage) {
-                        onSendMessage(`Tell me more about ${card.title}`);
-                      } else if (link.url) {
-                        window.open(link.url, "_blank", "noopener noreferrer");
-                      }
-                    }}
-                    className="text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    {link.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <Card key={i}>
+            <CardHeader>
+              <CardTitle>{card.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">{card.description}</p>
+              {card.tags && (
+                <div className="flex flex-wrap gap-1">
+                  {card.tags.map((tag, j) => (
+                    <Badge key={j} variant="secondary">{tag}</Badge>
+                  ))}
+                </div>
+              )}
+              {card.links && (
+                <div className="flex gap-2">
+                  {card.links.map((link, k) => (
+                    <button
+                      key={k}
+                      onClick={() => {
+                        if (link.type === "action" && onSendMessage) {
+                          onSendMessage(JSON.stringify({
+                            type: 'card-action',
+                            cardTitle: card.title,
+                            actionLabel: link.label
+                          }));
+                        } else if (link.url) {
+                          window.open(link.url, "_blank", "noopener noreferrer");
+                        }
+                      }}
+                      className="text-sm text-primary hover:text-primary/80 underline-offset-4 hover:underline"
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

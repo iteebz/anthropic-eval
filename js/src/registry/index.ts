@@ -1,5 +1,5 @@
 /**
- * Simple Registry - Just works
+ * Unified Registry - Clean, Extensible, Beautiful
  */
 
-export { registerComponents, getComponentRegistry, isValidInterfaceType, getComponentTypes } from './simple';
+export { registerComponent, renderAIPComponent, ComponentRegistration } from './unified';

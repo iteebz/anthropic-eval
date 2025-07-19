@@ -18,10 +18,31 @@ export interface ComponentRegistration<T = any> {
 const AIP_REGISTRY: Record<string, ComponentRegistration<any>> = {};
 
 /**
+ * Get all registered component types
+ */
+export function getRegisteredTypes(): string[] {
+  return Object.keys(AIP_REGISTRY);
+}
+
+/**
+ * Get all component registrations
+ */
+export function getAllRegistrations(): Record<string, ComponentRegistration<any>> {
+  return { ...AIP_REGISTRY };
+}
+
+/**
  * Register a component with the AIP system
  */
 export function registerComponent<T>(registration: ComponentRegistration<T>): void {
   AIP_REGISTRY[registration.type] = registration;
+}
+
+/**
+ * Check if a component type is registered
+ */
+export function isRegistered(type: string): boolean {
+  return type in AIP_REGISTRY;
 }
 
 /**
@@ -64,23 +85,3 @@ export function renderAIPComponent(component: { type: string; data: any }): Reac
   return render(component.data);
 }
 
-/**
- * Get all registered component types
- */
-export function getRegisteredTypes(): string[] {
-  return Object.keys(AIP_REGISTRY);
-}
-
-/**
- * Check if a component type is registered
- */
-export function isRegistered(type: string): boolean {
-  return type in AIP_REGISTRY;
-}
-
-/**
- * Get the full registry (for debugging)
- */
-export function getRegistry(): Record<string, ComponentRegistration<any>> {
-  return { ...AIP_REGISTRY };
-}

@@ -14,12 +14,8 @@ export type { AgentInterfaceRendererProps } from "./components/AgentInterfaceRen
 export { UnifiedRenderer } from "./components/UnifiedRenderer";
 export type { UnifiedRendererProps } from "./components/UnifiedRenderer";
 
-// Registry functions that folio imports
-export { registerComponents, getComponentRegistry, isValidInterfaceType } from "./registry/simple";
-export { getDiscoveredComponents, buildRegistry, getComponent } from "./registry/auto";
-
-// NEW: Unified registry system
-export { registerComponent, renderAIPComponent, getRegisteredTypes, isRegistered, getRegistry } from "./registry/unified";
+// Unified registry system  
+export { registerComponent, renderAIPComponent } from "./registry/unified";
 export type { ComponentRegistration } from "./registry/unified";
 
 // Error boundary for folio chat

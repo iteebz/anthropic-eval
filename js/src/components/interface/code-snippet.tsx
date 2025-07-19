@@ -35,18 +35,18 @@ export function CodeSnippet({
       )}
 
       {data?.code && (
-        <div className="border rounded bg-gray-50 p-4">
+        <div className="border rounded-lg bg-muted/30 p-4">
           {data.title && (
             <div className="text-sm font-medium mb-2">{data.title}</div>
           )}
           {data.language && (
-            <div className="text-xs text-gray-500 mb-2">{data.language}</div>
+            <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">{data.language}</div>
           )}
-          <pre className="overflow-x-auto">
-            <code className="text-sm">{data.code}</code>
+          <pre className="overflow-x-auto bg-background/50 rounded p-3 border">
+            <code className="text-sm font-mono">{data.code}</code>
           </pre>
           {data.description && (
-            <div className="text-sm text-gray-600 mt-2">{data.description}</div>
+            <div className="text-sm text-muted-foreground mt-2">{data.description}</div>
           )}
         </div>
       )}

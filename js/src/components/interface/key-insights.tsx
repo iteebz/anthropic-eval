@@ -39,12 +39,12 @@ export function KeyInsights({
       {insights.length > 0 && (
         <div className="space-y-3">
           {insights.map((insight, index) => (
-            <div key={index} className="border-l-4 border-blue-200 pl-4 py-2">
+            <div key={index} className="border-l-4 border-primary/30 pl-4 py-2 bg-muted/20 rounded-r">
               <div className="font-medium mb-1">{insight.title}</div>
               {insight.category && (
-                <div className="text-xs text-gray-500 mb-1">{insight.category}</div>
+                <div className="text-xs text-muted-foreground mb-1">{insight.category}</div>
               )}
-              <div className="text-sm text-gray-600">{insight.description}</div>
+              <div className="text-sm text-muted-foreground">{insight.description}</div>
             </div>
           ))}
         </div>
@@ -57,5 +57,5 @@ export function KeyInsights({
 registerComponent({
   type: 'key-insights',
   schema: KeyInsightsSchema,
-  render: (props) => <KeyInsights insights={props.insights} content={props.content} className={props.className} />
+  render: (props) => <KeyInsights content={props.content || ''} interfaceData={{ insights: props.insights }} className={props.className} />
 });

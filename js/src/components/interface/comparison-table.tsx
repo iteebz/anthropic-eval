@@ -25,22 +25,22 @@ export function ComparisonTable(props: ComparisonTableData) {
   return (
     <div className={className}>
       {title && <h2 className="text-xl font-bold mb-4">{title}</h2>}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border">
+      <div className="overflow-x-auto rounded-lg border">
+        <table className="w-full">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="border px-4 py-2 text-left">Name</th>
+            <tr className="border-b bg-muted/50">
+              <th className="px-4 py-3 text-left font-medium">Name</th>
               {attributes.map(attr => (
-                <th key={attr.key} className="border px-4 py-2 text-left">{attr.label}</th>
+                <th key={attr.key} className="px-4 py-3 text-left font-medium">{attr.label}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {items.map((item, i) => (
-              <tr key={item.id} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="border px-4 py-2 font-medium">{item.name}</td>
+              <tr key={item.id} className="border-b last:border-0 hover:bg-muted/25">
+                <td className="px-4 py-3 font-medium">{item.name}</td>
                 {attributes.map(attr => (
-                  <td key={attr.key} className="border px-4 py-2">
+                  <td key={attr.key} className="px-4 py-3 text-muted-foreground">
                     {String(item.attributes[attr.key] || '—')}
                   </td>
                 ))}

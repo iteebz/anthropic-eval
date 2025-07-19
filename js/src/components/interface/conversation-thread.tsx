@@ -20,10 +20,10 @@ export function ConversationThread(props: ConversationThreadData) {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'user': return 'bg-blue-50 border-blue-200';
-      case 'assistant': return 'bg-green-50 border-green-200';
-      case 'system': return 'bg-gray-50 border-gray-200';
-      default: return 'bg-gray-50 border-gray-200';
+      case 'user': return 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800';
+      case 'assistant': return 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800';
+      case 'system': return 'bg-muted/50 border-border';
+      default: return 'bg-muted/50 border-border';
     }
   };
 
@@ -45,7 +45,7 @@ export function ConversationThread(props: ConversationThreadData) {
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">{getRoleIcon(message.role)}</span>
               <span className="font-medium capitalize">{message.role}</span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {new Date(message.timestamp).toLocaleString()}
               </span>
             </div>

@@ -12,13 +12,14 @@ const ContactFormSchema = z.object({
   })),
   action: z.string().optional(),
   submitText: z.string().optional(),
-  className: z.string().optional()
+  className: z.string().optional(),
+  onSendMessage: z.function().optional()
 });
 
 type ContactFormData = z.infer<typeof ContactFormSchema>;
 
 export function ContactForm(props: ContactFormData) {
-  const data = props;
+  const { onSendMessage, ...data } = props;
   const [formData, setFormData] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -44,6 +45,11 @@ export function ContactForm(props: ContactFormData) {
       if (response.ok) {
         setSubmitStatus('success')
         setFormData({})
+        onSendMessage?.(JSON.stringify({
+          type: 'contact-form-submission',
+          formData,
+          status: 'success'
+        }));
       } else {
         setSubmitStatus('error')
       }
@@ -55,8 +61,8 @@ export function ContactForm(props: ContactFormData) {
   }
 
   const renderField = (field: ContactFormData['fields'][0]) => {
-    const baseClasses = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-    const errorClasses = "border-red-500 dark:border-red-400"
+    const baseClasses = "w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+    const errorClasses = "border-destructive"
     
     const fieldValue = formData[field.name] || ''
     const isRequired = field.required ?? false
@@ -136,28 +142,28 @@ export function ContactForm(props: ContactFormData) {
               </label>
               {renderField(field)}
               {hasError && (
-                <p className="text-sm text-red-600">{field.label} is required</p>
+                <p className="text-sm text-destructive">{field.label} is required</p>
               )}
             </div>
           );
         })}
 
         {submitStatus === 'success' && (
-          <div className="bg-green-50 border border-green-200 rounded p-4">
-            <span className="text-green-600">✓ Message sent successfully!</span>
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded p-4">
+            <span className="text-emerald-600 dark:text-emerald-400">✓ Message sent successfully!</span>
           </div>
         )}
 
         {submitStatus === 'error' && (
-          <div className="bg-red-50 border border-red-200 rounded p-4">
-            <span className="text-red-600">✗ Error sending message. Please try again.</span>
+          <div className="bg-destructive/10 border border-destructive/20 rounded p-4">
+            <span className="text-destructive">✗ Error sending message. Please try again.</span>
           </div>
         )}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-4 rounded"
+          className="w-full bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-primary-foreground py-2 px-4 rounded-md transition-colors"
         >
           {isSubmitting ? 'Sending...' : (data.submitText || 'Send Message')}
         </button>

@@ -8,23 +8,21 @@ import { CardGrid } from '../card-grid';
 // import { Markdown } from '../markdown';
 import { Timeline } from '../timeline';
 import { CodeSnippet } from '../code-snippet';
+import { ConversationSuggestions } from '../conversation-suggestions';
 
 describe('Component Sanity Tests', () => {
   it('should render CardGrid component', () => {
     const { container } = render(
       <CardGrid
+        cards={[
+          {
+            title: 'Test Card',
+            description: 'Test description',
+            tags: ['test'],
+            links: []
+          }
+        ]}
         content="Test content"
-        interfaceData={{
-          cards: [
-            {
-              title: 'Test Card',
-              description: 'Test description',
-              tags: ['test'],
-              links: [],
-              metadata: {}
-            }
-          ]
-        }}
       />
     );
     
@@ -77,5 +75,28 @@ describe('Component Sanity Tests', () => {
     );
     
     expect(container.textContent).toContain('const test = "hello";');
+  });
+
+  it('should render ConversationSuggestions component', () => {
+    const { container } = render(
+      <ConversationSuggestions
+        suggestions={[
+          {
+            text: 'Tell me more about this',
+            id: 'suggestion-1',
+            priority: 'high'
+          },
+          {
+            text: 'Show examples',
+            id: 'suggestion-2'
+          }
+        ]}
+        title="Try asking"
+      />
+    );
+    
+    expect(container.textContent).toContain('Tell me more about this');
+    expect(container.textContent).toContain('Show examples');
+    expect(container.textContent).toContain('Try asking');
   });
 });

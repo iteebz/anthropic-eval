@@ -9,6 +9,7 @@ export { CardGrid } from "./card-grid";
 export { CodeSnippet } from "./code-snippet";
 export { ComparisonTable } from "./comparison-table";
 export { ContactForm } from "./contact-form";
+export { ConversationSuggestions } from "./conversation-suggestions";
 export { ConversationThread } from "./conversation-thread";
 export { DecisionTree } from "./decision-tree";
 export { ExpandableSection } from "./expandable-section";
