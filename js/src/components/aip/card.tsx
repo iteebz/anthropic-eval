@@ -1,18 +1,19 @@
 import React from 'react';
+import { renderAIPComponent } from '../../registry';
+import type { AIPBlock } from '../../schema/aip';
 
 export interface CardProps {
-  children: React.ReactNode;
+  header?: AIPBlock[];
+  body?: AIPBlock[];
+  footer?: AIPBlock[];
   className?: string;
   variant?: 'default' | 'outlined' | 'elevated';
 }
 
-export interface CardSectionProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
 export function Card({ 
-  children, 
+  header,
+  body,
+  footer,
   className = '',
   variant = 'default'
 }: CardProps) {
@@ -24,78 +25,57 @@ export function Card({
 
   return (
     <div className={`${variantClasses[variant]} ${className}`}>
-      {children}
+      {header && (
+        <div className="aip-card-header border-b aip-border-primary aip-p-md">
+          {header.map((block, index) => renderAIPComponent(block, `header-${index}`))}
+        </div>
+      )}
+      {body && (
+        <div className="aip-card-body aip-p-md">
+          {body.map((block, index) => renderAIPComponent(block, `body-${index}`))}
+        </div>
+      )}
+      {footer && (
+        <div className="aip-card-footer border-t aip-border-primary aip-p-md">
+          {footer.map((block, index) => renderAIPComponent(block, `footer-${index}`))}
+        </div>
+      )}
     </div>
   );
 }
 
-Card.Header = function CardHeader({ 
-  children, 
-  className = '' 
-}: CardSectionProps) {
-  return (
-    <div className={`aip-card-header border-b aip-border-primary aip-p-md ${className}`}>
-      {children}
-    </div>
-  );
-};
-
-Card.Body = function CardBody({ 
-  children, 
-  className = '' 
-}: CardSectionProps) {
-  return (
-    <div className={`aip-card-body aip-p-md ${className}`}>
-      {children}
-    </div>
-  );
-};
-
-Card.Footer = function CardFooter({ 
-  children, 
-  className = '' 
-}: CardSectionProps) {
-  return (
-    <div className={`aip-card-footer border-t aip-border-primary aip-p-md ${className}`}>
-      {children}
-    </div>
-  );
-};
 
 // AIP metadata for agent discovery
-export const CardMetadata = {
-  name: 'card',
+export const metadata = {
+  type: 'card',
   description: 'Structured content container with header, body, and footer sections',
-  category: 'containers',
+  category: 'container',
+  tags: ['container', 'layout', 'structured'],
   schema: {
     type: 'object',
     properties: {
+      type: { type: 'string', enum: ['card'] },
       variant: {
         type: 'string',
         enum: ['default', 'outlined', 'elevated'],
         default: 'default'
       },
       header: {
-        type: 'string',
-        description: 'Optional header content'
+        type: 'array',
+        items: { type: 'object' },
+        description: 'Array of AIP blocks for card header'
       },
       body: {
-        type: 'string',
-        description: 'Main card content'
+        type: 'array',
+        items: { type: 'object' },
+        description: 'Array of AIP blocks for card body'
       },
       footer: {
-        type: 'string',
-        description: 'Optional footer content'
+        type: 'array',
+        items: { type: 'object' },
+        description: 'Array of AIP blocks for card footer'
       }
     },
-    required: ['body']
-  },
-  examples: [
-    {
-      variant: 'outlined',
-      header: 'Analysis Results',
-      body: 'Key findings and insights from data analysis',
-      footer: 'Generated at 2025-01-15 14:30'
-    }
-  ]
-};
+    required: ['type']
+  }
+} as const;

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { renderAIPComponent } from '../../registry';
+import type { AIPBlock } from '../../schema/aip';
 
 export interface TabItem {
   id: string;
   label: string;
-  content: React.ReactNode;
+  content: AIPBlock[];
 }
 
 export interface TabsProps {
@@ -15,7 +17,7 @@ export interface TabsProps {
 export function Tabs({ items, defaultTab, className = '' }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || items[0]?.id);
 
-  const activeContent = items.find(item => item.id === activeTab)?.content;
+  const activeContent = items.find(item => item.id === activeTab)?.content || [];
 
   return (
     <div className={`aip-tabs ${className}`}>
@@ -35,20 +37,24 @@ export function Tabs({ items, defaultTab, className = '' }: TabsProps) {
         ))}
       </div>
       <div className="aip-tabs-content aip-p-md">
-        {activeContent}
+        {activeContent.map((block, index) => 
+          renderAIPComponent(block, `${activeTab}-${index}`)
+        )}
       </div>
     </div>
   );
 }
 
 // AIP metadata for agent discovery
-export const TabsMetadata = {
-  name: 'tabs',
+export const metadata = {
+  type: 'tabs',
   description: 'Multi-view content container with tab navigation',
-  category: 'containers',
+  category: 'container',
+  tags: ['navigation', 'container', 'multi-view'],
   schema: {
     type: 'object',
     properties: {
+      type: { type: 'string', enum: ['tabs'] },
       items: {
         type: 'array',
         items: {
@@ -56,7 +62,11 @@ export const TabsMetadata = {
           properties: {
             id: { type: 'string' },
             label: { type: 'string' },
-            content: { type: 'string' }
+            content: { 
+              type: 'array',
+              items: { type: 'object' },
+              description: 'Array of AIP blocks to render in this tab'
+            }
           },
           required: ['id', 'label', 'content']
         }
@@ -66,16 +76,6 @@ export const TabsMetadata = {
         description: 'ID of the tab to show by default'
       }
     },
-    required: ['items']
-  },
-  examples: [
-    {
-      items: [
-        { id: 'overview', label: 'Overview', content: 'System status and metrics' },
-        { id: 'details', label: 'Details', content: 'Detailed analysis and findings' },
-        { id: 'actions', label: 'Actions', content: 'Recommended next steps' }
-      ],
-      defaultTab: 'overview'
-    }
-  ]
-};
+    required: ['type', 'items']
+  }
+} as const;

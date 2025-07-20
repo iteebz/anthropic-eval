@@ -4,7 +4,7 @@
  * Auto-registers all AIP components using metadata exports
  */
 
-import { registerComponent } from '../registry/unified';
+import { registerComponent } from '../registry';
 
 // Import all AIP components with metadata
 import { 
@@ -19,8 +19,8 @@ import {
   Tree, TreeMetadata,
   Suggestions, SuggestionsMetadata,
   Code, CodeMetadata,
-  Card, CardMetadata,
-  Tabs, TabsMetadata
+  Card, metadata as CardMetadata,
+  Tabs, metadata as TabsMetadata
 } from './aip';
 
 // Auto-register all AIP components
