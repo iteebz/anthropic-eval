@@ -1,74 +1,157 @@
-The renderer needs to handle the core cases cleanly:
-typescript// agentinterface/js/src/renderer.tsx
-import { useState } from 'react'
+/**
+ * AIP Renderer - The one true renderer for Agent Interface Protocol
+ * 
+ * Registry-driven component rendering with comprehensive error handling
+ */
 
-interface AIPResponse {
-  type: string
-  data: any
+import React, { useCallback } from 'react';
+import { renderAIPComponent, isRegistered, getRegisteredTypes } from '../registry/unified';
+import { InterfaceErrorBoundary, InterfaceErrorContext } from './common/InterfaceErrorBoundary';
+import { useInterfaceConfig } from '../hooks';
+import { LoadingState } from './common/LoadingState';
+import { ErrorState } from './common/ErrorState';
+import { EmptyState } from './common/EmptyState';
+import { ComponentNotFound } from './common/ComponentNotFound';
+import type { Logger } from '../types';
+
+export interface AIPRendererProps {
+  /**
+   * Raw agent response string (may contain structured data)
+   */
+  agentResponse: string;
+
+  /**
+   * Callback when user sends a message from within a component
+   */
+  onSendMessage?: (message: string) => void;
+
+  /**
+   * Additional CSS classes to apply to the wrapper
+   */
+  className?: string;
+
+  /**
+   * Whether to show error details in development mode
+   * @default true in development
+   */
+  showErrorDetails?: boolean;
+
+  /**
+   * Whether to enable performance monitoring
+   * @default true in development
+   */
+  enablePerformanceMonitoring?: boolean;
+
+  /**
+   * Custom error handler for component errors
+   */
+  onError?: (
+    error: Error,
+    errorInfo: React.ErrorInfo,
+    context: InterfaceErrorContext,
+  ) => void;
+
+  /**
+   * Custom logger instance
+   */
+  logger?: Logger;
 }
 
-interface AIPRendererProps {
-  response: AIPResponse | string
-  onError?: (error: Error) => void
-}
+/**
+ * AIP Renderer - The one true renderer
+ * 
+ * Parses agent responses and renders components using the unified registry
+ */
+export const AIPRenderer: React.FC<AIPRendererProps> = ({
+  agentResponse,
+  onSendMessage,
+  className = "",
+  showErrorDetails,
+  enablePerformanceMonitoring,
+  onError,
+  logger,
+}) => {
+  const { interfaceConfig, isLoading, error } = useInterfaceConfig(
+    agentResponse,
+    { enablePerformanceMonitoring, logger }
+  );
 
-export function AIPRenderer({ response, onError }: AIPRendererProps) {
-  const [error, setError] = useState<Error | null>(null)
-  
-  // Parse string responses
-  let parsed: AIPResponse
-  try {
-    parsed = typeof response === 'string' ? JSON.parse(response) : response
-  } catch (e) {
-    const parseError = new Error(`Invalid AIP response: ${e.message}`)
-    setError(parseError)
-    onError?.(parseError)
-    return <div className="aip-error">Failed to parse response</div>
+  const handleError = useCallback(
+    (
+      error: Error,
+      errorInfo: React.ErrorInfo,
+      context: InterfaceErrorContext,
+    ) => {
+      logger?.error("AIPRenderer error", {
+        error: {
+          details: { message: error.message, stack: error.stack },
+          originalData: error,
+        },
+        errorInfo,
+        context,
+      });
+      onError?.(error, errorInfo, context);
+    },
+    [logger, onError]
+  );
+
+  if (isLoading) {
+    return <LoadingState className={className} />;
   }
-  
-  // Look up component
-  const Component = getComponent(parsed.type)
-  if (!Component) {
-    const unknownError = new Error(`Unknown component type: ${parsed.type}`)
-    setError(unknownError) 
-    onError?.(unknownError)
-    return <div className="aip-error">Unknown component: {parsed.type}</div>
+
+  if (error) {
+    const errorObject = error instanceof Error ? error : new Error(String(error));
+    return (
+      <ErrorState
+        error={errorObject}
+        agentResponse={agentResponse}
+        showErrorDetails={showErrorDetails}
+        className={className}
+      />
+    );
   }
-  
-  // Render with error boundary
-  try {
-    return <Component {...parsed.data} />
-  } catch (e) {
-    const renderError = new Error(`Component render failed: ${e.message}`)
-    setError(renderError)
-    onError?.(renderError)
-    return <div className="aip-error">Render failed</div>
+
+  if (!interfaceConfig) {
+    return <EmptyState className={className} />;
   }
-}
 
-// Component registry lookup
-function getComponent(type: string) {
-  // Built-in components
-  const builtins = {
-    'markdown': MarkdownComponent,
-    'timeline': TimelineComponent,
-    'card-grid': CardGridComponent
+  // Check if component type is registered
+  if (!isRegistered(interfaceConfig.type)) {
+    const availableTypes = getRegisteredTypes();
+    const errorMessage = availableTypes.length > 0 
+      ? `Unknown component '${interfaceConfig.type}'. Available: ${availableTypes.join(', ')}`
+      : `Unknown component '${interfaceConfig.type}'. No components registered.`;
+    
+    logger?.warn(errorMessage);
+    return (
+      <ComponentNotFound
+        interfaceType={interfaceConfig.type}
+        content={interfaceConfig.content}
+        className={className}
+      />
+    );
   }
-  
-  return builtins[type] || getUserComponent(type)
-}
 
-// User component lookup from build-time registry
-function getUserComponent(type: string) {
-  // This gets populated by build script
-  return window.__AIP_COMPONENTS__?.[type]
-}
-Key features:
+  // Prepare component data
+  const componentData = {
+    ...interfaceConfig.data,
+    content: interfaceConfig.content,
+    className,
+    onSendMessage
+  };
 
-Accepts string or object responses
-Built-in error handling for parse/unknown/render failures
-Fallback UI for errors
-Optional error callback for logging
-Looks up components from registry
-
-Simple, dumb, reliable renderer.
+  return (
+    <InterfaceErrorBoundary
+      interfaceType={interfaceConfig.type}
+      fallbackContent={interfaceConfig.content}
+      interfaceData={interfaceConfig.data}
+      showDebugInfo={showErrorDetails}
+      onError={handleError}
+    >
+      {renderAIPComponent({
+        type: interfaceConfig.type,
+        data: componentData
+      })}
+    </InterfaceErrorBoundary>
+  );
+};

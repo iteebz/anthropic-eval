@@ -6,13 +6,9 @@
 export type { InterfaceType, InterfaceData } from "./types";
 export type { RendererComponentProps } from "./utils/componentProps";
 
-// Main component that folio uses
-export { AgentInterfaceRenderer } from "./components/AgentInterfaceRenderer";
-export type { AgentInterfaceRendererProps } from "./components/AgentInterfaceRenderer";
-
-// NEW: Unified renderer using registry system
-export { UnifiedRenderer } from "./components/UnifiedRenderer";
-export type { UnifiedRendererProps } from "./components/UnifiedRenderer";
+// Main AIP renderer - the one true renderer
+export { AIPRenderer } from "./components/renderer";
+export type { AIPRendererProps } from "./components/renderer";
 
 // Registry system  
 export { 
@@ -24,6 +20,10 @@ export {
   isRegistered 
 } from "./registry/unified";
 export type { ComponentMetadata, ComponentRegistration } from "./registry/unified";
+
+// Framework integrations
+export { vitePlugin, withAgentInterface, AgentInterfaceWebpackPlugin } from "./integrations";
+export type { AgentInterfaceViteOptions, AgentInterfaceNextOptions, AgentInterfaceWebpackOptions } from "./integrations";
 
 // Auto-register core components by importing
 import "./components";
