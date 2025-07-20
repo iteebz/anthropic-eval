@@ -1,0 +1,104 @@
+{
+  "name": "agentinterface",
+  "version": "0.1.0",
+  "description": "AI agents choose UI components with zero ceremony.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "agentinterface": "./dist/registry/cli.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup && node dist/registry/cli.cjs",
+    "prepublishOnly": "npm run build",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "format": "prettier --write '**/*.{ts,tsx,js,jsx,json,md}'",
+    "format:check": "prettier --check '**/*.{ts,tsx,js,jsx,json,md}'",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "15.5.0",
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
+    "unist-util-visit": "^5.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.0.14",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "@typescript-eslint/utils": "^8.35.0",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.30.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "eslint-plugin-tailwindcss": "^3.18.0",
+    "eslint-plugin-unicorn": "^59.0.1",
+    "globals": "^16.2.0",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.35.0",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "keywords": [
+    "react",
+    "ai",
+    "agents",
+    "interface",
+    "ui",
+    "components",
+    "protocol",
+    "rendering",
+    "agentinterface",
+    "aip",
+    "typescript",
+    "conversational"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iteebz/agentinterface"
+  },
+  "bugs": {
+    "url": "https://github.com/iteebz/agentinterface/issues"
+  },
+  "homepage": "https://github.com/iteebz/agentinterface#readme",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
+}

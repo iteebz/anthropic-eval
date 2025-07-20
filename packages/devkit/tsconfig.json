@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "types": ["node"],
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Package specific */
+    "declaration": true,
+    "outDir": "./dist",
+    "emitDeclarationOnly": false,
+
+    "paths": {
+      "@/*": ["./src/*"],
+      "@interface/*": ["./src/components/interface/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules", 
+    "dist", 
+    "src/dev/**/*", 
+    "src/playground/**/*",
+    "src/registry/magic.ts",
+    "src/registry/auto.ts",
+    "src/registry/lazy.ts"
+  ]
+}
