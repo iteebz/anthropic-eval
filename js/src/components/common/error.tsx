@@ -7,7 +7,7 @@ interface ErrorStateProps {
   className?: string;
 }
 
-export const ErrorState: React.FC<ErrorStateProps> = ({
+export const Error: React.FC<ErrorStateProps> = ({
   error,
   agentResponse,
   showErrorDetails,

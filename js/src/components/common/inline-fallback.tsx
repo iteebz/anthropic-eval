@@ -7,7 +7,7 @@ interface InlineComponentFallbackProps {
   mode?: 'error' | 'loading' | 'notFound';
 }
 
-export function InlineComponentFallback({ 
+export function InlineFallback({ 
   config, 
   error, 
   mode = 'notFound' 

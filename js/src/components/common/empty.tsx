@@ -4,6 +4,6 @@ interface EmptyStateProps {
   className?: string;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({ className }) => (
+export const Empty: React.FC<EmptyStateProps> = ({ className }) => (
   <div className={`text-gray-500 ${className}`}>No content to display.</div>
 );

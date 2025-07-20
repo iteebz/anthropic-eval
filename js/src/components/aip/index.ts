@@ -27,3 +27,5 @@ export { Cards, metadata as CardsMetadata } from './cards';
 export { Tree, metadata as TreeMetadata } from './tree';
 export { Suggestions, metadata as SuggestionsMetadata } from './suggestions';
 export { Code, metadata as CodeMetadata } from './code';
+export { Card, CardMetadata } from './card';
+export { Tabs, TabsMetadata } from './tabs';

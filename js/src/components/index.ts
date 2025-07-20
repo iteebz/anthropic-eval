@@ -18,7 +18,9 @@ import {
   Cards, CardsMetadata,
   Tree, TreeMetadata,
   Suggestions, SuggestionsMetadata,
-  Code, CodeMetadata
+  Code, CodeMetadata,
+  Card, CardMetadata,
+  Tabs, TabsMetadata
 } from './aip';
 
 // Auto-register all AIP components
@@ -33,5 +35,7 @@ registerComponent(CardsMetadata, Cards);
 registerComponent(TreeMetadata, Tree);
 registerComponent(SuggestionsMetadata, Suggestions);
 registerComponent(CodeMetadata, Code);
+registerComponent(CardMetadata, Card);
+registerComponent(TabsMetadata, Tabs);
 
 console.log('✅ AgentInterface: Registered all AIP components');

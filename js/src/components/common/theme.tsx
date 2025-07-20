@@ -9,7 +9,7 @@ export interface ThemeProviderProps {
   loadThemeCSS?: boolean;
 }
 
-export function ThemeProvider({ 
+export function Theme({ 
   children, 
   config,
   loadThemeCSS = true 
