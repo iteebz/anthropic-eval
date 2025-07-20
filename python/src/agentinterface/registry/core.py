@@ -14,6 +14,10 @@ class ComponentCategory(str, Enum):
     """Component categories"""
     CORE = "core"
     INTERFACE = "interface" 
+    CONTAINER = "container"
+    DISPLAY = "display"
+    INPUT = "input"
+    LAYOUT = "layout"
     EXTENSION = "extension"
     CUSTOM = "custom"
 

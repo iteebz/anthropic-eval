@@ -2,9 +2,6 @@
  * @agentic/react - AI-native UI components that just work
  */
 
-// Import CSS theme
-import "./styles/theme.css";
-
 // Types that folio needs
 export type { InterfaceType, InterfaceData } from "./types";
 export type { RendererComponentProps } from "./utils/componentProps";

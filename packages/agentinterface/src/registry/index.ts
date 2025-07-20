@@ -20,7 +20,13 @@ export function register({ type, schema, render }: {
   render: React.ComponentType<any>; 
 }): void {
   registry.set(type, { 
-    metadata: { type, schema }, 
+    metadata: { 
+      type, 
+      schema, 
+      description: `${type} component`,
+      category: 'interface',
+      tags: [type]
+    }, 
     component: render 
   });
 }

@@ -1,0 +1,295 @@
+/**
+ * AIP Theme System - CSS Custom Properties
+ * Advanced theming with CSS variables for consistent design
+ */
+
+:root {
+  /* Colors */
+  --aip-primary: #3b82f6;
+  --aip-primary-hover: #2563eb;
+  --aip-primary-active: #1d4ed8;
+  --aip-secondary: #6b7280;
+  --aip-secondary-hover: #4b5563;
+  --aip-accent: #10b981;
+  --aip-accent-hover: #059669;
+  
+  /* Status colors */
+  --aip-success: #10b981;
+  --aip-warning: #f59e0b;
+  --aip-error: #ef4444;
+  --aip-info: #3b82f6;
+  
+  /* Backgrounds */
+  --aip-bg-primary: #ffffff;
+  --aip-bg-secondary: #f9fafb;
+  --aip-bg-tertiary: #f3f4f6;
+  --aip-bg-code: #1f2937;
+  --aip-bg-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Text colors */
+  --aip-text-primary: #111827;
+  --aip-text-secondary: #6b7280;
+  --aip-text-tertiary: #9ca3af;
+  --aip-text-inverse: #ffffff;
+  --aip-text-code: #e5e7eb;
+  
+  /* Borders */
+  --aip-border-primary: #e5e7eb;
+  --aip-border-secondary: #d1d5db;
+  --aip-border-focus: #3b82f6;
+  --aip-border-error: #ef4444;
+  
+  /* Shadows */
+  --aip-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --aip-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --aip-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --aip-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Spacing */
+  --aip-spacing-xs: 0.25rem;
+  --aip-spacing-sm: 0.5rem;
+  --aip-spacing-md: 1rem;
+  --aip-spacing-lg: 1.5rem;
+  --aip-spacing-xl: 2rem;
+  --aip-spacing-2xl: 3rem;
+  
+  /* Typography */
+  --aip-font-family-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --aip-font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --aip-font-size-xs: 0.75rem;
+  --aip-font-size-sm: 0.875rem;
+  --aip-font-size-base: 1rem;
+  --aip-font-size-lg: 1.125rem;
+  --aip-font-size-xl: 1.25rem;
+  --aip-font-size-2xl: 1.5rem;
+  --aip-font-size-3xl: 1.875rem;
+  --aip-font-weight-normal: 400;
+  --aip-font-weight-medium: 500;
+  --aip-font-weight-semibold: 600;
+  --aip-font-weight-bold: 700;
+  --aip-line-height-tight: 1.25;
+  --aip-line-height-normal: 1.5;
+  --aip-line-height-relaxed: 1.75;
+  
+  /* Border radius */
+  --aip-radius-sm: 0.25rem;
+  --aip-radius-md: 0.375rem;
+  --aip-radius-lg: 0.5rem;
+  --aip-radius-xl: 0.75rem;
+  --aip-radius-2xl: 1rem;
+  --aip-radius-full: 9999px;
+  
+  /* Transitions */
+  --aip-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --aip-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --aip-transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Component-specific variables */
+  --aip-card-bg: var(--aip-bg-primary);
+  --aip-card-border: var(--aip-border-primary);
+  --aip-card-shadow: var(--aip-shadow-sm);
+  --aip-card-radius: var(--aip-radius-lg);
+  --aip-card-padding: var(--aip-spacing-lg);
+  
+  --aip-button-padding-x: var(--aip-spacing-md);
+  --aip-button-padding-y: var(--aip-spacing-sm);
+  --aip-button-radius: var(--aip-radius-md);
+  --aip-button-font-size: var(--aip-font-size-sm);
+  --aip-button-font-weight: var(--aip-font-weight-medium);
+  
+  --aip-input-padding-x: var(--aip-spacing-md);
+  --aip-input-padding-y: var(--aip-spacing-sm);
+  --aip-input-radius: var(--aip-radius-md);
+  --aip-input-border: var(--aip-border-primary);
+  --aip-input-focus-border: var(--aip-border-focus);
+  
+  --aip-timeline-line-color: var(--aip-border-secondary);
+  --aip-timeline-dot-size: 0.75rem;
+  --aip-timeline-spacing: var(--aip-spacing-lg);
+  
+  --aip-progress-bg: var(--aip-bg-tertiary);
+  --aip-progress-fill: var(--aip-primary);
+  --aip-progress-height: 0.5rem;
+  --aip-progress-radius: var(--aip-radius-full);
+}
+
+/* Dark mode theme */
+[data-theme="dark"] {
+  /* Colors */
+  --aip-primary: #60a5fa;
+  --aip-primary-hover: #3b82f6;
+  --aip-primary-active: #2563eb;
+  --aip-secondary: #9ca3af;
+  --aip-secondary-hover: #d1d5db;
+  --aip-accent: #34d399;
+  --aip-accent-hover: #10b981;
+  
+  /* Status colors */
+  --aip-success: #34d399;
+  --aip-warning: #fbbf24;
+  --aip-error: #f87171;
+  --aip-info: #60a5fa;
+  
+  /* Backgrounds */
+  --aip-bg-primary: #111827;
+  --aip-bg-secondary: #1f2937;
+  --aip-bg-tertiary: #374151;
+  --aip-bg-code: #0f172a;
+  --aip-bg-overlay: rgba(0, 0, 0, 0.7);
+  
+  /* Text colors */
+  --aip-text-primary: #f9fafb;
+  --aip-text-secondary: #d1d5db;
+  --aip-text-tertiary: #9ca3af;
+  --aip-text-inverse: #111827;
+  --aip-text-code: #e5e7eb;
+  
+  /* Borders */
+  --aip-border-primary: #374151;
+  --aip-border-secondary: #4b5563;
+  --aip-border-focus: #60a5fa;
+  --aip-border-error: #f87171;
+  
+  /* Shadows */
+  --aip-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --aip-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --aip-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --aip-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  
+  /* Component-specific adjustments */
+  --aip-card-bg: var(--aip-bg-secondary);
+  --aip-card-border: var(--aip-border-primary);
+  --aip-card-shadow: var(--aip-shadow-md);
+}
+
+/* Component base styles using theme variables */
+.aip-card {
+  background: var(--aip-card-bg);
+  border: 1px solid var(--aip-card-border);
+  border-radius: var(--aip-card-radius);
+  box-shadow: var(--aip-card-shadow);
+  padding: var(--aip-card-padding);
+  color: var(--aip-text-primary);
+  transition: box-shadow var(--aip-transition-normal);
+}
+
+.aip-card:hover {
+  box-shadow: var(--aip-shadow-md);
+}
+
+.aip-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--aip-button-padding-y) var(--aip-button-padding-x);
+  font-family: var(--aip-font-family-sans);
+  font-size: var(--aip-button-font-size);
+  font-weight: var(--aip-button-font-weight);
+  line-height: var(--aip-line-height-tight);
+  border: 1px solid transparent;
+  border-radius: var(--aip-button-radius);
+  cursor: pointer;
+  transition: all var(--aip-transition-fast);
+  text-decoration: none;
+}
+
+.aip-button-primary {
+  background: var(--aip-primary);
+  color: var(--aip-text-inverse);
+}
+
+.aip-button-primary:hover {
+  background: var(--aip-primary-hover);
+}
+
+.aip-button-secondary {
+  background: var(--aip-bg-secondary);
+  color: var(--aip-text-primary);
+  border-color: var(--aip-border-primary);
+}
+
+.aip-button-secondary:hover {
+  background: var(--aip-bg-tertiary);
+}
+
+.aip-input {
+  display: block;
+  width: 100%;
+  padding: var(--aip-input-padding-y) var(--aip-input-padding-x);
+  font-family: var(--aip-font-family-sans);
+  font-size: var(--aip-font-size-base);
+  line-height: var(--aip-line-height-normal);
+  color: var(--aip-text-primary);
+  background: var(--aip-bg-primary);
+  border: 1px solid var(--aip-input-border);
+  border-radius: var(--aip-input-radius);
+  transition: border-color var(--aip-transition-fast);
+}
+
+.aip-input:focus {
+  outline: none;
+  border-color: var(--aip-input-focus-border);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.aip-text-xs { font-size: var(--aip-font-size-xs); }
+.aip-text-sm { font-size: var(--aip-font-size-sm); }
+.aip-text-base { font-size: var(--aip-font-size-base); }
+.aip-text-lg { font-size: var(--aip-font-size-lg); }
+.aip-text-xl { font-size: var(--aip-font-size-xl); }
+.aip-text-2xl { font-size: var(--aip-font-size-2xl); }
+.aip-text-3xl { font-size: var(--aip-font-size-3xl); }
+
+.aip-font-normal { font-weight: var(--aip-font-weight-normal); }
+.aip-font-medium { font-weight: var(--aip-font-weight-medium); }
+.aip-font-semibold { font-weight: var(--aip-font-weight-semibold); }
+.aip-font-bold { font-weight: var(--aip-font-weight-bold); }
+
+.aip-text-primary { color: var(--aip-text-primary); }
+.aip-text-secondary { color: var(--aip-text-secondary); }
+.aip-text-tertiary { color: var(--aip-text-tertiary); }
+.aip-text-success { color: var(--aip-success); }
+.aip-text-warning { color: var(--aip-warning); }
+.aip-text-error { color: var(--aip-error); }
+.aip-text-info { color: var(--aip-info); }
+
+.aip-bg-primary { background: var(--aip-bg-primary); }
+.aip-bg-secondary { background: var(--aip-bg-secondary); }
+.aip-bg-tertiary { background: var(--aip-bg-tertiary); }
+
+.aip-border { border: 1px solid var(--aip-border-primary); }
+.aip-border-secondary { border: 1px solid var(--aip-border-secondary); }
+
+.aip-rounded-sm { border-radius: var(--aip-radius-sm); }
+.aip-rounded { border-radius: var(--aip-radius-md); }
+.aip-rounded-lg { border-radius: var(--aip-radius-lg); }
+.aip-rounded-xl { border-radius: var(--aip-radius-xl); }
+.aip-rounded-full { border-radius: var(--aip-radius-full); }
+
+.aip-shadow-sm { box-shadow: var(--aip-shadow-sm); }
+.aip-shadow { box-shadow: var(--aip-shadow-md); }
+.aip-shadow-lg { box-shadow: var(--aip-shadow-lg); }
+.aip-shadow-xl { box-shadow: var(--aip-shadow-xl); }
+
+.aip-transition { transition: all var(--aip-transition-normal); }
+.aip-transition-fast { transition: all var(--aip-transition-fast); }
+.aip-transition-slow { transition: all var(--aip-transition-slow); }
+
+/* Spacing utilities */
+.aip-p-xs { padding: var(--aip-spacing-xs); }
+.aip-p-sm { padding: var(--aip-spacing-sm); }
+.aip-p-md { padding: var(--aip-spacing-md); }
+.aip-p-lg { padding: var(--aip-spacing-lg); }
+.aip-p-xl { padding: var(--aip-spacing-xl); }
+
+.aip-m-xs { margin: var(--aip-spacing-xs); }
+.aip-m-sm { margin: var(--aip-spacing-sm); }
+.aip-m-md { margin: var(--aip-spacing-md); }
+.aip-m-lg { margin: var(--aip-spacing-lg); }
+.aip-m-xl { margin: var(--aip-spacing-xl); }
+
+.aip-gap-xs { gap: var(--aip-spacing-xs); }
+.aip-gap-sm { gap: var(--aip-spacing-sm); }
+.aip-gap-md { gap: var(--aip-spacing-md); }
+.aip-gap-lg { gap: var(--aip-spacing-lg); }
+.aip-gap-xl { gap: var(--aip-spacing-xl); }

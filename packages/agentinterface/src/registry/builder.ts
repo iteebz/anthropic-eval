@@ -52,8 +52,8 @@ export class RegistryBuilder {
   private async extractMetadata(filePath: string, fileName: string): Promise<void> {
     const content = fs.readFileSync(filePath, 'utf-8');
     
-    // Extract metadata export using regex
-    const metadataMatch = content.match(/export const metadata = \{([^}]+)\} as const;/s);
+    // Extract metadata export using regex - match the entire metadata object
+    const metadataMatch = content.match(/export const metadata = \{([\s\S]*?)\} as const;/s);
     
     if (!metadataMatch) {
       console.warn(`No metadata found in ${fileName}`);

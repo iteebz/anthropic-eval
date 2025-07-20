@@ -4,8 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Cards, Accordion, render } from 'agentinterface';
-import 'agentinterface/dist/index.css';
+import { Cards, Accordion, render } from 'agentinterface/browser';
 
 interface StudioProps {
   initialComponent?: string;
