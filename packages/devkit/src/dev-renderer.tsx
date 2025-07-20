@@ -4,11 +4,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { AgentInterfaceRenderer } from '../components/AgentInterfaceRenderer';
+import { AIPRenderer } from 'agentinterface';
 import { HotReloadProvider, HotReloadIndicator } from './hot-reload';
 import { AgentInterfaceDevTools, setupDevConsole } from './dev-panel';
-import { ComponentDiscovery, autoDiscoverComponents } from './filesystem-discovery';
-import { ComponentInfo } from '../registry/auto';
+// Component discovery replaced with new registry system
 import { DevConfig, defaultDevConfig } from './index';
 
 export interface DevAgentInterfaceRendererProps {
@@ -28,70 +27,15 @@ export function DevAgentInterfaceRenderer({
   devConfig = defaultDevConfig,
   ...props
 }: DevAgentInterfaceRendererProps) {
-  const [discovery, setDiscovery] = useState<ComponentDiscovery | null>(null);
-  const [registry, setRegistry] = useState<Record<string, ComponentInfo>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const config = { ...defaultDevConfig, ...devConfig };
 
   // Initialize development tools
   useEffect(() => {
-    if (!config.enableDiscovery && !config.enableHotReload) {
-      setIsLoading(false);
-      return;
-    }
-
-    const initDev = async () => {
-      try {
-        // Set up console commands
-        setupDevConsole();
-
-        // Initialize component discovery
-        let discoveryInstance: ComponentDiscovery | null = null;
-        if (config.enableDiscovery) {
-          discoveryInstance = new ComponentDiscovery({
-            watch: config.enableHotReload,
-            ...config.discoveryOptions
-          });
-          setDiscovery(discoveryInstance);
-        }
-
-        // Auto-discover components
-        const discoveredRegistry = config.enableDiscovery
-          ? await autoDiscoverComponents(components, config.discoveryOptions)
-          : Object.fromEntries(
-              Object.entries(components).map(([key, component]) => [
-                key.toLowerCase().replace(/([A-Z])/g, '-$1'),
-                {
-                  name: key.toLowerCase().replace(/([A-Z])/g, '-$1'),
-                  description: 'Explicit component',
-                  component
-                }
-              ])
-            );
-
-        setRegistry(discoveredRegistry);
-      } catch (error) {
-        console.error('Failed to initialize AgentInterface development tools:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initDev();
-
-    // Cleanup on unmount
-    return () => {
-      if (discovery) {
-        discovery.dispose();
-      }
-    };
-  }, [config.enableDiscovery, config.enableHotReload]);
-
-  // Convert ComponentInfo registry to component registry
-  const componentRegistry = Object.fromEntries(
-    Object.entries(registry).map(([key, info]) => [key, info.component])
-  );
+    // Set up console commands
+    setupDevConsole();
+  }, []);
 
   if (isLoading) {
     return (
@@ -103,9 +47,8 @@ export function DevAgentInterfaceRenderer({
   }
 
   const renderer = (
-    <AgentInterfaceRenderer
+    <AIPRenderer
       agentResponse={agentResponse}
-      components={componentRegistry}
       {...props}
     />
   );
@@ -118,8 +61,6 @@ export function DevAgentInterfaceRenderer({
   // In development, wrap with hot reload and dev tools
   return (
     <HotReloadProvider
-      discovery={discovery}
-      initialRegistry={registry}
       enabled={config.enableHotReload}
     >
       {renderer}
@@ -137,26 +78,7 @@ export function DevAgentInterfaceRenderer({
  * Hook for accessing development registry
  */
 export function useDevRegistry() {
-  const [registry, setRegistry] = useState<Record<string, ComponentInfo>>({});
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadRegistry = async () => {
-      try {
-        const discovery = new ComponentDiscovery();
-        await discovery.discover();
-        setRegistry(discovery.getRegistry());
-      } catch (error) {
-        console.error('Failed to load development registry:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadRegistry();
-  }, []);
-
-  return { registry, isLoading };
+  return { registry: {}, isLoading: false };
 }
 
 /**

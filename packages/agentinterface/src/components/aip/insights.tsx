@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Prose } from "../prose";
 import { Insights } from '.';
 import { Insights } from '.';
@@ -77,7 +77,7 @@ export function Insights({
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'insights',
   schema: InsightsValidator,
   render: Insights

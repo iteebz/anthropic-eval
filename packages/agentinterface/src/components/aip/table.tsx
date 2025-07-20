@@ -1,6 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 
 export const TableSchema = {
   type: "object",
@@ -95,7 +95,7 @@ export function Table(props: TableData) {
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'table',
   schema: TableValidator,
   render: Table

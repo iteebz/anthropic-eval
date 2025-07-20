@@ -5,6 +5,8 @@
 import React from 'react';
 import type { ComponentMetadata } from '../schema/aip';
 
+export type { ComponentMetadata };
+
 export interface ComponentRegistration {
   metadata: ComponentMetadata;
   component: React.ComponentType<any>;
@@ -12,11 +14,18 @@ export interface ComponentRegistration {
 
 const registry = new Map<string, ComponentRegistration>();
 
-export function registerComponent(metadata: ComponentMetadata, component: React.ComponentType<any>): void {
-  registry.set(metadata.type, { metadata, component });
+export function register({ type, schema, render }: { 
+  type: string; 
+  schema: any; 
+  render: React.ComponentType<any>; 
+}): void {
+  registry.set(type, { 
+    metadata: { type, schema }, 
+    component: render 
+  });
 }
 
-export function renderAIPComponent(block: any, key?: string): React.ReactElement | null {
+export function render(block: any, key?: string): React.ReactElement | null {
   const registration = registry.get(block.type);
   if (!registration) {
     console.warn(`Unknown component type: ${block.type}`);

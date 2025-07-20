@@ -34,11 +34,6 @@
   "include": ["src/**/*"],
   "exclude": [
     "node_modules", 
-    "dist", 
-    "src/dev/**/*", 
-    "src/playground/**/*",
-    "src/registry/magic.ts",
-    "src/registry/auto.ts",
-    "src/registry/lazy.ts"
+    "dist"
   ]
 }

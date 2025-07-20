@@ -5,7 +5,7 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: false,
   clean: true,
-  external: ['react', 'react-dom', 'tailwindcss'],
+  external: ['react', 'react-dom', 'tailwindcss', 'agentinterface'],
   treeshake: true,
   splitting: false,
   minify: false,

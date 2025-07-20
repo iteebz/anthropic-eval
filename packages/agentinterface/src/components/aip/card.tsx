@@ -1,5 +1,6 @@
 import React from 'react';
-import { renderAIPComponent } from '../../registry';
+import { z } from 'zod';
+import { render, register } from '../../registry';
 import type { AIPBlock } from '../../schema/aip';
 
 export interface CardProps {
@@ -27,17 +28,17 @@ export function Card({
     <div className={`${variantClasses[variant]} ${className}`}>
       {header && (
         <div className="aip-card-header border-b aip-border-primary aip-p-md">
-          {header.map((block, index) => renderAIPComponent(block, `header-${index}`))}
+          {header.map((block, index) => render(block, `header-${index}`))}
         </div>
       )}
       {body && (
         <div className="aip-card-body aip-p-md">
-          {body.map((block, index) => renderAIPComponent(block, `body-${index}`))}
+          {body.map((block, index) => render(block, `body-${index}`))}
         </div>
       )}
       {footer && (
         <div className="aip-card-footer border-t aip-border-primary aip-p-md">
-          {footer.map((block, index) => renderAIPComponent(block, `footer-${index}`))}
+          {footer.map((block, index) => render(block, `footer-${index}`))}
         </div>
       )}
     </div>
@@ -79,3 +80,18 @@ export const metadata = {
     required: ['type']
   }
 } as const;
+
+const CardValidator = z.object({
+  header: z.array(z.any()).optional(),
+  body: z.array(z.any()).optional(), 
+  footer: z.array(z.any()).optional(),
+  className: z.string().optional(),
+  variant: z.enum(['default', 'outlined', 'elevated']).optional()
+});
+
+// Register with AIP registry
+register({
+  type: 'card',
+  schema: CardValidator,
+  render: Card
+});

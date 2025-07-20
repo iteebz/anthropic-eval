@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Prose } from "../prose";
 
 export const ReferenceSchema = {
@@ -108,7 +108,7 @@ export function Reference(props: ReferenceData) {
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'reference',
   schema: ReferenceValidator,
   render: Reference

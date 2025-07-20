@@ -1,2 +1,1 @@
-export { ComponentPlayground } from './playground';
-export { default as ComponentPlayground } from './playground';
+export { Studio, StudioApp } from './studio';

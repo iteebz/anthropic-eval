@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 export const TreeSchema = {
@@ -119,7 +119,7 @@ export function Tree(props: TreeData) {
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'tree',
   schema: TreeValidator,
   render: Tree

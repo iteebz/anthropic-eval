@@ -1,41 +1,22 @@
 /**
  * Component auto-registration
  * 
- * Auto-registers all AIP components using metadata exports
+ * Components register themselves when imported
  */
 
-import { registerComponent } from '../registry';
+// Import all AIP components to trigger self-registration
+import './aip/accordion';
+import './aip/card';
+import './aip/cards';
+import './aip/code';
+import './aip/gallery';
+import './aip/insights';
+import './aip/markdown';
+import './aip/reference';
+import './aip/suggestions';
+import './aip/table';
+import './aip/tabs';
+import './aip/timeline';
+import './aip/tree';
 
-// Import all AIP components with metadata
-import { 
-  Timeline, TimelineMetadata,
-  Markdown, MarkdownMetadata, 
-  Table, TableMetadata,
-  Reference, ReferenceMetadata,
-  Insights, InsightsMetadata,
-  Gallery, GalleryMetadata,
-  Accordion, AccordionMetadata,
-  Cards, CardsMetadata,
-  Tree, TreeMetadata,
-  Suggestions, SuggestionsMetadata,
-  Code, CodeMetadata,
-  Card, CardMetadata,
-  Tabs, TabsMetadata
-} from './aip';
-
-// Auto-register all AIP components
-registerComponent(TimelineMetadata, Timeline);
-registerComponent(MarkdownMetadata, Markdown);
-registerComponent(TableMetadata, Table);
-registerComponent(ReferenceMetadata, Reference);
-registerComponent(InsightsMetadata, Insights);
-registerComponent(GalleryMetadata, Gallery);
-registerComponent(AccordionMetadata, Accordion);
-registerComponent(CardsMetadata, Cards);
-registerComponent(TreeMetadata, Tree);
-registerComponent(SuggestionsMetadata, Suggestions);
-registerComponent(CodeMetadata, Code);
-registerComponent(CardMetadata, Card);
-registerComponent(TabsMetadata, Tabs);
-
-console.log('✅ AgentInterface: Registered all AIP components');
+console.log('✅ AgentInterface: All AIP components loaded and registered');

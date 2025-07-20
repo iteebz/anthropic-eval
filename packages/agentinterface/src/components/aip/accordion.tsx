@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Prose } from "../prose";
 import {
   Collapsible,
@@ -84,9 +84,9 @@ export function Accordion({
   );
 }
 
-// Register with unified registry
-registerComponent({
+// Register with AIP registry
+register({
   type: 'accordion',
-  schema: ZodAccordionSchema,
+  schema: AccordionValidator,
   render: Accordion
 });

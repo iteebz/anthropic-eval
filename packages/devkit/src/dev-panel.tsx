@@ -5,7 +5,12 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHotReload } from './hot-reload';
-import { ComponentInfo } from '../registry/auto';
+// Use local ComponentInfo interface
+interface ComponentInfo {
+  name: string;
+  description: string;
+  component: React.ComponentType<any>;
+}
 
 export interface DevToolsProps {
   /** Show dev tools by default */

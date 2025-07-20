@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { type TimelineData, type TimelineEvent, type InterfaceProps } from "../../types";
 import { Prose } from "../prose";
 
@@ -79,7 +79,7 @@ export function Timeline({
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'timeline',
   schema: TimelineValidator,
   render: (props) => <Timeline events={props.events} content={props.content} className={props.className} />

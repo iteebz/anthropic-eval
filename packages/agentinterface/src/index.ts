@@ -2,6 +2,9 @@
  * @agentic/react - AI-native UI components that just work
  */
 
+// Import CSS theme
+import "./styles/theme.css";
+
 // Types that folio needs
 export type { InterfaceType, InterfaceData } from "./types";
 export type { RendererComponentProps } from "./utils/componentProps";
@@ -12,8 +15,8 @@ export type { AIPRendererProps } from "./components/renderer";
 
 // Registry system  
 export { 
-  registerComponent, 
-  renderAIPComponent, 
+  register, 
+  render, 
   getRegisteredTypes, 
   getAllMetadata,
   extendRegistry,
@@ -27,6 +30,9 @@ export type { AgentInterfaceViteOptions, AgentInterfaceNextOptions, AgentInterfa
 
 // Auto-register core components by importing
 import "./components";
+
+// Import styles to make them available
+import "./styles/theme.css";
 
 // Error boundary for folio chat
 export { InterfaceErrorBoundary } from "./core/InterfaceErrorBoundary";

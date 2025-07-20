@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 
 export const GallerySchema = {
   type: "object",
@@ -108,7 +108,7 @@ export function Gallery(props: GalleryData) {
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'gallery',
   schema: GalleryValidator,
   render: Gallery

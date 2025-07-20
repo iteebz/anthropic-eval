@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { type CodeSnippetData } from "../../types";
 import { Prose } from "../prose";
 
@@ -79,7 +79,7 @@ export function Code({
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'code',
   schema: CodeValidator,
   render: Code

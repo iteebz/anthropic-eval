@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { renderAIPComponent } from '../../registry';
+import { z } from 'zod';
+import { render, register } from '../../registry';
 import type { AIPBlock } from '../../schema/aip';
 
 export interface TabItem {
@@ -38,7 +39,7 @@ export function Tabs({ items, defaultTab, className = '' }: TabsProps) {
       </div>
       <div className="aip-tabs-content aip-p-md">
         {activeContent.map((block, index) => 
-          renderAIPComponent(block, `${activeTab}-${index}`)
+          render(block, `${activeTab}-${index}`)
         )}
       </div>
     </div>
@@ -79,3 +80,20 @@ export const metadata = {
     required: ['type', 'items']
   }
 } as const;
+
+const TabsValidator = z.object({
+  items: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    content: z.array(z.any())
+  })),
+  defaultTab: z.string().optional(),
+  className: z.string().optional()
+});
+
+// Register with AIP registry
+register({
+  type: 'tabs',
+  schema: TabsValidator,
+  render: Tabs
+});

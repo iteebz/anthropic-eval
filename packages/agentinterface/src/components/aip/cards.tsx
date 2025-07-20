@@ -1,6 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Prose } from "../prose";
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -123,7 +123,7 @@ export function Cards(props: CardsData) {
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'cards',
   schema: CardsValidator,
   render: Cards

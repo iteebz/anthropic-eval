@@ -4,8 +4,12 @@
  */
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { ComponentInfo } from '../registry/auto';
-import { ComponentDiscovery } from './filesystem-discovery';
+// Component discovery replaced with new registry system
+interface ComponentInfo {
+  name: string;
+  description: string;
+  component: React.ComponentType<any>;
+}
 
 export interface HotReloadContext {
   /** Current component registry */
@@ -28,66 +32,30 @@ const HotReloadContext = createContext<HotReloadContext | null>(null);
 
 export interface HotReloadProviderProps {
   children: React.ReactNode;
-  /** Component discovery instance */
-  discovery?: ComponentDiscovery;
-  /** Initial registry */
-  initialRegistry?: Record<string, ComponentInfo>;
   /** Enable hot reload by default */
   enabled?: boolean;
 }
 
 export function HotReloadProvider({ 
   children, 
-  discovery,
-  initialRegistry = {},
   enabled = process.env.NODE_ENV === 'development'
 }: HotReloadProviderProps) {
-  const [registry, setRegistry] = useState<Record<string, ComponentInfo>>(initialRegistry);
+  const [registry, setRegistry] = useState<Record<string, ComponentInfo>>({});
   const [isEnabled, setIsEnabled] = useState(enabled);
   const [lastReload, setLastReload] = useState<Date | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
 
   const reloadComponent = useCallback(async (name: string) => {
-    if (!isEnabled || !discovery) return;
-
-    try {
-      setErrors(prev => prev.filter(e => !e.includes(name)));
-      
-      // Re-discover components
-      const discoveredComponents = await discovery.discover();
-      const newRegistry = discovery.getRegistry();
-      
-      if (newRegistry[name]) {
-        setRegistry(prev => ({
-          ...prev,
-          [name]: newRegistry[name]
-        }));
-        setLastReload(new Date());
-      }
-    } catch (error) {
-      const errorMsg = `Failed to reload component ${name}: ${error}`;
-      setErrors(prev => [...prev, errorMsg]);
-      console.error(errorMsg);
-    }
-  }, [isEnabled, discovery]);
+    if (!isEnabled) return;
+    // Simplified: just trigger page reload for now
+    window.location.reload();
+  }, [isEnabled]);
 
   const reloadAll = useCallback(async () => {
-    if (!isEnabled || !discovery) return;
-
-    try {
-      setErrors([]);
-      
-      await discovery.discover();
-      const newRegistry = discovery.getRegistry();
-      
-      setRegistry(newRegistry);
-      setLastReload(new Date());
-    } catch (error) {
-      const errorMsg = `Failed to reload all components: ${error}`;
-      setErrors([errorMsg]);
-      console.error(errorMsg);
-    }
-  }, [isEnabled, discovery]);
+    if (!isEnabled) return;
+    // Simplified: just trigger page reload for now
+    window.location.reload();
+  }, [isEnabled]);
 
   const setEnabled = useCallback((enabled: boolean) => {
     setIsEnabled(enabled);

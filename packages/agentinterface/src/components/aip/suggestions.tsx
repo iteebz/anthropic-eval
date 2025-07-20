@@ -1,6 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Badge } from '../ui/badge';
 
 export const SuggestionsSchema = {
@@ -88,7 +88,7 @@ export function Suggestions(props: SuggestionsData) {
   );
 }
 
-registerComponent({
+register({
   type: 'suggestions',
   schema: SuggestionsValidator,
   render: Suggestions

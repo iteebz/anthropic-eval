@@ -9,7 +9,8 @@
     "agentinterface": "./dist/registry/cli.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./styles": "./dist/styles/theme.css"
   },
   "files": [
     "dist",

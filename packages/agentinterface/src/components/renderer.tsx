@@ -5,7 +5,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { renderAIPComponent, isRegistered, getRegisteredTypes } from '../registry';
+import { render, isRegistered, getRegisteredTypes } from '../registry';
 import { InterfaceErrorBoundary, InterfaceErrorContext } from '../core/InterfaceErrorBoundary';
 import { useInterfaceConfig } from '../hooks';
 import { Loading } from './common/loading';
@@ -148,7 +148,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
       showDebugInfo={showErrorDetails}
       onError={handleError}
     >
-      {renderAIPComponent({
+      {render({
         type: interfaceConfig.type,
         data: componentData
       })}

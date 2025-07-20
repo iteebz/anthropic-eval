@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { registerComponent } from '../../registry';
+import { register } from '../../registry';
 import { Prose } from "../prose";
 
 export const MarkdownSchema = {
@@ -47,7 +47,7 @@ export function Markdown({
 }
 
 // Register with unified registry
-registerComponent({
+register({
   type: 'markdown',
   schema: MarkdownValidator,
   render: Markdown
