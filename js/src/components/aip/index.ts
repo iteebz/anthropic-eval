@@ -23,7 +23,7 @@ export { Gallery, metadata as GalleryMetadata } from './gallery';
 export { Accordion, metadata as AccordionMetadata } from './accordion';
 
 // Additional AIP Components
-export { CardGrid, metadata as CardsMetadata } from './cards';
-export { DecisionTree, metadata as TreeMetadata } from './tree';
-export { ConversationSuggestions, metadata as SuggestionsMetadata } from './suggestions';
-export { CodeSnippet, metadata as CodeMetadata } from './code';
+export { Cards, metadata as CardsMetadata } from './cards';
+export { Tree, metadata as TreeMetadata } from './tree';
+export { Suggestions, metadata as SuggestionsMetadata } from './suggestions';
+export { Code, metadata as CodeMetadata } from './code';

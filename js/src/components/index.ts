@@ -1,19 +1,37 @@
 /**
- * Component exports and auto-registration
+ * Component auto-registration
+ * 
+ * Auto-registers all AIP components using metadata exports
  */
 
 import { registerComponent } from '../registry/unified';
 
-// Timeline
-export { Timeline, TimelineSchema, TimelineMetadata } from './timeline';
-import { Timeline, TimelineMetadata } from './timeline';
+// Import all AIP components with metadata
+import { 
+  Timeline, TimelineMetadata,
+  Markdown, MarkdownMetadata, 
+  Table, TableMetadata,
+  Reference, ReferenceMetadata,
+  Insights, InsightsMetadata,
+  Gallery, GalleryMetadata,
+  Accordion, AccordionMetadata,
+  Cards, CardsMetadata,
+  Tree, TreeMetadata,
+  Suggestions, SuggestionsMetadata,
+  Code, CodeMetadata
+} from './aip';
 
-// Markdown  
-export { Markdown, MarkdownSchema, MarkdownMetadata } from './markdown';
-import { Markdown, MarkdownMetadata } from './markdown';
-
-// Auto-register core components
+// Auto-register all AIP components
 registerComponent(TimelineMetadata, Timeline);
 registerComponent(MarkdownMetadata, Markdown);
+registerComponent(TableMetadata, Table);
+registerComponent(ReferenceMetadata, Reference);
+registerComponent(InsightsMetadata, Insights);
+registerComponent(GalleryMetadata, Gallery);
+registerComponent(AccordionMetadata, Accordion);
+registerComponent(CardsMetadata, Cards);
+registerComponent(TreeMetadata, Tree);
+registerComponent(SuggestionsMetadata, Suggestions);
+registerComponent(CodeMetadata, Code);
 
-console.log('✅ AgentInterface: Registered core components');
+console.log('✅ AgentInterface: Registered all AIP components');

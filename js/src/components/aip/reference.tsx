@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 
 export const ReferenceSchema = {
   type: "object",
@@ -68,7 +68,7 @@ export function Reference(props: ReferenceData) {
 
   return (
     <div className={className}>
-      {content && <MarkdownRenderer content={content} className="mb-4" />}
+      {content && <Prose content={content} className="mb-4" />}
       
       {references.length > 0 && (
         <div className="space-y-2">
@@ -86,7 +86,7 @@ export function Reference(props: ReferenceData) {
                 <div className="mt-2 ml-4 p-3 border-l-2 border-primary/30 bg-muted/30 rounded-r">
                   <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">{reference.type}</div>
                   <div className="text-sm text-muted-foreground mb-2">{reference.excerpt}</div>
-                  <MarkdownRenderer content={reference.content} />
+                  <Prose content={reference.content} />
                   {reference.url && (
                     <a
                       href={reference.url}

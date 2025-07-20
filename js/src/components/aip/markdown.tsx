@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 
 export const MarkdownSchema = {
   type: "object",
@@ -38,7 +38,7 @@ export function Markdown({
   onSendMessage,
 }: InterfaceProps) {
   return (
-    <MarkdownRenderer
+    <Prose
       content={content}
       className={className}
       onSendMessage={onSendMessage}

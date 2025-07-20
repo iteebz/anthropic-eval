@@ -8,21 +8,21 @@
 export * from "./schemas";
 export * from "./validation";
 
-// Core primitive components
-export { CardGrid } from "../components/interface/card-grid";
-export { ExpandableSection } from "../components/interface/expandable-section";
-export { InlineReference } from "../components/interface/inline-reference";
-export { KeyInsights } from "../components/interface/key-insights";
-export { MarkdownRenderer } from "../components/render/MarkdownRenderer";
-export { Timeline } from "../components/interface/timeline";
+// Core primitive components - now using AIP structure
+export { Cards } from "../components/aip/cards";
+export { Accordion } from "../components/aip/accordion";
+export { Reference } from "../components/aip/reference";
+export { Insights } from "../components/aip/insights";
+export { Prose } from "../components/prose";
+export { Timeline } from "../components/aip/timeline";
 
 // Core primitive registry
-import { CardGrid } from "../components/interface/card-grid";
-import { ExpandableSection } from "../components/interface/expandable-section";
-import { InlineReference } from "../components/interface/inline-reference";
-import { KeyInsights } from "../components/interface/key-insights";
-import { MarkdownRenderer } from "../components/render/MarkdownRenderer";
-import { Timeline } from "../components/interface/timeline";
+import { Cards } from "../components/aip/cards";
+import { Accordion } from "../components/aip/accordion";
+import { Reference } from "../components/aip/reference";
+import { Insights } from "../components/aip/insights";
+import { Prose } from "../components/prose";
+import { Timeline } from "../components/aip/timeline";
 import { RendererComponentProps } from "../utils/componentProps";
 import {
   type CardGridData,
@@ -34,22 +34,22 @@ import {
 } from "../types";
 
 export const CoreComponentRegistry = {
-  markdown: MarkdownRenderer as React.ComponentType<
+  markdown: Prose as React.ComponentType<
     RendererComponentProps<MarkdownData>
   >,
-  "card-grid": CardGrid as React.ComponentType<
+  "card-grid": Cards as React.ComponentType<
     RendererComponentProps<CardGridData>
   >,
-  "expandable-section": ExpandableSection as React.ComponentType<
+  "expandable-section": Accordion as React.ComponentType<
     RendererComponentProps<ExpandableSectionData>
   >,
-  "key-insights": KeyInsights as React.ComponentType<
+  "key-insights": Insights as React.ComponentType<
     RendererComponentProps<KeyInsightsData>
   >,
   timeline: Timeline as React.ComponentType<
     RendererComponentProps<TimelineData>
   >,
-  "inline-reference": InlineReference as React.ComponentType<
+  "inline-reference": Reference as React.ComponentType<
     RendererComponentProps<InlineReferencesData>
   >,
 } as const;

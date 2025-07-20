@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 import { type TimelineData, type TimelineEvent, type InterfaceProps } from "../../types";
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 
 export const TimelineSchema = {
   type: "object",
@@ -56,7 +56,7 @@ export function Timeline({
     <div className={className}>
       {content && (
         <div className="mb-4">
-          <MarkdownRenderer content={content} />
+          <Prose content={content} />
         </div>
       )}
 

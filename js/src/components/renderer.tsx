@@ -6,7 +6,7 @@
 
 import React, { useCallback } from 'react';
 import { renderAIPComponent, isRegistered, getRegisteredTypes } from '../registry/unified';
-import { InterfaceErrorBoundary, InterfaceErrorContext } from './common/InterfaceErrorBoundary';
+import { InterfaceErrorBoundary, InterfaceErrorContext } from '../core/InterfaceErrorBoundary';
 import { useInterfaceConfig } from '../hooks';
 import { LoadingState } from './common/LoadingState';
 import { ErrorState } from './common/ErrorState';

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 import { type CodeSnippetData } from "../../types";
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 
 export const CodeSchema = {
   type: "object",
@@ -51,7 +51,7 @@ export function Code({
     <div className={className}>
       {content && (
         <div className="mb-4">
-          <MarkdownRenderer content={content} />
+          <Prose content={content} />
         </div>
       )}
 

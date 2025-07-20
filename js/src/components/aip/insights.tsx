@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 import { Insights } from '.';
 import { Insights } from '.';
 
@@ -55,7 +55,7 @@ export function Insights({
     <div className={className}>
       {content && (
         <div className="mb-4">
-          <MarkdownRenderer content={content} />
+          <Prose content={content} />
         </div>
       )}
 

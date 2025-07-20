@@ -1,7 +1,7 @@
 import React from 'react';
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 
@@ -75,7 +75,7 @@ export function Cards(props: CardsData) {
 
   return (
     <div className={className}>
-      {content && <MarkdownRenderer content={content} className="mb-4" />}
+      {content && <Prose content={content} className="mb-4" />}
       <div className="grid gap-4 md:grid-cols-2">
         {cards.map((card, i) => (
           <Card key={i}>

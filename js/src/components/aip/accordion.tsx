@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Prose } from "../prose";
 import {
   Collapsible,
   CollapsibleContent,
@@ -58,7 +58,7 @@ export function Accordion({
     <div className={className}>
       {content && (
         <div className="mb-4">
-          <MarkdownRenderer content={content} />
+          <Prose content={content} />
         </div>
       )}
 
@@ -72,7 +72,7 @@ export function Accordion({
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="p-3">
-                    <MarkdownRenderer content={section.content} />
+                    <Prose content={section.content} />
                   </div>
                 </CollapsibleContent>
               </div>

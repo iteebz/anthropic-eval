@@ -5,7 +5,7 @@
  * and detailed error reporting. Designed to be shadcn-quality and work out of the box.
  */
 import { Component, type ErrorInfo, type ReactNode } from "react";
-// import { MarkdownRenderer } from "../render/MarkdownRenderer";
+// import { Prose } from "../prose";
 
 export interface InterfaceErrorBoundaryProps {
   children: ReactNode;
