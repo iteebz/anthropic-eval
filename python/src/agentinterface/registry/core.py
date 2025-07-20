@@ -49,19 +49,40 @@ class ComponentRegistry:
         self._load_core_registry()
     
     def _load_core_registry(self):
-        """Load core components from package registry"""
-        # Load from package-local registry file
-        registry_file = Path(__file__).parent / "registry.json"
+        """Load core components from synchronized registry"""
+        # Try new synchronized location first
+        registry_file = Path(__file__).parent.parent / "registry.json"
+        
+        if not registry_file.exists():
+            # Fallback to old location
+            registry_file = Path(__file__).parent / "registry.json"
         
         if registry_file.exists():
-            with open(registry_file, 'r') as f:
-                registry_data = json.load(f)
+            try:
+                with open(registry_file, 'r') as f:
+                    registry_data = json.load(f)
                 
-            for component_type, component_data in registry_data["components"].items():
-                spec = ComponentSpec.from_dict(component_data)
-                self._components[component_type] = spec
+                # Handle new registry format with metadata
+                if "components" in registry_data:
+                    for component_type, component_data in registry_data["components"].items():
+                        spec = ComponentSpec.from_dict(component_data)
+                        self._components[component_type] = spec
+                    
+                    # Log registry info
+                    version = registry_data.get("version", "unknown")
+                    generated_at = registry_data.get("generatedAt", "unknown")
+                    print(f"✅ Loaded {len(self._components)} components from registry v{version}")
+                    print(f"   Generated: {generated_at}")
+                else:
+                    print("Warning: Invalid registry format - missing 'components' key")
+                    
+            except json.JSONDecodeError as e:
+                print(f"Error: Invalid JSON in registry file: {e}")
+            except Exception as e:
+                print(f"Error loading registry: {e}")
         else:
             print(f"Warning: Core registry not found at {registry_file}")
+            print("Run 'npx agentinterface build' to generate the registry")
     
     def register(self, component_type: str, description: str, 
                 category: ComponentCategory = ComponentCategory.CUSTOM,
@@ -91,18 +112,53 @@ class ComponentRegistry:
     
     def get_format_instructions(self) -> str:
         """Generate format instructions for agents"""
+        if not self._components:
+            return "No components available. Run 'npx agentinterface build' to generate the registry."
+        
         instructions = [
-            "Available interface components:",
+            "Available AgentInterface Protocol (AIP) components:",
             ""
         ]
         
+        # Group by category
+        by_category = {}
         for component_type, spec in self._components.items():
-            example = self._build_example(spec)
-            instructions.append(f"- {component_type}: {spec.description}")
-            instructions.append(f"  Example: {example}")
+            category = spec.category.value
+            if category not in by_category:
+                by_category[category] = []
+            by_category[category].append((component_type, spec))
+        
+        for category, components in by_category.items():
+            instructions.append(f"{category.upper()} COMPONENTS:")
+            for component_type, spec in components:
+                example = self._build_example(spec)
+                instructions.append(f"- {component_type}: {spec.description}")
+                instructions.append(f"  Tags: {', '.join(spec.tags)}")
+                instructions.append(f"  Example: {example}")
+                instructions.append("")
             instructions.append("")
         
         return "\n".join(instructions)
+    
+    def get_registry_stats(self) -> Dict[str, Any]:
+        """Get registry statistics"""
+        stats = {
+            "total_components": len(self._components),
+            "by_category": {},
+            "by_tags": {}
+        }
+        
+        # Count by category
+        for spec in self._components.values():
+            category = spec.category.value
+            stats["by_category"][category] = stats["by_category"].get(category, 0) + 1
+        
+        # Count by tags
+        for spec in self._components.values():
+            for tag in spec.tags:
+                stats["by_tags"][tag] = stats["by_tags"].get(tag, 0) + 1
+        
+        return stats
     
     def _build_example(self, spec: ComponentSpec) -> str:
         """Build JSON example for component"""
@@ -163,3 +219,8 @@ def get_component_spec(component_type: str) -> Optional[ComponentSpec]:
 def get_format_instructions() -> str:
     """Get format instructions for agents"""
     return get_registry().get_format_instructions()
+
+
+def get_registry_stats() -> Dict[str, Any]:
+    """Get registry statistics"""
+    return get_registry().get_registry_stats()
