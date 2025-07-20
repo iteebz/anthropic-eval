@@ -1,0 +1,131 @@
+{
+  "version": "0.1.0",
+  "components": {
+    "markdown": {
+      "type": "markdown",
+      "description": "Rich text with formatting and syntax highlighting",
+      "category": "core",
+      "tags": ["text", "content", "default"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "content": { "type": "string" }
+        },
+        "required": ["content"]
+      }
+    },
+    "timeline": {
+      "type": "timeline",
+      "description": "Chronological events with rich details",
+      "category": "interface",
+      "tags": ["chronological", "events", "history"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" }
+              },
+              "required": ["date", "title"]
+            }
+          }
+        },
+        "required": ["events"]
+      }
+    },
+    "card-grid": {
+      "type": "card-grid",
+      "description": "Visual card layouts with actions and metadata",
+      "category": "interface",
+      "tags": ["cards", "grid", "collection"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "tags": { "type": "array", "items": { "type": "string" } },
+                "links": { "type": "array", "items": { "type": "object" } },
+                "metadata": { "type": "object" }
+              },
+              "required": ["title"]
+            }
+          }
+        },
+        "required": ["cards"]
+      }
+    },
+    "key-insights": {
+      "type": "key-insights",
+      "description": "Categorized insights with expandable sections",
+      "category": "interface",
+      "tags": ["insights", "analysis", "categorized"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "insights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "category": { "type": "string" }
+              },
+              "required": ["title", "description"]
+            }
+          }
+        },
+        "required": ["insights"]
+      }
+    },
+    "expandable-section": {
+      "type": "expandable-section",
+      "description": "Collapsible content areas",
+      "category": "interface",
+      "tags": ["collapsible", "sections", "organization"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "content": { "type": "string" },
+                "defaultExpanded": { "type": "boolean" }
+              },
+              "required": ["title", "content"]
+            }
+          }
+        },
+        "required": ["sections"]
+      }
+    },
+    "code-snippet": {
+      "type": "code-snippet",
+      "description": "Syntax-highlighted code blocks with copy functionality",
+      "category": "interface",
+      "tags": ["code", "syntax", "programming"],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "language": { "type": "string" },
+          "title": { "type": "string" }
+        },
+        "required": ["code"]
+      }
+    }
+  }
+}

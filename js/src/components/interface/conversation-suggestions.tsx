@@ -14,7 +14,7 @@ const ConversationSuggestionsSchema = z.object({
   suggestions: z.array(SuggestionSchema),
   title: z.string().optional(),
   className: z.string().optional(),
-  onSendMessage: z.function().optional()
+  onSendMessage: z.any().optional()
 });
 
 type ConversationSuggestionsData = z.infer<typeof ConversationSuggestionsSchema>;

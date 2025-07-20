@@ -7,10 +7,7 @@ import { LoadingState } from "./common/LoadingState";
 import { ErrorState } from "./common/ErrorState";
 import { EmptyState } from "./common/EmptyState";
 import { ComponentNotFound } from "./common/ComponentNotFound";
-import {
-  createComponentProps,
-  type RendererComponentProps,
-} from "../utils/componentProps";
+import { type RendererComponentProps } from "../utils/componentProps";
 import { RecursiveRenderer } from "./RecursiveRenderer";
 import type { Logger } from "../types";
 
@@ -156,12 +153,12 @@ export const AgentInterfaceRenderer = ({
     );
   }
 
-  const componentProps = createComponentProps(
-    interfaceConfig.content,
-    interfaceConfig.data as InterfaceData, // Cast here
+  const componentProps: RendererComponentProps = {
+    content: interfaceConfig.content,
+    interfaceData: interfaceConfig.data as InterfaceData,
     className,
     onSendMessage,
-    enableRecursiveRendering && (interfaceConfig.data as any)?.children ? (
+    children: enableRecursiveRendering && (interfaceConfig.data as any)?.children ? (
       <RecursiveRenderer
         content={(interfaceConfig.data as any).children}
         depth={1}
@@ -169,7 +166,7 @@ export const AgentInterfaceRenderer = ({
         onSendMessage={onSendMessage}
       />
     ) : undefined,
-  );
+  };
 
   return (
     <InterfaceErrorBoundary

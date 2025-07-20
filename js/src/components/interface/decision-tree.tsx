@@ -17,7 +17,7 @@ const DecisionTreeSchema = z.object({
   rootNodeId: z.string(),
   title: z.string().optional(),
   className: z.string().optional(),
-  onSendMessage: z.function().optional()
+  onSendMessage: z.any().optional()
 });
 
 type DecisionTreeData = z.infer<typeof DecisionTreeSchema>;

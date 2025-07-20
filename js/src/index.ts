@@ -1,5 +1,5 @@
 /**
- * @agentinterface/react - Minimal working version for folio
+ * @agentic/react - AI-native UI components that just work
  */
 
 // Types that folio needs
@@ -14,9 +14,19 @@ export type { AgentInterfaceRendererProps } from "./components/AgentInterfaceRen
 export { UnifiedRenderer } from "./components/UnifiedRenderer";
 export type { UnifiedRendererProps } from "./components/UnifiedRenderer";
 
-// Unified registry system  
-export { registerComponent, renderAIPComponent } from "./registry/unified";
-export type { ComponentRegistration } from "./registry/unified";
+// Registry system  
+export { 
+  registerComponent, 
+  renderAIPComponent, 
+  getRegisteredTypes, 
+  getAllMetadata,
+  extendRegistry,
+  isRegistered 
+} from "./registry/unified";
+export type { ComponentMetadata, ComponentRegistration } from "./registry/unified";
+
+// Auto-register core components by importing
+import "./components";
 
 // Error boundary for folio chat
 export { InterfaceErrorBoundary } from "./components/common/InterfaceErrorBoundary";
@@ -30,8 +40,10 @@ export { CodeSnippet } from "./components/interface/code-snippet";
 export { ComparisonTable } from "./components/interface/comparison-table";
 export { ContactForm } from "./components/interface/contact-form";
 export { ConversationThread } from "./components/interface/conversation-thread";
+export { ConversationSuggestions } from "./components/interface/conversation-suggestions";
 export { DecisionTree } from "./components/interface/decision-tree";
 export { ImageGallery } from "./components/interface/image-gallery";
 export { InlineReference } from "./components/interface/inline-reference";
 export { ProgressTracker } from "./components/interface/progress-tracker";
 export { Timeline } from "./components/interface/timeline";
+export { Markdown } from "./components/interface/markdown";

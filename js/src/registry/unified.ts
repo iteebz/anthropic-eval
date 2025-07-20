@@ -1,55 +1,77 @@
 /**
- * Unified AIP Registry - Clean, Extensible, Robust
+ * Registry - Runtime component registration and rendering
  * 
- * Registry-driven schema and renderer pattern.
- * Each component type registers itself with optional validation + render function.
+ * Clean extensibility via runtime composition.
  */
 
 import React from 'react';
-import { z, type ZodSchema } from 'zod';
 
-export interface ComponentRegistration<T = any> {
+export interface ComponentMetadata {
   type: string;
-  schema?: ZodSchema<T>;
-  render: (props: T) => React.JSX.Element;
+  description: string;
+  schema: any; // JSON Schema
+  category?: string;
+  tags?: string[];
 }
 
-// Global registry - single source of truth
-const AIP_REGISTRY: Record<string, ComponentRegistration<any>> = {};
+export interface ComponentRegistration {
+  metadata: ComponentMetadata;
+  render: (props: any) => React.JSX.Element;
+}
 
-/**
- * Get all registered component types
- */
+class ComponentRegistry {
+  private components = new Map<string, ComponentRegistration>();
+
+  register(metadata: ComponentMetadata, render: (props: any) => React.JSX.Element) {
+    this.components.set(metadata.type, { metadata, render });
+  }
+
+  get(type: string): ComponentRegistration | undefined {
+    return this.components.get(type);
+  }
+
+  getAll(): Record<string, ComponentMetadata> {
+    const result: Record<string, ComponentMetadata> = {};
+    for (const [type, registration] of this.components) {
+      result[type] = registration.metadata;
+    }
+    return result;
+  }
+
+  getTypes(): string[] {
+    return Array.from(this.components.keys());
+  }
+
+  isRegistered(type: string): boolean {
+    return this.components.has(type);
+  }
+}
+
+// Global registry instance
+export const registry = new ComponentRegistry();
+
+// Public API
+export function registerComponent(metadata: ComponentMetadata, render: (props: any) => React.JSX.Element) {
+  registry.register(metadata, render);
+}
+
 export function getRegisteredTypes(): string[] {
-  return Object.keys(AIP_REGISTRY);
+  return registry.getTypes();
 }
 
-/**
- * Get all component registrations
- */
-export function getAllRegistrations(): Record<string, ComponentRegistration<any>> {
-  return { ...AIP_REGISTRY };
+export function getAllMetadata(): Record<string, ComponentMetadata> {
+  return registry.getAll();
 }
 
-/**
- * Register a component with the AIP system
- */
-export function registerComponent<T>(registration: ComponentRegistration<T>): void {
-  AIP_REGISTRY[registration.type] = registration;
-}
-
-/**
- * Check if a component type is registered
- */
 export function isRegistered(type: string): boolean {
-  return type in AIP_REGISTRY;
+  return registry.isRegistered(type);
 }
 
 /**
  * Render an AIP component with validation
  */
 export function renderAIPComponent(component: { type: string; data: any }): React.JSX.Element | null {
-  const registration = AIP_REGISTRY[component.type];
+  const registration = registry.get(component.type);
   
   if (!registration) {
     console.warn(`No registration found for component type: ${component.type}`);
@@ -62,26 +84,19 @@ export function renderAIPComponent(component: { type: string; data: any }): Reac
     }, `Unknown component: ${component.type}`);
   }
 
-  const { schema, render } = registration;
+  // TODO: Add JSON Schema validation here
+  return registration.render(component.data);
+}
 
-  // Optional validation with safeParse
-  if (schema) {
-    const result = schema.safeParse(component.data);
-    if (!result.success) {
-      console.error(`Validation failed for ${component.type}:`, result.error.format());
-      return React.createElement('div', {
-        style: { 
-          padding: '1rem', 
-          border: '1px solid #f00', 
-          color: '#f00', 
-          backgroundColor: '#fee' 
-        }
-      }, `Invalid data for ${component.type}: ${result.error.issues.map(i => i.message).join(', ')}`);
-    }
-    return render(result.data);
+/**
+ * Extension API - register multiple components at once
+ */
+export function extendRegistry(components: Array<{
+  metadata: ComponentMetadata;
+  render: (props: unknown) => React.JSX.Element;
+}>) {
+  for (const component of components) {
+    registry.register(component.metadata, component.render);
   }
-
-  // No schema = pass raw data
-  return render(component.data);
 }
 

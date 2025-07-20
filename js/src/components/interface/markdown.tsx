@@ -5,7 +5,7 @@ import { MarkdownRenderer } from "../render/MarkdownRenderer";
 const MarkdownSchema = z.object({
   content: z.string(),
   className: z.string().optional(),
-  onSendMessage: z.function().optional()
+  onSendMessage: z.any().optional()
 });
 
 export interface InterfaceProps {

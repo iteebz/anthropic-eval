@@ -13,7 +13,7 @@ const ContactFormSchema = z.object({
   action: z.string().optional(),
   submitText: z.string().optional(),
   className: z.string().optional(),
-  onSendMessage: z.function().optional()
+  onSendMessage: z.any().optional()
 });
 
 type ContactFormData = z.infer<typeof ContactFormSchema>;

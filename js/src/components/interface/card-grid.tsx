@@ -20,7 +20,7 @@ const CardGridSchema = z.object({
   cards: z.array(CardSchema),
   content: z.string().optional(),
   className: z.string().optional(),
-  onSendMessage: z.function().optional()
+  onSendMessage: z.any().optional()
 });
 
 type CardGridData = z.infer<typeof CardGridSchema>;
