@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "agentinterface": "./dist/cli/index.js"
+    "agentinterface": "./dist/registry/cli.js"
   },
   "exports": {
     ".": "./dist/index.js"
@@ -18,7 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "node scripts/build-registry.mjs && tsup",
+    "build": "tsup && node dist/registry/cli.js",
     "prepublishOnly": "npm run build",
     "dev": "tsc --watch",
     "test": "vitest",
