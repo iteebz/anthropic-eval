@@ -3,7 +3,50 @@ import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
-const DecisionTreeSchema = z.object({
+export const TreeSchema = {
+  type: "object",
+  properties: {
+    nodes: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          title: { type: "string" },
+          content: { type: "string" },
+          options: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: { type: "string" },
+                label: { type: "string" },
+                nextNodeId: { type: "string" }
+              },
+              required: ["id", "label"]
+            }
+          }
+        },
+        required: ["id", "title", "content"]
+      }
+    },
+    rootNodeId: { type: "string" },
+    title: { type: "string" },
+    className: { type: "string" },
+    onSendMessage: { type: "object" }
+  },
+  required: ["nodes", "rootNodeId"]
+} as const;
+
+export const metadata = {
+  type: "tree",
+  description: "Interactive decision tree with branching options and MCP callback support",
+  schema: TreeSchema,
+  category: "interface",
+  tags: ["decision", "interactive", "branching"]
+} as const;
+
+const TreeValidator = z.object({
   nodes: z.array(z.object({
     id: z.string(),
     title: z.string(),
@@ -20,9 +63,9 @@ const DecisionTreeSchema = z.object({
   onSendMessage: z.any().optional()
 });
 
-type DecisionTreeData = z.infer<typeof DecisionTreeSchema>;
+type TreeData = z.infer<typeof TreeValidator>;
 
-export function DecisionTree(props: DecisionTreeData) {
+export function Tree(props: TreeData) {
   const { nodes, rootNodeId, title, className, onSendMessage } = props;
   const [currentNodeId, setCurrentNodeId] = useState(rootNodeId);
   
@@ -77,7 +120,7 @@ export function DecisionTree(props: DecisionTreeData) {
 
 // Register with unified registry
 registerComponent({
-  type: 'decision-tree',
-  schema: DecisionTreeSchema,
-  render: DecisionTree
+  type: 'tree',
+  schema: TreeValidator,
+  render: Tree
 });

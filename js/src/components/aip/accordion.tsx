@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { type ExpandableSectionData, type InterfaceProps } from "../../types";
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
 import {
   Collapsible,
@@ -8,7 +7,36 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 
-const ExpandableSectionSchema = z.object({
+export const AccordionSchema = {
+  type: "object",
+  properties: {
+    sections: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          content: { type: "string" },
+          defaultExpanded: { type: "boolean" }
+        },
+        required: ["title", "content"]
+      }
+    },
+    content: { type: "string" },
+    className: { type: "string" }
+  },
+  required: ["sections"]
+} as const;
+
+export const metadata = {
+  type: "accordion",
+  description: "Collapsible sections for organizing content with expandable/collapsible functionality",
+  schema: AccordionSchema,
+  category: "interface",
+  tags: ["collapsible", "organization", "expandable"]
+} as const;
+
+const AccordionValidator = z.object({
   sections: z.array(z.object({
     title: z.string(),
     content: z.string(),
@@ -18,13 +46,13 @@ const ExpandableSectionSchema = z.object({
   className: z.string().optional()
 });
 
-export function ExpandableSection({
+type AccordionData = z.infer<typeof AccordionValidator>;
+
+export function Accordion({
+  sections,
   content,
-  interfaceData,
   className,
-}: InterfaceProps) {
-  const data = interfaceData as ExpandableSectionData;
-  const sections = data?.sections || [];
+}: AccordionData) {
 
   return (
     <div className={className}>
@@ -34,7 +62,7 @@ export function ExpandableSection({
         </div>
       )}
 
-      {sections.length > 0 && (
+      {sections && sections.length > 0 && (
         <div className="space-y-2">
           {sections.map((section, index) => (
             <Collapsible key={index} defaultOpen={section.defaultExpanded}>
@@ -58,7 +86,7 @@ export function ExpandableSection({
 
 // Register with unified registry
 registerComponent({
-  type: 'expandable-sections',
-  schema: ExpandableSectionSchema,
-  render: (props) => <ExpandableSection sections={props.sections} content={props.content} className={props.className} />
+  type: 'accordion',
+  schema: ZodAccordionSchema,
+  render: Accordion
 });

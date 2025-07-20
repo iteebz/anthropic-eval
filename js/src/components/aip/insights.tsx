@@ -1,10 +1,39 @@
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
-import { KeyInsightsDataSchema } from '../../core/schemas';
-import { type KeyInsightsData } from "../../types";
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
+import { Insights } from '.';
+import { Insights } from '.';
 
-const KeyInsightsSchema = z.object({
+export const InsightsSchema = {
+  type: "object",
+  properties: {
+    insights: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          description: { type: "string" },
+          category: { type: "string" }
+        },
+        required: ["title", "description"]
+      }
+    },
+    content: { type: "string" },
+    className: { type: "string" }
+  },
+  required: ["insights"]
+} as const;
+
+export const metadata = {
+  type: "insights",
+  description: "Highlight key insights and important information with categorized callouts",
+  schema: InsightsSchema,
+  category: "interface",
+  tags: ["highlights", "callouts", "important"]
+} as const;
+
+const InsightsValidator = z.object({
   insights: z.array(z.object({
     title: z.string(),
     description: z.string(),
@@ -14,19 +43,13 @@ const KeyInsightsSchema = z.object({
   className: z.string().optional()
 });
 
-export interface InterfaceProps {
-  content: string;
-  interfaceData?: KeyInsightsData;
-  className?: string;
-}
+type InsightsData = z.infer<typeof InsightsValidator>;
 
-export function KeyInsights({
+export function Insights({
+  insights,
   content,
-  interfaceData,
   className,
-}: InterfaceProps) {
-  const data = interfaceData as KeyInsightsData;
-  const insights = data?.insights || [];
+}: InsightsData) {
 
   return (
     <div className={className}>
@@ -36,7 +59,7 @@ export function KeyInsights({
         </div>
       )}
 
-      {insights.length > 0 && (
+      {insights && insights.length > 0 && (
         <div className="space-y-3">
           {insights.map((insight, index) => (
             <div key={index} className="border-l-4 border-primary/30 pl-4 py-2 bg-muted/20 rounded-r">
@@ -55,7 +78,7 @@ export function KeyInsights({
 
 // Register with unified registry
 registerComponent({
-  type: 'key-insights',
-  schema: KeyInsightsSchema,
-  render: (props) => <KeyInsights content={props.content || ''} interfaceData={{ insights: props.insights }} className={props.className} />
+  type: 'insights',
+  schema: InsightsValidator,
+  render: Insights
 });

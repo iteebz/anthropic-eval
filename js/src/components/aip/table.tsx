@@ -2,7 +2,48 @@ import React from 'react';
 import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 
-const ComparisonTableSchema = z.object({
+export const TableSchema = {
+  type: "object",
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          name: { type: "string" },
+          attributes: { type: "object" }
+        },
+        required: ["id", "name", "attributes"]
+      }
+    },
+    attributes: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          key: { type: "string" },
+          label: { type: "string" },
+          type: { type: "string", enum: ["text", "number", "boolean"] }
+        },
+        required: ["key", "label"]
+      }
+    },
+    title: { type: "string" },
+    className: { type: "string" }
+  },
+  required: ["items", "attributes"]
+} as const;
+
+export const metadata = {
+  type: "table",
+  description: "Display structured data in a comparison table format with customizable columns and attributes",
+  schema: TableSchema,
+  category: "interface",
+  tags: ["data", "comparison", "structured"]
+} as const;
+
+const TableValidator = z.object({
   items: z.array(z.object({
     id: z.string(),
     name: z.string(),
@@ -17,9 +58,9 @@ const ComparisonTableSchema = z.object({
   className: z.string().optional()
 });
 
-type ComparisonTableData = z.infer<typeof ComparisonTableSchema>;
+type TableData = z.infer<typeof TableValidator>;
 
-export function ComparisonTable(props: ComparisonTableData) {
+export function Table(props: TableData) {
   const { items, attributes, title, className } = props;
 
   return (
@@ -55,7 +96,7 @@ export function ComparisonTable(props: ComparisonTableData) {
 
 // Register with unified registry
 registerComponent({
-  type: 'comparison-table',
-  schema: ComparisonTableSchema,
-  render: ComparisonTable
+  type: 'table',
+  schema: TableValidator,
+  render: Table
 });

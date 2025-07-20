@@ -3,7 +3,37 @@ import { registerComponent } from '../../registry/unified';
 import { type TimelineData, type TimelineEvent, type InterfaceProps } from "../../types";
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
-const TimelineSchema = z.object({
+export const TimelineSchema = {
+  type: "object",
+  properties: {
+    events: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          date: { type: "string" },
+          title: { type: "string" },
+          description: { type: "string" },
+          type: { type: "string" }
+        },
+        required: ["date", "title", "description"]
+      }
+    },
+    content: { type: "string" },
+    className: { type: "string" }
+  },
+  required: ["events"]
+} as const;
+
+export const metadata = {
+  type: "timeline",
+  description: "Display chronological events in a vertical timeline format with dates, titles, and descriptions",
+  schema: TimelineSchema,
+  category: "interface",
+  tags: ["chronological", "events", "history"]
+} as const;
+
+const TimelineValidator = z.object({
   events: z.array(z.object({
     date: z.string(),
     title: z.string(),
@@ -51,6 +81,6 @@ export function Timeline({
 // Register with unified registry
 registerComponent({
   type: 'timeline',
-  schema: TimelineSchema,
+  schema: TimelineValidator,
   render: (props) => <Timeline events={props.events} content={props.content} className={props.className} />
 });

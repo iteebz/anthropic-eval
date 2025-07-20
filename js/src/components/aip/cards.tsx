@@ -5,6 +5,51 @@ import { MarkdownRenderer } from "../render/MarkdownRenderer";
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 
+export const CardsSchema = {
+  type: "object",
+  properties: {
+    cards: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          description: { type: "string" },
+          tags: {
+            type: "array",
+            items: { type: "string" }
+          },
+          links: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                label: { type: "string" },
+                url: { type: "string" },
+                type: { type: "string", enum: ["action", "external"] }
+              },
+              required: ["label"]
+            }
+          }
+        },
+        required: ["title", "description"]
+      }
+    },
+    content: { type: "string" },
+    className: { type: "string" },
+    onSendMessage: { type: "object" }
+  },
+  required: ["cards"]
+} as const;
+
+export const metadata = {
+  type: "cards",
+  description: "Interactive card grid with actions and MCP callback support",
+  schema: CardsSchema,
+  category: "interface",
+  tags: ["cards", "interactive", "grid"]
+} as const;
+
 const CardSchema = z.object({
   title: z.string(),
   description: z.string(),
@@ -16,16 +61,16 @@ const CardSchema = z.object({
   })).optional()
 });
 
-const CardGridSchema = z.object({
+const CardsValidator = z.object({
   cards: z.array(CardSchema),
   content: z.string().optional(),
   className: z.string().optional(),
   onSendMessage: z.any().optional()
 });
 
-type CardGridData = z.infer<typeof CardGridSchema>;
+type CardsData = z.infer<typeof CardsValidator>;
 
-export function CardGrid(props: CardGridData) {
+export function Cards(props: CardsData) {
   const { cards = [], content, className, onSendMessage } = props;
 
   return (
@@ -79,7 +124,7 @@ export function CardGrid(props: CardGridData) {
 
 // Register with unified registry
 registerComponent({
-  type: 'card-grid',
-  schema: CardGridSchema,
-  render: CardGrid
+  type: 'cards',
+  schema: CardsValidator,
+  render: Cards
 });

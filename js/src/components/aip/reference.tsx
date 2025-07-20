@@ -3,7 +3,39 @@ import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 import { MarkdownRenderer } from "../render/MarkdownRenderer";
 
-const InlineReferenceSchema = z.object({
+export const ReferenceSchema = {
+  type: "object",
+  properties: {
+    references: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          title: { type: "string" },
+          type: { type: "string" },
+          excerpt: { type: "string" },
+          content: { type: "string" },
+          url: { type: "string" }
+        },
+        required: ["id", "title", "type", "excerpt", "content"]
+      }
+    },
+    content: { type: "string" },
+    className: { type: "string" }
+  },
+  required: ["references"]
+} as const;
+
+export const metadata = {
+  type: "reference",
+  description: "Interactive inline references that expand to show detailed content with MCP callback support",
+  schema: ReferenceSchema,
+  category: "interface",
+  tags: ["citation", "interactive", "expandable"]
+} as const;
+
+const ReferenceValidator = z.object({
   references: z.array(z.object({
     id: z.string(),
     title: z.string(),
@@ -16,9 +48,9 @@ const InlineReferenceSchema = z.object({
   className: z.string().optional()
 });
 
-type InlineReferenceData = z.infer<typeof InlineReferenceSchema>;
+type ReferenceData = z.infer<typeof ReferenceValidator>;
 
-export function InlineReference(props: InlineReferenceData) {
+export function Reference(props: ReferenceData) {
   const { references = [], content, className } = props;
   const [expandedRefs, setExpandedRefs] = useState<Set<string>>(new Set());
 
@@ -77,7 +109,7 @@ export function InlineReference(props: InlineReferenceData) {
 
 // Register with unified registry
 registerComponent({
-  type: 'inline-reference',
-  schema: InlineReferenceSchema,
-  render: InlineReference
+  type: 'reference',
+  schema: ReferenceValidator,
+  render: Reference
 });

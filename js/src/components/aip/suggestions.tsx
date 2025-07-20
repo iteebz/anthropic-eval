@@ -3,26 +3,57 @@ import { z } from 'zod';
 import { registerComponent } from '../../registry/unified';
 import { Badge } from '../ui/badge';
 
-const SuggestionSchema = z.object({
+export const SuggestionsSchema = {
+  type: "object",
+  properties: {
+    suggestions: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          text: { type: "string" },
+          id: { type: "string" },
+          context: { type: "string" },
+          priority: { type: "string", enum: ["high", "medium", "low"] }
+        },
+        required: ["text"]
+      }
+    },
+    title: { type: "string" },
+    className: { type: "string" },
+    onSendMessage: { type: "object" }
+  },
+  required: ["suggestions"]
+} as const;
+
+export const metadata = {
+  type: "suggestions",
+  description: "Interactive suggestion buttons for continuing conversations with MCP callback support",
+  schema: SuggestionsSchema,
+  category: "interface",
+  tags: ["suggestions", "interactive", "conversation"]
+} as const;
+
+const SuggestionValidator = z.object({
   text: z.string(),
   id: z.string().optional(),
   context: z.string().optional(),
   priority: z.enum(['high', 'medium', 'low']).optional()
 });
 
-const ConversationSuggestionsSchema = z.object({
-  suggestions: z.array(SuggestionSchema),
+const SuggestionsValidator = z.object({
+  suggestions: z.array(SuggestionValidator),
   title: z.string().optional(),
   className: z.string().optional(),
   onSendMessage: z.any().optional()
 });
 
-type ConversationSuggestionsData = z.infer<typeof ConversationSuggestionsSchema>;
+type SuggestionsData = z.infer<typeof SuggestionsValidator>;
 
-export function ConversationSuggestions(props: ConversationSuggestionsData) {
+export function Suggestions(props: SuggestionsData) {
   const { suggestions, title = "Continue the conversation", className, onSendMessage } = props;
 
-  const handleSuggestionClick = (suggestion: z.infer<typeof SuggestionSchema>) => {
+  const handleSuggestionClick = (suggestion: z.infer<typeof SuggestionValidator>) => {
     onSendMessage?.(JSON.stringify({
       type: 'suggestion-selected',
       suggestion: suggestion.text,
@@ -58,7 +89,7 @@ export function ConversationSuggestions(props: ConversationSuggestionsData) {
 }
 
 registerComponent({
-  type: 'conversation-suggestions',
-  schema: ConversationSuggestionsSchema,
-  render: ConversationSuggestions
+  type: 'suggestions',
+  schema: SuggestionsValidator,
+  render: Suggestions
 });
