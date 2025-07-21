@@ -24,7 +24,7 @@ export function register({ type, schema, render }: {
       type, 
       schema, 
       description: `${type} component`,
-      category: 'interface',
+      category: 'atomic',
       tags: [type]
     }, 
     component: render 
@@ -59,12 +59,9 @@ export function isRegistered(type: string): boolean {
   return registry.has(type);
 }
 
-// Import markdown component for text alias
-import { Markdown } from '../components/aip/markdown';
-
-// Register text as alias to markdown for simple content
+// Register text as a simple text renderer to avoid circular dependencies
 register({
   type: 'text',
   schema: { content: 'string' },
-  render: ({ content }: { content: string }) => React.createElement(Markdown, { content })
+  render: ({ content }: { content: string }) => React.createElement('div', { className: 'aip-text' }, content)
 });

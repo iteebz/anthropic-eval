@@ -3,7 +3,7 @@
  * Integrates AIP registry generation into Vite build process
  */
 
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 import { RegistryGenerator } from '../registry/generator';
 
 export interface AgentInterfaceViteOptions {

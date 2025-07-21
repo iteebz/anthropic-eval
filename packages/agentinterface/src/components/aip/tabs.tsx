@@ -15,10 +15,19 @@ export interface TabsProps {
   className?: string;
 }
 
-export function Tabs({ items, defaultTab, className = '' }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultTab || items[0]?.id);
+export function Tabs({ items = [], defaultTab, className = '' }: TabsProps) {
+  const [activeTab, setActiveTab] = useState(defaultTab || items[0]?.id || '');
 
   const activeContent = items.find(item => item.id === activeTab)?.content || [];
+
+  // Handle empty items array
+  if (items.length === 0) {
+    return (
+      <div className={`aip-tabs ${className}`}>
+        <div className="aip-text-secondary aip-p-md">No tabs provided</div>
+      </div>
+    );
+  }
 
   return (
     <div className={`aip-tabs ${className}`}>

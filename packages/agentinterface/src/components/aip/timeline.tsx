@@ -82,5 +82,5 @@ export function Timeline({
 register({
   type: 'timeline',
   schema: TimelineValidator,
-  render: (props) => <Timeline events={props.events} content={props.content} className={props.className} />
+  render: Timeline
 });

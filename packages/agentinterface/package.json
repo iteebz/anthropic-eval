@@ -17,7 +17,8 @@
       "import": "./dist/browser.js",
       "types": "./dist/browser.d.ts"
     },
-    "./styles": "./dist/index.css"
+    "./styles": "./dist/index.css",
+    "./styles/theme.css": "./dist/theme.css"
   },
   "files": [
     "dist",

@@ -1,8 +1,6 @@
 import { z } from 'zod';
 import { register } from '../../registry';
 import { Prose } from "../prose";
-import { Insights } from '.';
-import { Insights } from '.';
 
 export const InsightsSchema = {
   type: "object",

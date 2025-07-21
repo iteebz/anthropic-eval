@@ -9,7 +9,7 @@ import { render, isRegistered, getRegisteredTypes } from '../registry';
 import { InterfaceErrorBoundary, InterfaceErrorContext } from '../core/InterfaceErrorBoundary';
 import { useInterfaceConfig } from '../hooks';
 import { Loading } from './common/loading';
-import { Error } from './common/error';
+import { Error as ErrorState } from './common/error';
 import { Empty } from './common/empty';
 import { NotFound } from './common/not-found';
 import type { Logger } from '../types';
@@ -102,7 +102,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
   if (error) {
     const errorObject = error instanceof Error ? error : new Error(String(error));
     return (
-      <Error
+      <ErrorState
         error={errorObject}
         agentResponse={agentResponse}
         showErrorDetails={showErrorDetails}

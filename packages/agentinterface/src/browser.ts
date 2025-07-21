@@ -32,5 +32,5 @@ export { Tabs } from "./components/aip/tabs";
 // Auto-register components
 import "./components";
 
-// Import styles
-import "./styles/theme.css";
+// Import styles - use the built CSS file
+// Note: This will be resolved via package.json exports

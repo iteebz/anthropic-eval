@@ -22,8 +22,9 @@ export {
 export type { ComponentMetadata, ComponentRegistration } from "./registry";
 
 // Framework integrations
-export { vitePlugin, withAgentInterface, AgentInterfaceWebpackPlugin } from "./integrations";
-export type { AgentInterfaceViteOptions, AgentInterfaceNextOptions, AgentInterfaceWebpackOptions } from "./integrations";
+export { withAgentInterface, AgentInterfaceWebpackPlugin } from "./integrations";
+export type { AgentInterfaceNextOptions, AgentInterfaceWebpackOptions } from "./integrations";
+// Note: vitePlugin temporarily disabled due to build issues
 
 // Auto-register core components by importing
 import "./components";

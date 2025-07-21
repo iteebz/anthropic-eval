@@ -3,9 +3,9 @@
  * Build-time registry generation hooks
  */
 
-// Vite
-export { agentInterface as vitePlugin } from './vite';
-export type { AgentInterfaceViteOptions } from './vite';
+// Vite - temporarily disabled
+// export { agentInterface as vitePlugin } from './vite';
+// export type { AgentInterfaceViteOptions } from './vite';
 
 // Next.js  
 export { withAgentInterface } from './next';
