@@ -58,3 +58,13 @@ export function extendRegistry(extensions: Map<string, ComponentRegistration>): 
 export function isRegistered(type: string): boolean {
   return registry.has(type);
 }
+
+// Import markdown component for text alias
+import { Markdown } from '../components/aip/markdown';
+
+// Register text as alias to markdown for simple content
+register({
+  type: 'text',
+  schema: { content: 'string' },
+  render: ({ content }: { content: string }) => React.createElement(Markdown, { content })
+});

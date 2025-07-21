@@ -1,31 +1,32 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { Timeline } from '../src/components/aip/timeline';
-import { Markdown } from '../src/components/aip/markdown';
-import { Table } from '../src/components/aip/table';
+import React from 'react';
 
 describe('AIP Components', () => {
   describe('Timeline Component', () => {
-    it('should render timeline events', () => {
+    it('should render timeline events', async () => {
+      const { Timeline } = await import('../src/components/aip/timeline');
       const props = {
-        events: [
-          {
-            date: '2024-01-01',
-            title: 'Test Event',
-            description: 'Test description'
-          }
-        ]
+        interfaceData: {
+          events: [
+            {
+              date: '2024-01-01',
+              title: 'Test Event',
+              description: 'Test description'
+            }
+          ]
+        }
       };
 
-      const { getByText } = render(<Timeline {...props} />);
+      const { getByText } = render(React.createElement(Timeline, props));
       
       expect(getByText('Test Event')).toBeInTheDocument();
       expect(getByText('2024-01-01')).toBeInTheDocument();
       expect(getByText('Test description')).toBeInTheDocument();
     });
 
-    it('should export correct metadata', () => {
-      const { metadata } = require('../src/components/aip/timeline');
+    it('should export correct metadata', async () => {
+      const { metadata } = await import('../src/components/aip/timeline');
       
       expect(metadata.type).toBe('timeline');
       expect(metadata.category).toBe('interface');
@@ -36,8 +37,8 @@ describe('AIP Components', () => {
   });
 
   describe('Markdown Component', () => {
-    it('should export correct metadata', () => {
-      const { metadata } = require('../src/components/aip/markdown');
+    it('should export correct metadata', async () => {
+      const { metadata } = await import('../src/components/aip/markdown');
       
       expect(metadata.type).toBe('markdown');
       expect(metadata.category).toBe('interface');
@@ -47,7 +48,8 @@ describe('AIP Components', () => {
   });
 
   describe('Table Component', () => {
-    it('should render comparison table', () => {
+    it('should render comparison table', async () => {
+      const { Table } = await import('../src/components/aip/table');
       const props = {
         items: [
           {
@@ -62,15 +64,15 @@ describe('AIP Components', () => {
         ]
       };
 
-      const { getByText } = render(<Table {...props} />);
+      const { getByText } = render(React.createElement(Table, props));
       
       expect(getByText('Item 1')).toBeInTheDocument();
       expect(getByText('Price')).toBeInTheDocument();
       expect(getByText('$10')).toBeInTheDocument();
     });
 
-    it('should export correct metadata', () => {
-      const { metadata } = require('../src/components/aip/table');
+    it('should export correct metadata', async () => {
+      const { metadata } = await import('../src/components/aip/table');
       
       expect(metadata.type).toBe('table');
       expect(metadata.category).toBe('interface');
@@ -92,8 +94,8 @@ describe('AIP Components', () => {
     ];
 
     componentFiles.forEach(componentName => {
-      it(`should have consistent metadata structure for ${componentName}`, () => {
-        const { metadata } = require(`../src/components/aip/${componentName}`);
+      it(`should have consistent metadata structure for ${componentName}`, async () => {
+        const { metadata } = await import(`../src/components/aip/${componentName}`);
         
         // All components should have these required fields
         expect(metadata).toHaveProperty('type');

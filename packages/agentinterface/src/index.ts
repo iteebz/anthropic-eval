@@ -35,6 +35,10 @@ import "./styles/theme.css";
 export { InterfaceErrorBoundary } from "./core/InterfaceErrorBoundary";
 export type { InterfaceErrorBoundaryProps } from "./core/InterfaceErrorBoundary";
 
+// Component resolver for SSR and inline components
+export { processInlineComponents } from "./core/component-resolver";
+export type { ComponentResolver } from "./core/inline-components";
+
 // Built-in components that folio uses
 export { Insights } from "./components/aip/insights";
 export { Accordion } from "./components/aip/accordion";

@@ -3,7 +3,7 @@
  */
 
 import '@testing-library/jest-dom/vitest';
-import { vi } from 'vitest';
+import { vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 
 // Mock global objects that might not be available in test environment

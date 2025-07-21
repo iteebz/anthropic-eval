@@ -12,4 +12,7 @@ export default defineConfig({
       '@': './src',
     },
   },
+  esbuild: {
+    jsx: 'automatic',
+  },
 })
