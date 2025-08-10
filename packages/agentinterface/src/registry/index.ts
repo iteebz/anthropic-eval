@@ -69,6 +69,41 @@ export function isRegistered(type: string): boolean {
   return registry.has(type);
 }
 
+/**
+ * Clear and selectively register only specified components
+ * Useful for demos or specific environments
+ */
+export function selectiveRegistry(allowedTypes: string[]): void {
+  const backup = new Map(registry);
+  registry.clear();
+  
+  // Re-register text component (always needed)
+  register({
+    type: 'text',
+    schema: { content: 'string' },
+    render: ({ content }: { content: string }) =>
+      React.createElement('div', { className: 'aip-text' }, content),
+  });
+  
+  // Only register allowed types
+  allowedTypes.forEach(type => {
+    const registration = backup.get(type);
+    if (registration) {
+      registry.set(type, registration);
+    }
+  });
+}
+
+/**
+ * Reset registry to include all components
+ */
+export function resetRegistry(): void {
+  registry.clear();
+  
+  // Re-import all components to trigger re-registration
+  import('../components');
+}
+
 // Register text as a simple text renderer to avoid circular dependencies
 register({
   type: 'text',

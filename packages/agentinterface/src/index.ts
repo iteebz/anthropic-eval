@@ -18,6 +18,8 @@ export {
   getAllMetadata,
   extendRegistry,
   isRegistered,
+  selectiveRegistry,
+  resetRegistry,
 } from './registry';
 export type { ComponentMetadata, ComponentRegistration } from './registry';
 
