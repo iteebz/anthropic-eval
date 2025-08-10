@@ -2,5 +2,5 @@
  * AgentInterface utilities
  */
 
-export * from "./performance";
-export * from "./parsing";
+export * from './performance';
+export * from './parsing';

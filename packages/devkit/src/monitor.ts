@@ -31,7 +31,7 @@ class PerformanceMonitor {
       slowThreshold: 16, // 16ms = 60fps
       logSlowRenders: true,
       enableProfiler: true,
-      ...config
+      ...config,
     };
 
     if (this.config.enabled) {
@@ -53,7 +53,7 @@ class PerformanceMonitor {
             componentRenderTime: entry.duration,
             componentMountTime: 0,
             totalRenderTime: entry.duration,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
         }
       }
@@ -69,11 +69,11 @@ class PerformanceMonitor {
     // Hook into React DevTools Profiler if available
     if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
       const hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-      
+
       // Listen to profiler events
       hook.onCommitFiberRoot = (id: any, root: any, priorityLevel: any) => {
         if (Math.random() > this.config.sampleRate) return;
-        
+
         // Collect render metrics from React fiber tree
         this.collectReactMetrics(root);
       };
@@ -85,14 +85,14 @@ class PerformanceMonitor {
     // For now, we'll use a simpler approach with performance.mark/measure
     if (performance && performance.getEntriesByType) {
       const measures = performance.getEntriesByType('measure');
-      measures.forEach(measure => {
+      measures.forEach((measure) => {
         if (measure.name.includes('React')) {
           this.recordMetric({
             componentName: 'React',
             componentRenderTime: measure.duration,
             componentMountTime: 0,
             totalRenderTime: measure.duration,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
         }
       });
@@ -101,10 +101,15 @@ class PerformanceMonitor {
 
   recordMetric(metric: PerformanceMetrics) {
     this.metrics.push(metric);
-    
+
     // Log slow renders
-    if (this.config.logSlowRenders && metric.componentRenderTime > this.config.slowThreshold) {
-      console.warn(`🐌 Slow render detected: ${metric.componentName} took ${metric.componentRenderTime.toFixed(2)}ms`);
+    if (
+      this.config.logSlowRenders &&
+      metric.componentRenderTime > this.config.slowThreshold
+    ) {
+      console.warn(
+        `🐌 Slow render detected: ${metric.componentName} took ${metric.componentRenderTime.toFixed(2)}ms`,
+      );
     }
 
     // Keep only last 1000 metrics
@@ -118,17 +123,22 @@ class PerformanceMonitor {
   }
 
   getSlowRenders(): PerformanceMetrics[] {
-    return this.metrics.filter(m => m.componentRenderTime > this.config.slowThreshold);
+    return this.metrics.filter(
+      (m) => m.componentRenderTime > this.config.slowThreshold,
+    );
   }
 
   getAverageRenderTime(componentName?: string): number {
-    const filtered = componentName 
-      ? this.metrics.filter(m => m.componentName === componentName)
+    const filtered = componentName
+      ? this.metrics.filter((m) => m.componentName === componentName)
       : this.metrics;
-    
+
     if (filtered.length === 0) return 0;
-    
-    return filtered.reduce((sum, m) => sum + m.componentRenderTime, 0) / filtered.length;
+
+    return (
+      filtered.reduce((sum, m) => sum + m.componentRenderTime, 0) /
+      filtered.length
+    );
   }
 
   exportReport(): string {
@@ -136,31 +146,35 @@ class PerformanceMonitor {
       totalMetrics: this.metrics.length,
       slowRenders: this.getSlowRenders().length,
       averageRenderTime: this.getAverageRenderTime(),
-      componentsAnalyzed: [...new Set(this.metrics.map(m => m.componentName))],
+      componentsAnalyzed: [
+        ...new Set(this.metrics.map((m) => m.componentName)),
+      ],
       topSlowComponents: this.getTopSlowComponents(),
       timeRange: {
-        start: Math.min(...this.metrics.map(m => m.timestamp)),
-        end: Math.max(...this.metrics.map(m => m.timestamp))
-      }
+        start: Math.min(...this.metrics.map((m) => m.timestamp)),
+        end: Math.max(...this.metrics.map((m) => m.timestamp)),
+      },
     };
 
     return JSON.stringify(report, null, 2);
   }
 
-  private getTopSlowComponents(): Array<{name: string, avgTime: number}> {
+  private getTopSlowComponents(): Array<{ name: string; avgTime: number }> {
     const componentTimes = new Map<string, number[]>();
-    
-    this.metrics.forEach(metric => {
+
+    this.metrics.forEach((metric) => {
       if (!componentTimes.has(metric.componentName)) {
         componentTimes.set(metric.componentName, []);
       }
-      componentTimes.get(metric.componentName)!.push(metric.componentRenderTime);
+      componentTimes
+        .get(metric.componentName)!
+        .push(metric.componentRenderTime);
     });
 
     return Array.from(componentTimes.entries())
       .map(([name, times]) => ({
         name,
-        avgTime: times.reduce((sum, time) => sum + time, 0) / times.length
+        avgTime: times.reduce((sum, time) => sum + time, 0) / times.length,
       }))
       .sort((a, b) => b.avgTime - a.avgTime)
       .slice(0, 5);
@@ -171,7 +185,7 @@ class PerformanceMonitor {
   }
 
   destroy() {
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach((observer) => observer.disconnect());
     this.observers.clear();
   }
 }
@@ -182,30 +196,34 @@ export const performanceMonitor = new PerformanceMonitor();
 // React hook for component performance monitoring
 export function usePerformanceMonitor(componentName: string) {
   const startTime = performance.now();
-  
+
   return {
     markRenderStart: () => {
       if (performanceMonitor.config.enabled) {
         performance.mark(`aip-${componentName}-start`);
       }
     },
-    
+
     markRenderEnd: () => {
       if (performanceMonitor.config.enabled) {
         performance.mark(`aip-${componentName}-end`);
-        performance.measure(`aip-${componentName}`, `aip-${componentName}-start`, `aip-${componentName}-end`);
+        performance.measure(
+          `aip-${componentName}`,
+          `aip-${componentName}-start`,
+          `aip-${componentName}-end`,
+        );
       }
     },
-    
+
     recordCustomMetric: (renderTime: number) => {
       performanceMonitor.recordMetric({
         componentName,
         componentRenderTime: renderTime,
         componentMountTime: 0,
         totalRenderTime: renderTime,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
-    }
+    },
   };
 }
 

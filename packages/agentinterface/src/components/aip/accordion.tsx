@@ -1,59 +1,57 @@
 import { z } from 'zod';
 import { register } from '../../registry';
-import { Prose } from "../prose";
+import { Prose } from '../prose';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../ui/collapsible";
+} from '../ui/collapsible';
 
 export const AccordionSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     sections: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          title: { type: "string" },
-          content: { type: "string" },
-          defaultExpanded: { type: "boolean" }
+          title: { type: 'string' },
+          content: { type: 'string' },
+          defaultExpanded: { type: 'boolean' },
         },
-        required: ["title", "content"]
-      }
+        required: ['title', 'content'],
+      },
     },
-    content: { type: "string" },
-    className: { type: "string" }
+    content: { type: 'string' },
+    className: { type: 'string' },
   },
-  required: ["sections"]
+  required: ['sections'],
 } as const;
 
 export const metadata = {
-  type: "accordion",
-  description: "Collapsible sections for organizing content with expandable/collapsible functionality",
+  type: 'accordion',
+  description:
+    'Collapsible sections for organizing content with expandable/collapsible functionality',
   schema: AccordionSchema,
-  category: "interface",
-  tags: ["collapsible", "organization", "expandable"]
+  category: 'interface',
+  tags: ['collapsible', 'organization', 'expandable'],
 } as const;
 
 const AccordionValidator = z.object({
-  sections: z.array(z.object({
-    title: z.string(),
-    content: z.string(),
-    defaultExpanded: z.boolean().optional()
-  })),
+  sections: z.array(
+    z.object({
+      title: z.string(),
+      content: z.string(),
+      defaultExpanded: z.boolean().optional(),
+    }),
+  ),
   content: z.string().optional(),
-  className: z.string().optional()
+  className: z.string().optional(),
 });
 
 type AccordionData = z.infer<typeof AccordionValidator>;
 
-export function Accordion({
-  sections,
-  content,
-  className,
-}: AccordionData) {
-
+export function Accordion({ sections, content, className }: AccordionData) {
   return (
     <div className={className}>
       {content && (
@@ -66,8 +64,8 @@ export function Accordion({
         <div className="space-y-2">
           {sections.map((section, index) => (
             <Collapsible key={index} defaultOpen={section.defaultExpanded}>
-              <div className="border rounded-lg">
-                <CollapsibleTrigger className="w-full p-3 text-left border-b">
+              <div className="rounded-lg border">
+                <CollapsibleTrigger className="w-full border-b p-3 text-left">
                   <div className="font-medium">{section.title}</div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -88,5 +86,5 @@ export function Accordion({
 register({
   type: 'accordion',
   schema: AccordionValidator,
-  render: Accordion
+  render: Accordion,
 });

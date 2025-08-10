@@ -19,7 +19,7 @@ export class RegistryBuilder {
   private componentsDir: string;
   private entries: RegistryEntry[] = [];
 
-  constructor(componentsDir: string = 'src/components/aip') {
+  constructor(componentsDir = 'src/components/aip') {
     this.componentsDir = componentsDir;
   }
 
@@ -28,16 +28,15 @@ export class RegistryBuilder {
    */
   async scanComponents(): Promise<void> {
     const fullPath = path.resolve(this.componentsDir);
-    
+
     if (!fs.existsSync(fullPath)) {
       throw new Error(`Components directory not found: ${fullPath}`);
     }
 
     const files = fs.readdirSync(fullPath);
-    const componentFiles = files.filter(file => 
-      file.endsWith('.tsx') && 
-      file !== 'index.ts' && 
-      file !== 'README.md'
+    const componentFiles = files.filter(
+      (file) =>
+        file.endsWith('.tsx') && file !== 'index.ts' && file !== 'README.md',
     );
 
     for (const file of componentFiles) {
@@ -49,12 +48,17 @@ export class RegistryBuilder {
   /**
    * Extract metadata from a component file using regex parsing
    */
-  private async extractMetadata(filePath: string, fileName: string): Promise<void> {
+  private async extractMetadata(
+    filePath: string,
+    fileName: string,
+  ): Promise<void> {
     const content = fs.readFileSync(filePath, 'utf-8');
-    
+
     // Extract metadata export using regex - match the entire metadata object
-    const metadataMatch = content.match(/export const metadata = \{([\s\S]*?)\} as const;/s);
-    
+    const metadataMatch = content.match(
+      /export const metadata = \{([\s\S]*?)\} as const;/s,
+    );
+
     if (!metadataMatch) {
       console.warn(`No metadata found in ${fileName}`);
       return;
@@ -64,13 +68,13 @@ export class RegistryBuilder {
       // Parse the metadata object
       const metadataStr = metadataMatch[0];
       const metadata = this.parseMetadataString(metadataStr);
-      
+
       this.entries.push({
         type: metadata.type,
         metadata,
-        filePath: path.relative(process.cwd(), filePath)
+        filePath: path.relative(process.cwd(), filePath),
       });
-      
+
       console.log(`✓ Found component: ${metadata.type}`);
     } catch (error) {
       console.error(`Error parsing metadata in ${fileName}:`, error);
@@ -85,7 +89,7 @@ export class RegistryBuilder {
     const typeMatch = metadataStr.match(/type:\s*["']([^"']+)["']/);
     const type = typeMatch?.[1] || '';
 
-    // Extract description  
+    // Extract description
     const descMatch = metadataStr.match(/description:\s*["']([^"']+)["']/);
     const description = descMatch?.[1] || '';
 
@@ -95,19 +99,19 @@ export class RegistryBuilder {
 
     // Extract tags array
     const tagsMatch = metadataStr.match(/tags:\s*\[([^\]]+)\]/);
-    const tags = tagsMatch?.[1] 
-      ? tagsMatch[1].split(',').map(tag => tag.trim().replace(/["']/g, ''))
+    const tags = tagsMatch?.[1]
+      ? tagsMatch[1].split(',').map((tag) => tag.trim().replace(/["']/g, ''))
       : [];
 
     // For now, we'll set schema as a placeholder - proper schema extraction would be more complex
-    const schema = { type: "object" };
+    const schema = { type: 'object' };
 
     return {
       type,
       description,
       schema,
       category,
-      tags
+      tags,
     };
   }
 

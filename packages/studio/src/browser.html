@@ -1,240 +1,374 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIP Component Playground</title>
-  <script src="https://unpkg.com/react@19/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@19/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .playground-container {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    .component-wrapper {
-      max-width: 100%;
-      overflow-x: auto;
-    }
-    
-    .preview-container {
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .control-group label {
-      color: #374151;
-    }
-    
-    .animate-spin {
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body class="bg-gray-50">
-  <div id="playground-root"></div>
-  
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-    
-    // Mock AIP registry for standalone demo
-    const mockComponents = {
-      'markdown': {
-        name: 'markdown',
-        description: 'Markdown renderer',
-        component: ({ content }) => React.createElement('div', { 
-          className: 'prose max-w-none',
-          dangerouslySetInnerHTML: { __html: content || '<p>Hello World</p>' }
-        })
-      },
-      'card-grid': {
-        name: 'card-grid',
-        description: 'Card grid layout',
-        component: ({ items = [] }) => React.createElement('div', { 
-          className: 'grid grid-cols-1 md:grid-cols-2 gap-4'
-        }, items.map((item, i) => 
-          React.createElement('div', { 
-            key: i,
-            className: 'p-4 border rounded-lg bg-white shadow-sm'
-          }, [
-            React.createElement('h3', { 
-              key: 'title',
-              className: 'font-medium mb-2'
-            }, item.title),
-            React.createElement('p', { 
-              key: 'desc',
-              className: 'text-gray-600 text-sm'
-            }, item.description)
-          ])
-        ))
-      },
-      'code-snippet': {
-        name: 'code-snippet',
-        description: 'Code snippet with syntax highlighting',
-        component: ({ code, language }) => React.createElement('pre', { 
-          className: 'bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto'
-        }, React.createElement('code', { className: `language-${language || 'text'}` }, code || '// No code provided'))
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIP Component Playground</title>
+    <script src="https://unpkg.com/react@19/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@19/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .playground-container {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
-    };
-    
-    function PlaygroundDemo() {
-      const [selectedComponent, setSelectedComponent] = useState('markdown');
-      const [testProps, setTestProps] = useState({});
-      const [propsJson, setPropsJson] = useState('{}');
-      const [loading, setLoading] = useState(false);
-      
-      useEffect(() => {
-        const defaultProps = {
-          'markdown': { content: '# Hello World\n\nThis is a **test** markdown.' },
-          'card-grid': { 
-            items: [
-              { title: 'Card 1', description: 'First card' },
-              { title: 'Card 2', description: 'Second card' }
-            ]
-          },
-          'code-snippet': { 
-            code: 'const hello = "world";\nconsole.log(hello);', 
-            language: 'javascript' 
+
+      .component-wrapper {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .preview-container {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .control-group label {
+        color: #374151;
+      }
+
+      .animate-spin {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div id="playground-root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // Mock AIP registry for standalone demo
+      const mockComponents = {
+        markdown: {
+          name: 'markdown',
+          description: 'Markdown renderer',
+          component: ({ content }) =>
+            React.createElement('div', {
+              className: 'prose max-w-none',
+              dangerouslySetInnerHTML: {
+                __html: content || '<p>Hello World</p>',
+              },
+            }),
+        },
+        'card-grid': {
+          name: 'card-grid',
+          description: 'Card grid layout',
+          component: ({ items = [] }) =>
+            React.createElement(
+              'div',
+              {
+                className: 'grid grid-cols-1 md:grid-cols-2 gap-4',
+              },
+              items.map((item, i) =>
+                React.createElement(
+                  'div',
+                  {
+                    key: i,
+                    className: 'p-4 border rounded-lg bg-white shadow-sm',
+                  },
+                  [
+                    React.createElement(
+                      'h3',
+                      {
+                        key: 'title',
+                        className: 'font-medium mb-2',
+                      },
+                      item.title,
+                    ),
+                    React.createElement(
+                      'p',
+                      {
+                        key: 'desc',
+                        className: 'text-gray-600 text-sm',
+                      },
+                      item.description,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        },
+        'code-snippet': {
+          name: 'code-snippet',
+          description: 'Code snippet with syntax highlighting',
+          component: ({ code, language }) =>
+            React.createElement(
+              'pre',
+              {
+                className:
+                  'bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto',
+              },
+              React.createElement(
+                'code',
+                { className: `language-${language || 'text'}` },
+                code || '// No code provided',
+              ),
+            ),
+        },
+      };
+
+      function PlaygroundDemo() {
+        const [selectedComponent, setSelectedComponent] = useState('markdown');
+        const [testProps, setTestProps] = useState({});
+        const [propsJson, setPropsJson] = useState('{}');
+        const [loading, setLoading] = useState(false);
+
+        useEffect(() => {
+          const defaultProps = {
+            markdown: {
+              content: '# Hello World\n\nThis is a **test** markdown.',
+            },
+            'card-grid': {
+              items: [
+                { title: 'Card 1', description: 'First card' },
+                { title: 'Card 2', description: 'Second card' },
+              ],
+            },
+            'code-snippet': {
+              code: 'const hello = "world";\nconsole.log(hello);',
+              language: 'javascript',
+            },
+          };
+
+          const defaults = defaultProps[selectedComponent] || {};
+          setTestProps(defaults);
+          setPropsJson(JSON.stringify(defaults, null, 2));
+        }, [selectedComponent]);
+
+        const handlePropsChange = (value) => {
+          setPropsJson(value);
+          try {
+            const parsed = JSON.parse(value);
+            setTestProps(parsed);
+          } catch (e) {
+            // Invalid JSON, keep current props
           }
         };
-        
-        const defaults = defaultProps[selectedComponent] || {};
-        setTestProps(defaults);
-        setPropsJson(JSON.stringify(defaults, null, 2));
-      }, [selectedComponent]);
-      
-      const handlePropsChange = (value) => {
-        setPropsJson(value);
-        try {
-          const parsed = JSON.parse(value);
-          setTestProps(parsed);
-        } catch (e) {
-          // Invalid JSON, keep current props
-        }
-      };
-      
-      const ComponentToRender = mockComponents[selectedComponent]?.component;
-      
-      return React.createElement('div', { 
-        className: 'playground-container max-w-6xl mx-auto p-6'
-      }, [
-        React.createElement('div', { 
-          key: 'header',
-          className: 'playground-header mb-8'
-        }, [
-          React.createElement('h1', { 
-            key: 'title',
-            className: 'text-3xl font-bold mb-2'
-          }, 'AIP Component Playground'),
-          React.createElement('p', { 
-            key: 'subtitle',
-            className: 'text-gray-600'
-          }, 'Test and develop AIP components with zero ceremony')
-        ]),
-        
-        React.createElement('div', { 
-          key: 'content',
-          className: 'playground-content grid grid-cols-1 lg:grid-cols-2 gap-6'
-        }, [
-          React.createElement('div', { 
-            key: 'controls',
-            className: 'playground-controls'
-          }, [
-            React.createElement('div', { 
-              key: 'component-select',
-              className: 'control-group mb-4'
-            }, [
-              React.createElement('label', { 
-                key: 'label',
-                className: 'block text-sm font-medium mb-2'
-              }, 'Component'),
-              React.createElement('select', {
-                key: 'select',
-                value: selectedComponent,
-                onChange: (e) => setSelectedComponent(e.target.value),
-                className: 'w-full p-2 border rounded-md bg-white'
-              }, Object.keys(mockComponents).map(name => 
-                React.createElement('option', { 
-                  key: name,
-                  value: name
-                }, name)
-              ))
-            ]),
-            
-            React.createElement('div', { 
-              key: 'props-editor',
-              className: 'control-group mb-4'
-            }, [
-              React.createElement('label', { 
-                key: 'label',
-                className: 'block text-sm font-medium mb-2'
-              }, 'Props (JSON)'),
-              React.createElement('textarea', {
-                key: 'textarea',
-                value: propsJson,
-                onChange: (e) => handlePropsChange(e.target.value),
-                className: 'w-full h-48 p-3 border rounded-md font-mono text-sm bg-gray-50',
-                placeholder: 'Enter component props as JSON'
-              })
-            ]),
-            
-            React.createElement('div', { 
-              key: 'info',
-              className: 'bundle-stats p-4 bg-blue-50 rounded-md'
-            }, [
-              React.createElement('h3', { 
-                key: 'title',
-                className: 'font-medium mb-2'
-              }, 'Component Info'),
-              React.createElement('div', { 
-                key: 'desc',
-                className: 'text-sm'
-              }, mockComponents[selectedComponent]?.description || 'No description')
-            ])
-          ]),
-          
-          React.createElement('div', { 
-            key: 'preview',
-            className: 'playground-preview'
-          }, [
-            React.createElement('div', { 
-              key: 'header',
-              className: 'preview-header flex justify-between items-center mb-4'
-            }, [
-              React.createElement('h2', { 
-                key: 'title',
-                className: 'text-xl font-semibold'
-              }, 'Preview'),
-              React.createElement('div', { 
-                key: 'status',
-                className: 'text-sm text-gray-500'
-              }, selectedComponent)
-            ]),
-            
-            React.createElement('div', { 
-              key: 'container',
-              className: 'preview-container border rounded-md p-4 bg-white min-h-[400px]'
-            }, ComponentToRender ? 
-              React.createElement('div', { 
-                key: 'wrapper',
-                className: 'component-wrapper'
-              }, React.createElement(ComponentToRender, testProps)) :
-              React.createElement('div', { 
-                key: 'error',
-                className: 'text-red-600 p-4 bg-red-50 rounded-md'
-              }, 'Component not found')
-            )
-          ])
-        ])
-      ]);
-    }
-    
-    ReactDOM.render(React.createElement(PlaygroundDemo), document.getElementById('playground-root'));
-  </script>
-</body>
+
+        const ComponentToRender = mockComponents[selectedComponent]?.component;
+
+        return React.createElement(
+          'div',
+          {
+            className: 'playground-container max-w-6xl mx-auto p-6',
+          },
+          [
+            React.createElement(
+              'div',
+              {
+                key: 'header',
+                className: 'playground-header mb-8',
+              },
+              [
+                React.createElement(
+                  'h1',
+                  {
+                    key: 'title',
+                    className: 'text-3xl font-bold mb-2',
+                  },
+                  'AIP Component Playground',
+                ),
+                React.createElement(
+                  'p',
+                  {
+                    key: 'subtitle',
+                    className: 'text-gray-600',
+                  },
+                  'Test and develop AIP components with zero ceremony',
+                ),
+              ],
+            ),
+
+            React.createElement(
+              'div',
+              {
+                key: 'content',
+                className:
+                  'playground-content grid grid-cols-1 lg:grid-cols-2 gap-6',
+              },
+              [
+                React.createElement(
+                  'div',
+                  {
+                    key: 'controls',
+                    className: 'playground-controls',
+                  },
+                  [
+                    React.createElement(
+                      'div',
+                      {
+                        key: 'component-select',
+                        className: 'control-group mb-4',
+                      },
+                      [
+                        React.createElement(
+                          'label',
+                          {
+                            key: 'label',
+                            className: 'block text-sm font-medium mb-2',
+                          },
+                          'Component',
+                        ),
+                        React.createElement(
+                          'select',
+                          {
+                            key: 'select',
+                            value: selectedComponent,
+                            onChange: (e) =>
+                              setSelectedComponent(e.target.value),
+                            className: 'w-full p-2 border rounded-md bg-white',
+                          },
+                          Object.keys(mockComponents).map((name) =>
+                            React.createElement(
+                              'option',
+                              {
+                                key: name,
+                                value: name,
+                              },
+                              name,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    React.createElement(
+                      'div',
+                      {
+                        key: 'props-editor',
+                        className: 'control-group mb-4',
+                      },
+                      [
+                        React.createElement(
+                          'label',
+                          {
+                            key: 'label',
+                            className: 'block text-sm font-medium mb-2',
+                          },
+                          'Props (JSON)',
+                        ),
+                        React.createElement('textarea', {
+                          key: 'textarea',
+                          value: propsJson,
+                          onChange: (e) => handlePropsChange(e.target.value),
+                          className:
+                            'w-full h-48 p-3 border rounded-md font-mono text-sm bg-gray-50',
+                          placeholder: 'Enter component props as JSON',
+                        }),
+                      ],
+                    ),
+
+                    React.createElement(
+                      'div',
+                      {
+                        key: 'info',
+                        className: 'bundle-stats p-4 bg-blue-50 rounded-md',
+                      },
+                      [
+                        React.createElement(
+                          'h3',
+                          {
+                            key: 'title',
+                            className: 'font-medium mb-2',
+                          },
+                          'Component Info',
+                        ),
+                        React.createElement(
+                          'div',
+                          {
+                            key: 'desc',
+                            className: 'text-sm',
+                          },
+                          mockComponents[selectedComponent]?.description ||
+                            'No description',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                React.createElement(
+                  'div',
+                  {
+                    key: 'preview',
+                    className: 'playground-preview',
+                  },
+                  [
+                    React.createElement(
+                      'div',
+                      {
+                        key: 'header',
+                        className:
+                          'preview-header flex justify-between items-center mb-4',
+                      },
+                      [
+                        React.createElement(
+                          'h2',
+                          {
+                            key: 'title',
+                            className: 'text-xl font-semibold',
+                          },
+                          'Preview',
+                        ),
+                        React.createElement(
+                          'div',
+                          {
+                            key: 'status',
+                            className: 'text-sm text-gray-500',
+                          },
+                          selectedComponent,
+                        ),
+                      ],
+                    ),
+
+                    React.createElement(
+                      'div',
+                      {
+                        key: 'container',
+                        className:
+                          'preview-container border rounded-md p-4 bg-white min-h-[400px]',
+                      },
+                      ComponentToRender
+                        ? React.createElement(
+                            'div',
+                            {
+                              key: 'wrapper',
+                              className: 'component-wrapper',
+                            },
+                            React.createElement(ComponentToRender, testProps),
+                          )
+                        : React.createElement(
+                            'div',
+                            {
+                              key: 'error',
+                              className:
+                                'text-red-600 p-4 bg-red-50 rounded-md',
+                            },
+                            'Component not found',
+                          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+      }
+
+      ReactDOM.render(
+        React.createElement(PlaygroundDemo),
+        document.getElementById('playground-root'),
+      );
+    </script>
+  </body>
 </html>

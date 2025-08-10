@@ -9,17 +9,27 @@ export interface ValidationError {
 }
 
 const MetadataSchema = z.object({
-  type: z.string()
+  type: z
+    .string()
     .min(1)
-    .regex(/^[a-z][a-z0-9-]*[a-z0-9]$/, "Type must be lowercase kebab-case"),
-  description: z.string()
-    .min(10, "Description must be at least 10 characters")
-    .max(200, "Description must be less than 200 characters"),
+    .regex(/^[a-z][a-z0-9-]*[a-z0-9]$/, 'Type must be lowercase kebab-case'),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(200, 'Description must be less than 200 characters'),
   schema: z.any().optional(),
-  category: z.enum(["interface", "custom", "container", "display", "input", "layout"]),
-  tags: z.array(z.string())
-    .min(1, "Must have at least one tag")
-    .max(10, "Cannot have more than 10 tags")
+  category: z.enum([
+    'interface',
+    'custom',
+    'container',
+    'display',
+    'input',
+    'layout',
+  ]),
+  tags: z
+    .array(z.string())
+    .min(1, 'Must have at least one tag')
+    .max(10, 'Cannot have more than 10 tags'),
 });
 
 export class MetadataValidator {
@@ -34,14 +44,14 @@ export class MetadataValidator {
 
     // Validate metadata structure using Zod
     const result = MetadataSchema.safeParse(metadata);
-    
+
     if (!result.success) {
       for (const issue of result.error.issues) {
         errors.push({
           component: type,
           field: issue.path.join('.') || 'metadata',
           message: issue.message,
-          value: issue.code
+          value: issue.code,
         });
       }
     }
@@ -55,15 +65,18 @@ export class MetadataValidator {
   /**
    * Validate component data schema using basic JSON Schema checks
    */
-  validateComponentSchema(schema: unknown, componentType: string): ValidationError[] {
+  validateComponentSchema(
+    schema: unknown,
+    componentType: string,
+  ): ValidationError[] {
     const errors: ValidationError[] = [];
 
     // Check for required schema properties
-    if (!schema.type) {
+    if (!(schema as any)?.type) {
       errors.push({
         component: componentType,
         field: 'schema.type',
-        message: 'Schema must have a type property'
+        message: 'Schema must have a type property',
       });
     }
 
@@ -74,7 +87,7 @@ export class MetadataValidator {
       errors.push({
         component: componentType,
         field: 'schema',
-        message: 'Schema must be an object'
+        message: 'Schema must be an object',
       });
     }
 
@@ -94,7 +107,7 @@ export class MetadataValidator {
         allErrors.push({
           component: entry.type,
           field: 'type',
-          message: `Duplicate component type: ${entry.type}`
+          message: `Duplicate component type: ${entry.type}`,
         });
       }
       typesSeen.add(entry.type);
@@ -103,7 +116,9 @@ export class MetadataValidator {
       allErrors.push(...this.validateMetadata(entry));
 
       // Validate component schema
-      allErrors.push(...this.validateComponentSchema(entry.metadata.schema, entry.type));
+      allErrors.push(
+        ...this.validateComponentSchema(entry.metadata.schema, entry.type),
+      );
     }
 
     return allErrors;
@@ -116,33 +131,28 @@ export class MetadataValidator {
     const errors: ValidationError[] = [];
     const { metadata, type } = entry;
 
-    // Type should match filename convention
+    // Type should match path convention
     const expectedFileName = `${type}.tsx`;
     if (!entry.filePath.endsWith(expectedFileName)) {
       errors.push({
         component: type,
         field: 'type',
-        message: `Component type '${type}' should match filename '${expectedFileName}'`
+        message: `Component type '${type}' should match path '${expectedFileName}'`,
       });
     }
 
     // Description should not be too generic
-    const genericDescriptions = [
-      'component',
-      'renders',
-      'displays',
-      'shows'
-    ];
-    
-    const hasGenericDescription = genericDescriptions.some(generic => 
-      metadata.description.toLowerCase().startsWith(generic.toLowerCase())
+    const genericDescriptions = ['component', 'renders', 'displays', 'shows'];
+
+    const hasGenericDescription = genericDescriptions.some((generic) =>
+      metadata.description.toLowerCase().startsWith(generic.toLowerCase()),
     );
 
     if (hasGenericDescription) {
       errors.push({
         component: type,
         field: 'description',
-        message: 'Description should be more specific and descriptive'
+        message: 'Description should be more specific and descriptive',
       });
     }
 
@@ -152,15 +162,15 @@ export class MetadataValidator {
         errors.push({
           component: type,
           field: 'tags',
-          message: `Tag '${tag}' should be lowercase`
+          message: `Tag '${tag}' should be lowercase`,
         });
       }
-      
+
       if (tag.length < 3) {
         errors.push({
           component: type,
           field: 'tags',
-          message: `Tag '${tag}' is too short (minimum 3 characters)`
+          message: `Tag '${tag}' is too short (minimum 3 characters)`,
         });
       }
     }
@@ -176,17 +186,22 @@ export class MetadataValidator {
       return '✓ All components validated successfully';
     }
 
-    const errorsByComponent = errors.reduce((acc, error) => {
-      if (!acc[error.component]) {
-        acc[error.component] = [];
-      }
-      acc[error.component].push(error);
-      return acc;
-    }, {} as Record<string, ValidationError[]>);
+    const errorsByComponent = errors.reduce(
+      (acc, error) => {
+        if (!acc[error.component]) {
+          acc[error.component] = [];
+        }
+        acc[error.component].push(error);
+        return acc;
+      },
+      {} as Record<string, ValidationError[]>,
+    );
 
     let output = `❌ Found ${errors.length} validation error(s):\n\n`;
 
-    for (const [component, componentErrors] of Object.entries(errorsByComponent)) {
+    for (const [component, componentErrors] of Object.entries(
+      errorsByComponent,
+    )) {
       output += `${component}:\n`;
       for (const error of componentErrors) {
         output += `  • ${error.field}: ${error.message}\n`;

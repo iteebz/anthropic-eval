@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useEffect } from 'react';
-import { useTheme, type ThemeConfig, type UseThemeResult } from '../../hooks/useTheme';
+import {
+  useTheme,
+  type ThemeConfig,
+  type UseThemeResult,
+} from '../../hooks/useTheme';
 
 const ThemeContext = createContext<UseThemeResult | null>(null);
 
@@ -9,16 +13,16 @@ export interface ThemeProviderProps {
   loadThemeCSS?: boolean;
 }
 
-export function Theme({ 
-  children, 
+export function Theme({
+  children,
   config,
-  loadThemeCSS = true 
+  loadThemeCSS = true,
 }: ThemeProviderProps) {
   const themeResult = useTheme(config);
 
   // Load theme CSS if requested
   useEffect(() => {
-    if (!loadThemeCSS || typeof window === 'undefined') return;
+    if (!loadThemeCSS || typeof globalThis.window === 'undefined') return;
 
     const existingLink = document.querySelector('link[data-aip-theme]');
     if (existingLink) return;
@@ -58,17 +62,17 @@ export interface ThemeToggleProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function ThemeToggle({ 
-  className = '', 
+export function ThemeToggle({
+  className = '',
   showLabel = true,
-  size = 'md'
+  size = 'md',
 }: ThemeToggleProps) {
   const { theme, setTheme, isDark } = useAIPTheme();
 
   const sizeClasses = {
     sm: 'aip-text-sm aip-p-sm',
     md: 'aip-text-base aip-p-md',
-    lg: 'aip-text-lg aip-p-lg'
+    lg: 'aip-text-lg aip-p-lg',
   };
 
   const buttonClass = `aip-button aip-button-secondary ${sizeClasses[size]} ${className}`;
@@ -79,14 +83,8 @@ export function ThemeToggle({
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
     >
-      <span className="aip-transition">
-        {isDark ? '☀️' : '🌙'}
-      </span>
-      {showLabel && (
-        <span className="ml-2">
-          {isDark ? 'Light' : 'Dark'}
-        </span>
-      )}
+      <span className="aip-transition">{isDark ? '☀️' : '🌙'}</span>
+      {showLabel && <span className="ml-2">{isDark ? 'Light' : 'Dark'}</span>}
     </button>
   );
 }
@@ -96,18 +94,16 @@ export interface ThemeSelectProps {
   showLabel?: boolean;
 }
 
-export function ThemeSelect({ 
-  className = '', 
-  showLabel = true 
+export function ThemeSelect({
+  className = '',
+  showLabel = true,
 }: ThemeSelectProps) {
   const { theme, setTheme } = useAIPTheme();
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {showLabel && (
-        <label className="aip-text-sm aip-text-secondary">
-          Theme:
-        </label>
+        <label className="aip-text-sm aip-text-secondary">Theme:</label>
       )}
       <select
         className="aip-input aip-text-sm"
@@ -127,23 +123,23 @@ export interface CustomPropertyEditorProps {
   properties?: string[];
 }
 
-export function CustomPropertyEditor({ 
+export function CustomPropertyEditor({
   className = '',
   properties = [
     '--aip-primary',
-    '--aip-secondary', 
+    '--aip-secondary',
     '--aip-accent',
     '--aip-bg-primary',
     '--aip-bg-secondary',
     '--aip-text-primary',
-    '--aip-text-secondary'
-  ]
+    '--aip-text-secondary',
+  ],
 }: CustomPropertyEditorProps) {
-  const { 
-    customProperties, 
-    setCustomProperty, 
+  const {
+    customProperties,
+    setCustomProperty,
     removeCustomProperty,
-    resetCustomProperties 
+    resetCustomProperties,
   } = useAIPTheme();
 
   return (
@@ -157,7 +153,7 @@ export function CustomPropertyEditor({
           Reset
         </button>
       </div>
-      
+
       <div className="space-y-2">
         {properties.map((property) => (
           <div key={property} className="flex items-center gap-2">

@@ -14,7 +14,8 @@ export class RegistrySync {
 
   constructor(options: SyncOptions = {}) {
     this.jsRegistryPath = options.jsRegistryPath || 'dist/registry.json';
-    this.pythonRegistryPath = options.pythonRegistryPath || 'python/src/agentinterface/registry.json';
+    this.pythonRegistryPath =
+      options.pythonRegistryPath || 'python/src/agentinterface/registry.json';
     this.verbose = options.verbose || false;
   }
 
@@ -30,12 +31,14 @@ export class RegistrySync {
 
       // Read JS registry
       const registryContent = fs.readFileSync(this.jsRegistryPath, 'utf-8');
-      
+
       // Validate it's valid JSON
       try {
         JSON.parse(registryContent);
       } catch (error) {
-        throw new Error(`Invalid JSON in registry file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        throw new Error(
+          `Invalid JSON in registry file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        );
       }
 
       // Ensure Python directory exists
@@ -58,7 +61,6 @@ export class RegistrySync {
 
       // Verify the copy
       await this.verifySync();
-
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       throw new Error(`Registry synchronization failed: ${message}`);
@@ -99,7 +101,10 @@ export class RegistrySync {
    */
   async isInSync(): Promise<boolean> {
     try {
-      if (!fs.existsSync(this.jsRegistryPath) || !fs.existsSync(this.pythonRegistryPath)) {
+      if (
+        !fs.existsSync(this.jsRegistryPath) ||
+        !fs.existsSync(this.pythonRegistryPath)
+      ) {
         return false;
       }
 
@@ -142,7 +147,7 @@ export class RegistrySync {
       pythonExists,
       inSync,
       jsModified,
-      pythonModified
+      pythonModified,
     };
   }
 

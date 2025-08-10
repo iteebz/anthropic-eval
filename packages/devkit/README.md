@@ -5,6 +5,7 @@ Development tools for building AgentInterface components with zero ceremony.
 ## Features
 
 ### 🔍 Filesystem-Based Component Discovery
+
 Automatically discovers components from your filesystem structure without manual registration.
 
 ```typescript
@@ -14,7 +15,7 @@ const discovery = new ComponentDiscovery({
   baseDir: 'src',
   scanDirs: ['components/interface', 'components/render'],
   pattern: /^(?!.*\.(test|spec|d)\.tsx?$).*\.tsx?$/,
-  watch: true
+  watch: true,
 });
 
 await discovery.discover();
@@ -22,6 +23,7 @@ const registry = discovery.getRegistry();
 ```
 
 ### 🔥 Hot Reload
+
 Live reload components during development without losing state.
 
 ```typescript
@@ -37,7 +39,7 @@ function App() {
 
 function MyComponent() {
   const hotReload = useHotReload();
-  
+
   return (
     <button onClick={() => hotReload.reloadAll()}>
       Reload All Components
@@ -47,6 +49,7 @@ function MyComponent() {
 ```
 
 ### 🛠️ Dev Tools Integration
+
 Comprehensive debugging and development utilities.
 
 ```typescript
@@ -100,9 +103,9 @@ export default {
     agentInterfaceVitePlugin({
       baseDir: 'src',
       scanDirs: ['components/interface', 'components/render'],
-      generateManifest: true
-    })
-  ]
+      generateManifest: true,
+    }),
+  ],
 };
 ```
 
@@ -190,11 +193,11 @@ export interface ProjectCardProps {
   links: { github?: string; demo?: string };
 }
 
-export default function ProjectCard({ 
-  title, 
-  description, 
-  technologies, 
-  links 
+export default function ProjectCard({
+  title,
+  description,
+  technologies,
+  links
 }: ProjectCardProps) {
   return (
     <div className="project-card">
@@ -234,13 +237,13 @@ function DevPage() {
 
 ```typescript
 interface DevConfig {
-  enableDiscovery?: boolean;      // Enable filesystem discovery
-  enableHotReload?: boolean;      // Enable hot reload
-  enableDevTools?: boolean;       // Enable dev tools UI
+  enableDiscovery?: boolean; // Enable filesystem discovery
+  enableHotReload?: boolean; // Enable hot reload
+  enableDevTools?: boolean; // Enable dev tools UI
   discoveryOptions?: {
-    baseDir?: string;             // Base directory to scan
-    scanDirs?: string[];          // Directories to scan
-    pattern?: RegExp;             // File pattern to match
+    baseDir?: string; // Base directory to scan
+    scanDirs?: string[]; // Directories to scan
+    pattern?: RegExp; // File pattern to match
   };
   devToolsPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
 }

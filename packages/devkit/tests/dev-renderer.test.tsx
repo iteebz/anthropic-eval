@@ -12,9 +12,11 @@ vi.mock('../src/components/AgentInterfaceRenderer', () => ({
   AgentInterfaceRenderer: ({ agentResponse, components }: any) => (
     <div data-testid="agent-interface-renderer">
       <span data-testid="agent-response">{JSON.stringify(agentResponse)}</span>
-      <span data-testid="component-count">{Object.keys(components || {}).length}</span>
+      <span data-testid="component-count">
+        {Object.keys(components || {}).length}
+      </span>
     </div>
-  )
+  ),
 }));
 
 // Mock development components
@@ -24,14 +26,18 @@ vi.mock('../src/hot-reload', () => ({
       {children}
     </div>
   ),
-  HotReloadIndicator: () => <div data-testid="hot-reload-indicator">Hot Reload</div>
+  HotReloadIndicator: () => (
+    <div data-testid="hot-reload-indicator">Hot Reload</div>
+  ),
 }));
 
 vi.mock('../src/devtools', () => ({
   AgentInterfaceDevTools: ({ position }: any) => (
-    <div data-testid="dev-tools" data-position={position}>Dev Tools</div>
+    <div data-testid="dev-tools" data-position={position}>
+      Dev Tools
+    </div>
   ),
-  setupDevConsole: vi.fn()
+  setupDevConsole: vi.fn(),
 }));
 
 // Discovery is now handled by agentinterface registry
@@ -49,7 +55,7 @@ describe('DevAgentInterfaceRenderer', () => {
       // Mock development environment
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
-      
+
       // Restore after each test
       afterEach(() => {
         process.env.NODE_ENV = originalEnv;
@@ -61,15 +67,17 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       // Wait for initialization
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
-      // Should include development wrappers  
+      // Should include development wrappers
       expect(screen.getByTestId('hot-reload-provider')).toBeInTheDocument();
       // Dev features may not render in test env - just verify provider exists
     });
@@ -79,12 +87,12 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       await waitFor(() => {
         expect(screen.getByTestId('agent-response')).toHaveTextContent(
-          JSON.stringify(mockAgentResponse)
+          JSON.stringify(mockAgentResponse),
         );
       });
     });
@@ -94,11 +102,13 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Component count may be 0 in test env, just verify renderer works
@@ -113,17 +123,21 @@ describe('DevAgentInterfaceRenderer', () => {
           devConfig={{
             enableDiscovery: false,
             enableHotReload: false,
-            enableDevTools: false
+            enableDevTools: false,
           }}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Should not include development features when disabled
-      expect(screen.queryByTestId('hot-reload-indicator')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hot-reload-indicator'),
+      ).not.toBeInTheDocument();
       expect(screen.queryByTestId('dev-tools')).not.toBeInTheDocument();
     });
 
@@ -133,13 +147,15 @@ describe('DevAgentInterfaceRenderer', () => {
           agentResponse={mockAgentResponse}
           components={mockComponents}
           devConfig={{
-            devToolsPosition: 'top-left'
+            devToolsPosition: 'top-left',
           }}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Dev tools should be present with position
@@ -150,19 +166,23 @@ describe('DevAgentInterfaceRenderer', () => {
     });
 
     it('handles discovery errors gracefully', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       // Test error handling without discovery mock
 
       render(
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       consoleErrorSpy.mockRestore();
@@ -173,7 +193,7 @@ describe('DevAgentInterfaceRenderer', () => {
     beforeEach(() => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
-      
+
       afterEach(() => {
         process.env.NODE_ENV = originalEnv;
       });
@@ -184,16 +204,22 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Should not include development wrappers
-      expect(screen.queryByTestId('hot-reload-provider')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('hot-reload-indicator')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hot-reload-provider'),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hot-reload-indicator'),
+      ).not.toBeInTheDocument();
       expect(screen.queryByTestId('dev-tools')).not.toBeInTheDocument();
     });
 
@@ -202,11 +228,13 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Should have component count element
@@ -220,11 +248,13 @@ describe('DevAgentInterfaceRenderer', () => {
           components={mockComponents}
           className="custom-class"
           data-testid="custom-renderer"
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
     });
   });
@@ -235,12 +265,14 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       // Wait for render to complete
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
     });
 
@@ -251,17 +283,21 @@ describe('DevAgentInterfaceRenderer', () => {
           components={mockComponents}
           devConfig={{
             enableDiscovery: false,
-            enableHotReload: false
+            enableHotReload: false,
           }}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Loading state is skipped when discovery is disabled
-      expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('agent-interface-renderer'),
+      ).toBeInTheDocument();
     });
   });
 
@@ -271,11 +307,13 @@ describe('DevAgentInterfaceRenderer', () => {
         <DevAgentInterfaceRenderer
           agentResponse={mockAgentResponse}
           components={mockComponents}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Should unmount without error
@@ -288,13 +326,15 @@ describe('DevAgentInterfaceRenderer', () => {
           agentResponse={mockAgentResponse}
           components={mockComponents}
           devConfig={{
-            enableDiscovery: false
+            enableDiscovery: false,
           }}
-        />
+        />,
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('agent-interface-renderer')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('agent-interface-renderer'),
+        ).toBeInTheDocument();
       });
 
       // Should not throw when discovery is null

@@ -1,51 +1,54 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { z } from 'zod';
 import { register } from '../../registry';
-import { Prose } from "../prose";
+import { Prose } from '../prose';
 
 export const ReferenceSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     references: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          id: { type: "string" },
-          title: { type: "string" },
-          type: { type: "string" },
-          excerpt: { type: "string" },
-          content: { type: "string" },
-          url: { type: "string" }
+          id: { type: 'string' },
+          title: { type: 'string' },
+          type: { type: 'string' },
+          excerpt: { type: 'string' },
+          content: { type: 'string' },
+          url: { type: 'string' },
         },
-        required: ["id", "title", "type", "excerpt", "content"]
-      }
+        required: ['id', 'title', 'type', 'excerpt', 'content'],
+      },
     },
-    content: { type: "string" },
-    className: { type: "string" }
+    content: { type: 'string' },
+    className: { type: 'string' },
   },
-  required: ["references"]
+  required: ['references'],
 } as const;
 
 export const metadata = {
-  type: "reference",
-  description: "Interactive inline references that expand to show detailed content with MCP callback support",
+  type: 'reference',
+  description:
+    'Interactive inline references that expand to show detailed content with MCP callback support',
   schema: ReferenceSchema,
-  category: "interface",
-  tags: ["citation", "interactive", "expandable"]
+  category: 'interface',
+  tags: ['citation', 'interactive', 'expandable'],
 } as const;
 
 const ReferenceValidator = z.object({
-  references: z.array(z.object({
-    id: z.string(),
-    title: z.string(),
-    type: z.string(),
-    excerpt: z.string(),
-    content: z.string(),
-    url: z.string().optional()
-  })),
+  references: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      type: z.string(),
+      excerpt: z.string(),
+      content: z.string(),
+      url: z.string().optional(),
+    }),
+  ),
   content: z.string().optional(),
-  className: z.string().optional()
+  className: z.string().optional(),
 });
 
 type ReferenceData = z.infer<typeof ReferenceValidator>;
@@ -69,7 +72,7 @@ export function Reference(props: ReferenceData) {
   return (
     <div className={className}>
       {content && <Prose content={content} className="mb-4" />}
-      
+
       {references.length > 0 && (
         <div className="space-y-2">
           <div className="text-sm font-medium">References:</div>
@@ -81,18 +84,22 @@ export function Reference(props: ReferenceData) {
               >
                 {reference.title}
               </button>
-              
+
               {expandedRefs.has(reference.id) && (
-                <div className="mt-2 ml-4 p-3 border-l-2 border-primary/30 bg-muted/30 rounded-r">
-                  <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">{reference.type}</div>
-                  <div className="text-sm text-muted-foreground mb-2">{reference.excerpt}</div>
+                <div className="border-primary/30 bg-muted/30 ml-4 mt-2 rounded-r border-l-2 p-3">
+                  <div className="text-muted-foreground mb-1 text-xs uppercase tracking-wide">
+                    {reference.type}
+                  </div>
+                  <div className="text-muted-foreground mb-2 text-sm">
+                    {reference.excerpt}
+                  </div>
                   <Prose content={reference.content} />
                   {reference.url && (
                     <a
                       href={reference.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:text-primary/80 text-xs block mt-2 underline-offset-4 hover:underline"
+                      className="text-primary hover:text-primary/80 mt-2 block text-xs underline-offset-4 hover:underline"
                     >
                       View source →
                     </a>
@@ -111,5 +118,5 @@ export function Reference(props: ReferenceData) {
 register({
   type: 'reference',
   schema: ReferenceValidator,
-  render: Reference
+  render: Reference,
 });

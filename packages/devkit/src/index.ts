@@ -1,6 +1,6 @@
 /**
  * AgentInterface Development Tools
- * 
+ *
  * Provides filesystem-based component discovery, hot-reload capabilities,
  * and comprehensive dev tools for building AgentInterface components.
  */
@@ -35,5 +35,5 @@ export const defaultDevConfig: DevConfig = {
   enableDiscovery: isDevelopment,
   enableHotReload: isDevelopment,
   enableDevTools: isDevelopment,
-  devToolsPosition: 'bottom-right'
+  devToolsPosition: 'bottom-right',
 };

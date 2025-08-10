@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2025-07-21T04:26:50.579Z",
+  "generatedAt": "2025-08-07T20:17:37.835Z",
   "components": {
     "accordion": {
       "type": "accordion",
@@ -9,11 +9,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "collapsible",
-        "organization",
-        "expandable"
-      ],
+      "tags": ["collapsible", "organization", "expandable"],
       "filePath": "src/components/aip/accordion.tsx"
     },
     "card": {
@@ -23,11 +19,7 @@
         "type": "object"
       },
       "category": "container",
-      "tags": [
-        "container",
-        "layout",
-        "structured"
-      ],
+      "tags": ["container", "layout", "structured"],
       "filePath": "src/components/aip/card.tsx"
     },
     "cards": {
@@ -37,11 +29,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "cards",
-        "interactive",
-        "grid"
-      ],
+      "tags": ["cards", "interactive", "grid"],
       "filePath": "src/components/aip/cards.tsx"
     },
     "code": {
@@ -51,11 +39,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "code",
-        "syntax",
-        "snippet"
-      ],
+      "tags": ["code", "syntax", "snippet"],
       "filePath": "src/components/aip/code.tsx"
     },
     "gallery": {
@@ -65,11 +49,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "images",
-        "visual",
-        "grid"
-      ],
+      "tags": ["images", "visual", "grid"],
       "filePath": "src/components/aip/gallery.tsx"
     },
     "insights": {
@@ -79,11 +59,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "highlights",
-        "callouts",
-        "important"
-      ],
+      "tags": ["highlights", "callouts", "important"],
       "filePath": "src/components/aip/insights.tsx"
     },
     "markdown": {
@@ -93,11 +69,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "text",
-        "formatting",
-        "content"
-      ],
+      "tags": ["text", "formatting", "content"],
       "filePath": "src/components/aip/markdown.tsx"
     },
     "reference": {
@@ -107,11 +79,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "citation",
-        "interactive",
-        "expandable"
-      ],
+      "tags": ["citation", "interactive", "expandable"],
       "filePath": "src/components/aip/reference.tsx"
     },
     "suggestions": {
@@ -121,11 +89,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "suggestions",
-        "interactive",
-        "conversation"
-      ],
+      "tags": ["suggestions", "interactive", "conversation"],
       "filePath": "src/components/aip/suggestions.tsx"
     },
     "table": {
@@ -135,11 +99,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "data",
-        "comparison",
-        "structured"
-      ],
+      "tags": ["data", "comparison", "structured"],
       "filePath": "src/components/aip/table.tsx"
     },
     "tabs": {
@@ -149,11 +109,7 @@
         "type": "object"
       },
       "category": "container",
-      "tags": [
-        "navigation",
-        "container",
-        "multi-view"
-      ],
+      "tags": ["navigation", "container", "multi-view"],
       "filePath": "src/components/aip/tabs.tsx"
     },
     "timeline": {
@@ -163,11 +119,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "chronological",
-        "events",
-        "history"
-      ],
+      "tags": ["chronological", "events", "history"],
       "filePath": "src/components/aip/timeline.tsx"
     },
     "tree": {
@@ -177,11 +129,7 @@
         "type": "object"
       },
       "category": "interface",
-      "tags": [
-        "decision",
-        "interactive",
-        "branching"
-      ],
+      "tags": ["decision", "interactive", "branching"],
       "filePath": "src/components/aip/tree.tsx"
     }
   },
@@ -199,115 +147,41 @@
       "timeline",
       "tree"
     ],
-    "container": [
-      "card",
-      "tabs"
-    ]
+    "container": ["card", "tabs"]
   },
   "tags": {
-    "collapsible": [
-      "accordion"
-    ],
-    "organization": [
-      "accordion"
-    ],
-    "expandable": [
-      "accordion",
-      "reference"
-    ],
-    "container": [
-      "card",
-      "tabs"
-    ],
-    "layout": [
-      "card"
-    ],
-    "structured": [
-      "card",
-      "table"
-    ],
-    "cards": [
-      "cards"
-    ],
-    "interactive": [
-      "cards",
-      "reference",
-      "suggestions",
-      "tree"
-    ],
-    "grid": [
-      "cards",
-      "gallery"
-    ],
-    "code": [
-      "code"
-    ],
-    "syntax": [
-      "code"
-    ],
-    "snippet": [
-      "code"
-    ],
-    "images": [
-      "gallery"
-    ],
-    "visual": [
-      "gallery"
-    ],
-    "highlights": [
-      "insights"
-    ],
-    "callouts": [
-      "insights"
-    ],
-    "important": [
-      "insights"
-    ],
-    "text": [
-      "markdown"
-    ],
-    "formatting": [
-      "markdown"
-    ],
-    "content": [
-      "markdown"
-    ],
-    "citation": [
-      "reference"
-    ],
-    "suggestions": [
-      "suggestions"
-    ],
-    "conversation": [
-      "suggestions"
-    ],
-    "data": [
-      "table"
-    ],
-    "comparison": [
-      "table"
-    ],
-    "navigation": [
-      "tabs"
-    ],
-    "multi-view": [
-      "tabs"
-    ],
-    "chronological": [
-      "timeline"
-    ],
-    "events": [
-      "timeline"
-    ],
-    "history": [
-      "timeline"
-    ],
-    "decision": [
-      "tree"
-    ],
-    "branching": [
-      "tree"
-    ]
+    "collapsible": ["accordion"],
+    "organization": ["accordion"],
+    "expandable": ["accordion", "reference"],
+    "container": ["card", "tabs"],
+    "layout": ["card"],
+    "structured": ["card", "table"],
+    "cards": ["cards"],
+    "interactive": ["cards", "reference", "suggestions", "tree"],
+    "grid": ["cards", "gallery"],
+    "code": ["code"],
+    "syntax": ["code"],
+    "snippet": ["code"],
+    "images": ["gallery"],
+    "visual": ["gallery"],
+    "highlights": ["insights"],
+    "callouts": ["insights"],
+    "important": ["insights"],
+    "text": ["markdown"],
+    "formatting": ["markdown"],
+    "content": ["markdown"],
+    "citation": ["reference"],
+    "suggestions": ["suggestions"],
+    "conversation": ["suggestions"],
+    "data": ["table"],
+    "comparison": ["table"],
+    "navigation": ["tabs"],
+    "multi-view": ["tabs"],
+    "chronological": ["timeline"],
+    "events": ["timeline"],
+    "history": ["timeline"],
+    "decision": ["tree"],
+    "branching": ["tree"]
   },
   "stats": {
     "totalComponents": 13,

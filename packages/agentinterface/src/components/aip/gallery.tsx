@@ -3,42 +3,45 @@ import { z } from 'zod';
 import { register } from '../../registry';
 
 export const GallerySchema = {
-  type: "object",
+  type: 'object',
   properties: {
     images: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          src: { type: "string" },
-          alt: { type: "string" },
-          title: { type: "string" }
+          src: { type: 'string' },
+          alt: { type: 'string' },
+          title: { type: 'string' },
         },
-        required: ["src", "alt"]
-      }
+        required: ['src', 'alt'],
+      },
     },
-    columns: { type: "number", minimum: 1, maximum: 4 },
-    className: { type: "string" }
+    columns: { type: 'number', minimum: 1, maximum: 4 },
+    className: { type: 'string' },
   },
-  required: ["images"]
+  required: ['images'],
 } as const;
 
 export const metadata = {
-  type: "gallery",
-  description: "Display a grid of images with lightbox functionality and customizable layout",
+  type: 'gallery',
+  description:
+    'Display a grid of images with lightbox functionality and customizable layout',
   schema: GallerySchema,
-  category: "interface",
-  tags: ["images", "visual", "grid"]
+  category: 'interface',
+  tags: ['images', 'visual', 'grid'],
 } as const;
 
 const GalleryValidator = z.object({
-  images: z.array(z.object({
-    src: z.string(),
-    alt: z.string(),
-    title: z.string().optional()
-  })),
+  images: z.array(
+    z.object({
+      src: z.string(),
+      alt: z.string(),
+      title: z.string().optional(),
+    }),
+  ),
   columns: z.number().optional(),
-  className: z.string().optional()
+  className: z.string().optional(),
 });
 
 type GalleryData = z.infer<typeof GalleryValidator>;
@@ -48,12 +51,13 @@ export function Gallery(props: GalleryData) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  const gridClass = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-1 md:grid-cols-2',
-    3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-    4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
-  }[columns] || 'grid-cols-3';
+  const gridClass =
+    {
+      1: 'grid-cols-1',
+      2: 'grid-cols-1 md:grid-cols-2',
+      3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+      4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+    }[columns] || 'grid-cols-3';
 
   return (
     <div className={className}>
@@ -61,7 +65,7 @@ export function Gallery(props: GalleryData) {
         {images.map((image, index) => (
           <div
             key={index}
-            className="relative overflow-hidden rounded-lg cursor-pointer hover:opacity-90"
+            className="relative cursor-pointer overflow-hidden rounded-lg hover:opacity-90"
             onClick={() => {
               setCurrentImage(index);
               setLightboxOpen(true);
@@ -70,11 +74,11 @@ export function Gallery(props: GalleryData) {
             <img
               src={image.src}
               alt={image.alt}
-              className="w-full h-auto object-cover"
+              className="h-auto w-full object-cover"
               loading="lazy"
             />
             {image.title && (
-              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
+              <div className="absolute inset-x-0 bottom-0 bg-black bg-opacity-50 p-2 text-white">
                 <p className="text-sm">{image.title}</p>
               </div>
             )}
@@ -84,20 +88,20 @@ export function Gallery(props: GalleryData) {
 
       {lightboxOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4"
           onClick={() => setLightboxOpen(false)}
         >
-          <div className="relative max-w-4xl max-h-full">
+          <div className="relative max-h-full max-w-4xl">
             <button
               onClick={() => setLightboxOpen(false)}
-              className="absolute top-4 right-4 text-white text-2xl hover:text-gray-300"
+              className="absolute right-4 top-4 text-2xl text-white hover:text-gray-300"
             >
               ×
             </button>
             <img
               src={images[currentImage].src}
               alt={images[currentImage].alt}
-              className="max-w-full max-h-full object-contain"
+              className="max-h-full max-w-full object-contain"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
@@ -111,5 +115,5 @@ export function Gallery(props: GalleryData) {
 register({
   type: 'gallery',
   schema: GalleryValidator,
-  render: Gallery
+  render: Gallery,
 });

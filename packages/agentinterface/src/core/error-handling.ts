@@ -34,7 +34,7 @@ export class AIPErrorHandler {
       enableReporting: false,
       maxRetries: 3,
       retryDelay: 1000,
-      ...config
+      ...config,
     };
   }
 
@@ -47,7 +47,7 @@ export class AIPErrorHandler {
     component?: string,
     props?: any,
     cause?: Error,
-    context?: Record<string, any>
+    context?: Record<string, any>,
   ): AIPError {
     return {
       code,
@@ -56,7 +56,7 @@ export class AIPErrorHandler {
       props,
       cause,
       timestamp: Date.now(),
-      context
+      context,
     };
   }
 
@@ -70,7 +70,7 @@ export class AIPErrorHandler {
         props: error.props,
         cause: error.cause,
         context: error.context,
-        timestamp: new Date(error.timestamp).toISOString()
+        timestamp: new Date(error.timestamp).toISOString(),
       });
     }
 
@@ -89,17 +89,17 @@ export class AIPErrorHandler {
   async handleComponentError<T>(
     componentName: string,
     operation: () => Promise<T>,
-    fallback?: T
+    fallback?: T,
   ): Promise<T | null> {
     const key = `component:${componentName}`;
     const retries = this.retryCount.get(key) || 0;
 
     try {
       const result = await operation();
-      
+
       // Reset retry count on success
       this.retryCount.delete(key);
-      
+
       return result;
     } catch (error) {
       const aipError = this.createError(
@@ -107,7 +107,7 @@ export class AIPErrorHandler {
         `Failed to load component: ${componentName}`,
         componentName,
         undefined,
-        error instanceof Error ? error : new Error(String(error))
+        error instanceof Error ? error : new Error(String(error)),
       );
 
       this.handleError(aipError);
@@ -115,11 +115,11 @@ export class AIPErrorHandler {
       // Retry logic
       if (retries < (this.config.maxRetries || 3)) {
         this.retryCount.set(key, retries + 1);
-        
-        await new Promise(resolve => 
-          setTimeout(resolve, this.config.retryDelay || 1000)
+
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.config.retryDelay || 1000),
         );
-        
+
         return this.handleComponentError(componentName, operation, fallback);
       }
 
@@ -135,14 +135,14 @@ export class AIPErrorHandler {
     componentName: string,
     props: any,
     validationError: Error,
-    strictMode: boolean = false
+    strictMode = false,
   ): { success: boolean; error?: string; data?: any } {
     const aipError = this.createError(
       'VALIDATION_ERROR',
       `Props validation failed for component: ${componentName}`,
       componentName,
       props,
-      validationError
+      validationError,
     );
 
     this.handleError(aipError);
@@ -154,7 +154,7 @@ export class AIPErrorHandler {
     return {
       success: false,
       error: validationError.message,
-      data: props // Return original props for graceful degradation
+      data: props, // Return original props for graceful degradation
     };
   }
 
@@ -164,7 +164,7 @@ export class AIPErrorHandler {
   handleRegistryError(
     operation: string,
     error: Error,
-    context?: Record<string, any>
+    context?: Record<string, any>,
   ): void {
     const aipError = this.createError(
       'REGISTRY_ERROR',
@@ -172,7 +172,7 @@ export class AIPErrorHandler {
       undefined,
       undefined,
       error,
-      context
+      context,
     );
 
     this.handleError(aipError);
@@ -184,7 +184,7 @@ export class AIPErrorHandler {
   async handleBundleError(
     bundleName: string,
     operation: () => Promise<any>,
-    fallback?: any
+    fallback?: any,
   ): Promise<any> {
     try {
       return await operation();
@@ -195,7 +195,7 @@ export class AIPErrorHandler {
         undefined,
         undefined,
         error instanceof Error ? error : new Error(String(error)),
-        { bundleName }
+        { bundleName },
       );
 
       this.handleError(aipError);
@@ -206,7 +206,7 @@ export class AIPErrorHandler {
   /**
    * Report error to external service
    */
-  private reportError(error: AIPError): void {
+  private reportError(_error: AIPError): void {
     // Implementation would depend on error reporting service
     // e.g., Sentry, LogRocket, etc.
     console.warn('[AIP] Error reporting not configured');
@@ -248,10 +248,10 @@ export const ErrorCodes = {
   VALIDATION_ERROR: 'VALIDATION_ERROR',
   REGISTRY_ERROR: 'REGISTRY_ERROR',
   BUNDLE_LOAD_ERROR: 'BUNDLE_LOAD_ERROR',
-  UNKNOWN_ERROR: 'UNKNOWN_ERROR'
+  UNKNOWN_ERROR: 'UNKNOWN_ERROR',
 } as const;
 
-export type ErrorCode = typeof ErrorCodes[keyof typeof ErrorCodes];
+export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes];
 
 /**
  * Error recovery strategies
@@ -260,10 +260,11 @@ export const ErrorRecoveryStrategies = {
   RETRY: 'retry',
   FALLBACK: 'fallback',
   IGNORE: 'ignore',
-  FAIL_FAST: 'fail_fast'
+  FAIL_FAST: 'fail_fast',
 } as const;
 
-export type ErrorRecoveryStrategy = typeof ErrorRecoveryStrategies[keyof typeof ErrorRecoveryStrategies];
+export type ErrorRecoveryStrategy =
+  (typeof ErrorRecoveryStrategies)[keyof typeof ErrorRecoveryStrategies];
 
 /**
  * Utility for wrapping async operations with error handling
@@ -273,7 +274,7 @@ export async function withErrorHandling<T>(
   errorCode: ErrorCode,
   message: string,
   context?: Record<string, any>,
-  fallback?: T
+  fallback?: T,
 ): Promise<T | null> {
   try {
     return await operation();
@@ -285,9 +286,9 @@ export async function withErrorHandling<T>(
       undefined,
       undefined,
       error instanceof Error ? error : new Error(String(error)),
-      context
+      context,
     );
-    
+
     errorHandler.handleError(aipError);
     return fallback || null;
   }
@@ -301,7 +302,7 @@ export function withSyncErrorHandling<T>(
   errorCode: ErrorCode,
   message: string,
   context?: Record<string, any>,
-  fallback?: T
+  fallback?: T,
 ): T | null {
   try {
     return operation();
@@ -313,9 +314,9 @@ export function withSyncErrorHandling<T>(
       undefined,
       undefined,
       error instanceof Error ? error : new Error(String(error)),
-      context
+      context,
     );
-    
+
     errorHandler.handleError(aipError);
     return fallback || null;
   }

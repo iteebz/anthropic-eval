@@ -31,7 +31,7 @@ export class RegistryGenerator {
   private sync: RegistrySync;
   private outputPath: string;
 
-  constructor(componentsDir?: string, outputPath: string = 'dist/registry.json') {
+  constructor(componentsDir?: string, outputPath = 'dist/registry.json') {
     this.builder = new RegistryBuilder(componentsDir);
     this.validator = new MetadataValidator();
     this.sync = new RegistrySync({ jsRegistryPath: outputPath, verbose: true });
@@ -43,11 +43,11 @@ export class RegistryGenerator {
    */
   async generate(): Promise<RegistryOutput> {
     console.log('🔍 Scanning AIP components...');
-    
+
     // Scan components
     await this.builder.scanComponents();
     const entries = this.builder.getEntries();
-    
+
     if (entries.length === 0) {
       throw new Error('No AIP components found to generate registry');
     }
@@ -57,15 +57,17 @@ export class RegistryGenerator {
     // Validate all components
     console.log('✅ Validating component metadata...');
     const validationErrors = this.validator.validateAll(entries);
-    
+
     if (validationErrors.length > 0) {
       const errorMessage = this.validator.formatErrors(validationErrors);
-      throw new Error(`Registry generation failed due to validation errors:\n${errorMessage}`);
+      throw new Error(
+        `Registry generation failed due to validation errors:\n${errorMessage}`,
+      );
     }
 
     // Generate registry structure
     const registry = this.buildRegistry(entries);
-    
+
     // Ensure output directory exists
     const outputDir = path.dirname(this.outputPath);
     if (!fs.existsSync(outputDir)) {
@@ -74,15 +76,17 @@ export class RegistryGenerator {
 
     // Write registry file
     fs.writeFileSync(this.outputPath, JSON.stringify(registry, null, 2));
-    
+
     console.log(`🎉 Registry generated successfully: ${this.outputPath}`);
     console.log(`   Components: ${registry.stats.totalComponents}`);
-    console.log(`   Categories: ${Object.keys(registry.categories).join(', ')}`);
-    
+    console.log(
+      `   Categories: ${Object.keys(registry.categories).join(', ')}`,
+    );
+
     // Auto-sync to Python
     console.log('🔄 Syncing to Python package...');
     await this.sync.autoSync();
-    
+
     return registry;
   }
 
@@ -98,7 +102,7 @@ export class RegistryGenerator {
     // Process each component
     for (const entry of entries) {
       const { type, metadata, filePath } = entry;
-      
+
       // Add to components registry
       components[type] = {
         type: metadata.type,
@@ -106,7 +110,7 @@ export class RegistryGenerator {
         schema: metadata.schema,
         category: metadata.category,
         tags: metadata.tags,
-        filePath
+        filePath,
       };
 
       // Organize by category
@@ -142,8 +146,8 @@ export class RegistryGenerator {
       tags,
       stats: {
         totalComponents: entries.length,
-        categoryCounts
-      }
+        categoryCounts,
+      },
     };
   }
 
@@ -169,7 +173,7 @@ export class RegistryGenerator {
   async generateWithSummary(): Promise<string> {
     try {
       const registry = await this.generate();
-      
+
       let summary = `Registry Generation Complete!\n\n`;
       summary += `📊 Summary:\n`;
       summary += `   • Total Components: ${registry.stats.totalComponents}\n`;
@@ -177,9 +181,11 @@ export class RegistryGenerator {
       summary += `   • Unique Tags: ${Object.keys(registry.tags).length}\n`;
       summary += `   • Generated: ${registry.generatedAt}\n`;
       summary += `   • Output: ${this.outputPath}\n\n`;
-      
+
       summary += `🏷️  Components by Category:\n`;
-      for (const [category, components] of Object.entries(registry.categories)) {
+      for (const [category, components] of Object.entries(
+        registry.categories,
+      )) {
         summary += `   • ${category}: ${components.join(', ')}\n`;
       }
 

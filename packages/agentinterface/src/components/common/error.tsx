@@ -16,7 +16,7 @@ export const Error: React.FC<ErrorStateProps> = ({
   <div className={`text-red-500 ${className}`}>
     <p>Error: {error.message}</p>
     {showErrorDetails && (
-      <pre className="text-xs bg-gray-100 p-2 rounded mt-2">
+      <pre className="mt-2 rounded bg-gray-100 p-2 text-xs">
         {error.stack}
         <br />
         Agent Response: {agentResponse}

@@ -1,10 +1,10 @@
 /**
  * Production-ready error boundary for AgentInterface components
- * 
+ *
  * Provides graceful degradation with markdown fallback, retry functionality,
  * and detailed error reporting. Designed to be shadcn-quality and work out of the box.
  */
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 // import { Prose } from "../prose";
 
 export interface InterfaceErrorBoundaryProps {
@@ -20,7 +20,11 @@ export interface InterfaceErrorBoundaryProps {
   /** Show debug information in development */
   showDebugInfo?: boolean;
   /** Custom error handler */
-  onError?: (error: Error, errorInfo: ErrorInfo, context: InterfaceErrorContext) => void;
+  onError?: (
+    error: Error,
+    errorInfo: ErrorInfo,
+    context: InterfaceErrorContext,
+  ) => void;
   /** Custom className for styling */
   className?: string;
 }
@@ -39,14 +43,17 @@ export interface InterfaceErrorContext {
   retryCount: number;
 }
 
-export class InterfaceErrorBoundary extends Component<InterfaceErrorBoundaryProps, State> {
+export class InterfaceErrorBoundary extends Component<
+  InterfaceErrorBoundaryProps,
+  State
+> {
   private readonly maxRetries = 3;
 
   constructor(props: InterfaceErrorBoundaryProps) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      retryCount: 0 
+    this.state = {
+      hasError: false,
+      retryCount: 0,
     };
   }
 
@@ -62,7 +69,7 @@ export class InterfaceErrorBoundary extends Component<InterfaceErrorBoundaryProp
       retryCount: this.state.retryCount,
     };
 
-    console.error("AgentInterface component error:", {
+    console.error('AgentInterface component error:', {
       error: error.message,
       stack: error.stack,
       componentStack: errorInfo.componentStack,
@@ -75,7 +82,7 @@ export class InterfaceErrorBoundary extends Component<InterfaceErrorBoundaryProp
 
   handleRetry = () => {
     if (this.state.retryCount < this.maxRetries) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         hasError: false,
         error: undefined,
         errorInfo: undefined,
@@ -86,18 +93,29 @@ export class InterfaceErrorBoundary extends Component<InterfaceErrorBoundaryProp
 
   render() {
     if (this.state.hasError) {
-      const { fallbackContent, interfaceType, showRetry = true, className = "" } = this.props;
+      const {
+        fallbackContent,
+        interfaceType,
+        showRetry = true,
+        className = '',
+      } = this.props;
       const canRetry = this.state.retryCount < this.maxRetries;
 
       return (
-        <div className={`bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 ${className}`}>
+        <div
+          className={`rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20 ${className}`}
+        >
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0">
-              <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                <path 
-                  fillRule="evenodd" 
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" 
-                  clipRule="evenodd" 
+            <div className="shrink-0">
+              <svg
+                className="size-5 text-red-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
                 />
               </svg>
             </div>
@@ -106,25 +124,28 @@ export class InterfaceErrorBoundary extends Component<InterfaceErrorBoundaryProp
                 Interface Component Error
               </h3>
               <p className="text-sm text-red-700 dark:text-red-300">
-                An error occurred while rendering this interface component. The chat will continue to work normally.
+                An error occurred while rendering this interface component. The
+                chat will continue to work normally.
                 {interfaceType && (
-                  <span className="block mt-1 text-xs opacity-75">
+                  <span className="mt-1 block text-xs opacity-75">
                     Interface type: {interfaceType}
                   </span>
                 )}
               </p>
-              
+
               {fallbackContent && (
-                <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded border border-red-200 dark:border-red-700">
-                  <pre className="whitespace-pre-wrap text-sm">{fallbackContent}</pre>
+                <div className="mt-3 rounded border border-red-200 bg-white p-3 dark:border-red-700 dark:bg-gray-800">
+                  <pre className="whitespace-pre-wrap text-sm">
+                    {fallbackContent}
+                  </pre>
                 </div>
               )}
 
-              <div className="flex items-center gap-2 mt-3">
+              <div className="mt-3 flex items-center gap-2">
                 {showRetry && canRetry && (
                   <button
                     onClick={this.handleRetry}
-                    className="px-3 py-1 text-xs bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded border border-red-300 dark:border-red-600 hover:bg-red-200 dark:hover:bg-red-700 transition-colors"
+                    className="rounded border border-red-300 bg-red-100 px-3 py-1 text-xs text-red-800 transition-colors hover:bg-red-200 dark:border-red-600 dark:bg-red-800 dark:text-red-200 dark:hover:bg-red-700"
                   >
                     ↻ Retry ({this.maxRetries - this.state.retryCount} left)
                   </button>

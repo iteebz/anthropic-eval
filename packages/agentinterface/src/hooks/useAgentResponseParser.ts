@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 import {
   validateInterfaceData,
   isValidInterfaceType,
-} from "../core/validation";
-import { type InterfaceType, type InterfaceData } from "../types";
-import { parseAgentResponse } from "../utils/parsing";
-import type { Logger } from "../types";
+} from '../core/validation';
+import { type InterfaceType, type InterfaceData } from '../types';
+import { parseAgentResponse } from '../utils/parsing';
+import type { Logger } from '../types';
 
 export interface InterfaceConfig {
   type: InterfaceType;
@@ -41,7 +41,7 @@ export const useAgentResponseParser = ({
             `Unknown interface type: ${interfaceType}, falling back to markdown`,
           );
           return {
-            type: "markdown",
+            type: 'markdown',
             data: {},
             content,
           };
@@ -49,7 +49,7 @@ export const useAgentResponseParser = ({
 
         // Validate interface data if provided
         let validatedData: InterfaceData | undefined;
-        if (parsed.interface_data && interfaceType !== "markdown") {
+        if (parsed.interface_data && interfaceType !== 'markdown') {
           const validation = validateInterfaceData(
             interfaceType,
             parsed.interface_data,
@@ -92,7 +92,7 @@ export const useAgentResponseParser = ({
 
         // Fallback to markdown with raw content
         return {
-          type: "markdown",
+          type: 'markdown',
           data: {},
           content: response,
         };

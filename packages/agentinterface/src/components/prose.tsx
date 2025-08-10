@@ -9,7 +9,7 @@ export interface ProseProps {
 
 export function Prose({ content, className = '' }: ProseProps) {
   return (
-    <div 
+    <div
       className={`aip-markdown ${className}`}
       dangerouslySetInnerHTML={{ __html: content }}
     />

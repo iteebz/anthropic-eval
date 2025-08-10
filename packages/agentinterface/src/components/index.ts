@@ -1,6 +1,6 @@
 /**
  * Component auto-registration
- * 
+ *
  * Components register themselves when imported
  */
 

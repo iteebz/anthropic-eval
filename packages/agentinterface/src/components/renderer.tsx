@@ -1,12 +1,15 @@
 /**
  * AIP Renderer - The one true renderer for Agent Interface Protocol
- * 
+ *
  * Registry-driven component rendering with comprehensive error handling
  */
 
 import React, { useCallback } from 'react';
 import { render, isRegistered, getRegisteredTypes } from '../registry';
-import { InterfaceErrorBoundary, InterfaceErrorContext } from '../core/InterfaceErrorBoundary';
+import {
+  InterfaceErrorBoundary,
+  InterfaceErrorContext,
+} from '../core/InterfaceErrorBoundary';
 import { useInterfaceConfig } from '../hooks';
 import { Loading } from './common/loading';
 import { Error as ErrorState } from './common/error';
@@ -59,13 +62,13 @@ export interface AIPRendererProps {
 
 /**
  * AIP Renderer - The one true renderer
- * 
+ *
  * Parses agent responses and renders components using the unified registry
  */
 export const AIPRenderer: React.FC<AIPRendererProps> = ({
   agentResponse,
   onSendMessage,
-  className = "",
+  className = '',
   showErrorDetails,
   enablePerformanceMonitoring,
   onError,
@@ -73,7 +76,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
 }) => {
   const { interfaceConfig, isLoading, error } = useInterfaceConfig(
     agentResponse,
-    { enablePerformanceMonitoring, logger }
+    { enablePerformanceMonitoring, logger },
   );
 
   const handleError = useCallback(
@@ -82,7 +85,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
       errorInfo: React.ErrorInfo,
       context: InterfaceErrorContext,
     ) => {
-      logger?.error("AIPRenderer error", {
+      logger?.error('AIPRenderer error', {
         error: {
           details: { message: error.message, stack: error.stack },
           originalData: error,
@@ -92,7 +95,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
       });
       onError?.(error, errorInfo, context);
     },
-    [logger, onError]
+    [logger, onError],
   );
 
   if (isLoading) {
@@ -100,7 +103,8 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
   }
 
   if (error) {
-    const errorObject = error instanceof Error ? error : new Error(String(error));
+    const errorObject =
+      error instanceof Error ? error : new Error(String(error));
     return (
       <ErrorState
         error={errorObject}
@@ -118,10 +122,11 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
   // Check if component type is registered
   if (!isRegistered(interfaceConfig.type)) {
     const availableTypes = getRegisteredTypes();
-    const errorMessage = availableTypes.length > 0 
-      ? `Unknown component '${interfaceConfig.type}'. Available: ${availableTypes.join(', ')}`
-      : `Unknown component '${interfaceConfig.type}'. No components registered.`;
-    
+    const errorMessage =
+      availableTypes.length > 0
+        ? `Unknown component '${interfaceConfig.type}'. Available: ${availableTypes.join(', ')}`
+        : `Unknown component '${interfaceConfig.type}'. No components registered.`;
+
     logger?.warn(errorMessage);
     return (
       <NotFound
@@ -137,7 +142,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
     ...interfaceConfig.data,
     content: interfaceConfig.content,
     className,
-    onSendMessage
+    onSendMessage,
   };
 
   return (
@@ -150,7 +155,7 @@ export const AIPRenderer: React.FC<AIPRendererProps> = ({
     >
       {render({
         type: interfaceConfig.type,
-        data: componentData
+        data: componentData,
       })}
     </InterfaceErrorBoundary>
   );

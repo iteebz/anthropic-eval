@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import {
   useAgentResponseParser,
   type InterfaceConfig,
-} from "./useAgentResponseParser";
-import type { Logger } from "../types";
+} from './useAgentResponseParser';
+import type { Logger } from '../types';
 
 export interface UseInterfaceConfigOptions {
   enablePerformanceMonitoring?: boolean;
@@ -33,7 +33,7 @@ export const useInterfaceConfig = (
       setInterfaceConfig(config);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
-      options.logger?.error("Failed to process agent response", {
+      options.logger?.error('Failed to process agent response', {
         error: {
           details: {
             message: err instanceof Error ? err.message : String(err),

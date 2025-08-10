@@ -3,7 +3,13 @@
  * Enables live reloading of components during development
  */
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 // Component discovery replaced with new registry system
 interface ComponentInfo {
   name: string;
@@ -36,20 +42,23 @@ export interface HotReloadProviderProps {
   enabled?: boolean;
 }
 
-export function HotReloadProvider({ 
-  children, 
-  enabled = process.env.NODE_ENV === 'development'
+export function HotReloadProvider({
+  children,
+  enabled = process.env.NODE_ENV === 'development',
 }: HotReloadProviderProps) {
   const [registry, setRegistry] = useState<Record<string, ComponentInfo>>({});
   const [isEnabled, setIsEnabled] = useState(enabled);
   const [lastReload, setLastReload] = useState<Date | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const reloadComponent = useCallback(async (name: string) => {
-    if (!isEnabled) return;
-    // Simplified: just trigger page reload for now
-    window.location.reload();
-  }, [isEnabled]);
+  const reloadComponent = useCallback(
+    async (name: string) => {
+      if (!isEnabled) return;
+      // Simplified: just trigger page reload for now
+      window.location.reload();
+    },
+    [isEnabled],
+  );
 
   const reloadAll = useCallback(async () => {
     if (!isEnabled) return;
@@ -57,12 +66,15 @@ export function HotReloadProvider({
     window.location.reload();
   }, [isEnabled]);
 
-  const setEnabled = useCallback((enabled: boolean) => {
-    setIsEnabled(enabled);
-    if (enabled) {
-      reloadAll();
-    }
-  }, [reloadAll]);
+  const setEnabled = useCallback(
+    (enabled: boolean) => {
+      setIsEnabled(enabled);
+      if (enabled) {
+        reloadAll();
+      }
+    },
+    [reloadAll],
+  );
 
   // Set up hot reload listeners
   useEffect(() => {
@@ -70,9 +82,12 @@ export function HotReloadProvider({
 
     // Listen for Vite/Webpack HMR events
     if (import.meta.hot) {
-      import.meta.hot.on('agentinterface:component-changed', (data: { name: string }) => {
-        reloadComponent(data.name);
-      });
+      import.meta.hot.on(
+        'agentinterface:component-changed',
+        (data: { name: string }) => {
+          reloadComponent(data.name);
+        },
+      );
 
       import.meta.hot.on('agentinterface:registry-changed', () => {
         reloadAll();
@@ -82,7 +97,7 @@ export function HotReloadProvider({
     // Listen for custom hot reload events
     const handleHotReload = (event: CustomEvent) => {
       const { type, componentName } = event.detail;
-      
+
       if (type === 'component-changed' && componentName) {
         reloadComponent(componentName);
       } else if (type === 'registry-changed') {
@@ -90,10 +105,16 @@ export function HotReloadProvider({
       }
     };
 
-    window.addEventListener('agentinterface:hot-reload', handleHotReload as EventListener);
+    window.addEventListener(
+      'agentinterface:hot-reload',
+      handleHotReload as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('agentinterface:hot-reload', handleHotReload as EventListener);
+      window.removeEventListener(
+        'agentinterface:hot-reload',
+        handleHotReload as EventListener,
+      );
     };
   }, [isEnabled, reloadComponent, reloadAll]);
 
@@ -103,7 +124,11 @@ export function HotReloadProvider({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Ctrl/Cmd + Shift + R: Reload all components
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'R') {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        event.key === 'R'
+      ) {
         event.preventDefault();
         reloadAll();
       }
@@ -120,7 +145,7 @@ export function HotReloadProvider({
     setEnabled,
     isEnabled,
     lastReload,
-    errors
+    errors,
   };
 
   return (
@@ -143,18 +168,20 @@ export function useHotReload(): HotReloadContext {
  */
 export function useComponentHotReload(componentName: string) {
   const hotReload = useHotReload();
-  
+
   const reload = useCallback(() => {
     hotReload.reloadComponent(componentName);
   }, [hotReload, componentName]);
 
-  const isComponentError = hotReload.errors.some(error => error.includes(componentName));
+  const isComponentError = hotReload.errors.some((error) =>
+    error.includes(componentName),
+  );
 
   return {
     reload,
     isError: isComponentError,
     lastReload: hotReload.lastReload,
-    isEnabled: hotReload.isEnabled
+    isEnabled: hotReload.isEnabled,
   };
 }
 
@@ -163,7 +190,7 @@ export function useComponentHotReload(componentName: string) {
  */
 export function HotReloadIndicator() {
   const hotReload = useHotReload();
-  
+
   if (!hotReload.isEnabled || process.env.NODE_ENV !== 'development') {
     return null;
   }
@@ -172,9 +199,11 @@ export function HotReloadIndicator() {
     <div className="fixed bottom-4 right-4 z-50">
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 text-sm">
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${
-            hotReload.errors.length > 0 ? 'bg-red-500' : 'bg-green-500'
-          }`} />
+          <div
+            className={`w-2 h-2 rounded-full ${
+              hotReload.errors.length > 0 ? 'bg-red-500' : 'bg-green-500'
+            }`}
+          />
           <span className="font-medium">Hot Reload</span>
           {hotReload.lastReload && (
             <span className="text-gray-500 text-xs">
@@ -182,13 +211,13 @@ export function HotReloadIndicator() {
             </span>
           )}
         </div>
-        
+
         {hotReload.errors.length > 0 && (
           <div className="mt-2 text-red-600 text-xs">
             {hotReload.errors.length} error(s)
           </div>
         )}
-        
+
         <div className="mt-2 text-xs text-gray-500">
           Ctrl+Shift+R to reload all
         </div>
@@ -205,20 +234,20 @@ export function agentInterfaceHotReloadPlugin() {
     name: 'agentinterface-hot-reload',
     handleHotUpdate(ctx: any) {
       const { file, server } = ctx;
-      
+
       // Check if it's a component file
       if (file.includes('/components/interface/') && file.endsWith('.tsx')) {
         const componentName = file.split('/').pop()?.replace('.tsx', '');
-        
+
         if (componentName) {
           server.ws.send({
             type: 'custom',
             event: 'agentinterface:component-changed',
-            data: { name: componentName }
+            data: { name: componentName },
           });
         }
       }
-    }
+    },
   };
 }
 
@@ -227,7 +256,7 @@ export function agentInterfaceHotReloadPlugin() {
  */
 export function createHotReloadRegistry(
   discovery: ComponentDiscovery,
-  initialRegistry: Record<string, ComponentInfo> = {}
+  initialRegistry: Record<string, ComponentInfo> = {},
 ): Record<string, ComponentInfo> {
   if (process.env.NODE_ENV !== 'development') {
     return initialRegistry;
@@ -235,11 +264,11 @@ export function createHotReloadRegistry(
 
   // Wrap components with hot reload proxy
   const hotRegistry: Record<string, ComponentInfo> = {};
-  
+
   for (const [name, info] of Object.entries(initialRegistry)) {
     hotRegistry[name] = {
       ...info,
-      component: createHotReloadProxy(info.component, name)
+      component: createHotReloadProxy(info.component, name),
     };
   }
 
@@ -253,12 +282,12 @@ function createHotReloadProxy(Component: any, name: string) {
 
   return function HotReloadProxy(props: any) {
     const { reload, isError } = useComponentHotReload(name);
-    
+
     if (isError) {
       return (
         <div className="bg-red-50 border border-red-200 rounded p-2 text-red-700">
           <div className="font-medium">Component Error: {name}</div>
-          <button 
+          <button
             onClick={reload}
             className="mt-1 px-2 py-1 bg-red-100 rounded text-xs hover:bg-red-200"
           >

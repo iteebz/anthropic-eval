@@ -22,7 +22,7 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -41,8 +41,8 @@ global.import = {
       on: vi.fn(),
       accept: vi.fn(),
       dispose: vi.fn(),
-    }
-  }
+    },
+  },
 } as any;
 
 // Mock process.env for Node.js environment detection
@@ -108,20 +108,22 @@ vi.mock('path', async (importOriginal) => {
 // Helper function to mock filesystem structure
 export async function mockFilesystem(structure: Record<string, any>) {
   const { promises: fs } = vi.mocked(await import('fs'));
-  const path = vi.mocked(await import('path'));
+  const _path = vi.mocked(await import('path'));
 
   fs.readdir.mockImplementation((dir: string) => {
     const normalizedDir = dir.replace(/\\/g, '/');
     const dirContents = structure[normalizedDir];
-    
+
     if (!dirContents) {
-      return Promise.reject(new Error(`ENOENT: no such file or directory, scandir '${dir}'`));
+      return Promise.reject(
+        new Error(`ENOENT: no such file or directory, scandir '${dir}'`),
+      );
     }
 
     return Promise.resolve(dirContents);
   });
 
-  fs.stat.mockImplementation((filePath: string) => {
+  fs.stat.mockImplementation((_filePath: string) => {
     return Promise.resolve({
       mtime: new Date('2023-01-01'),
       isFile: () => true,
@@ -140,7 +142,8 @@ export async function mockFilesystem(structure: Record<string, any>) {
 
 // Helper function to create mock components
 export function createMockComponent(name: string) {
-  const Component = () => React.createElement('div', { 'data-testid': name }, name);
+  const Component = () =>
+    React.createElement('div', { 'data-testid': name }, name);
   Component.displayName = name;
   return Component;
 }

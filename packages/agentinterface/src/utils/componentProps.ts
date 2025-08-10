@@ -1,4 +1,4 @@
-import { type InterfaceData } from "../types";
+import { type InterfaceData } from '../types';
 
 export interface RendererComponentProps<
   T extends InterfaceData = InterfaceData,
@@ -17,4 +17,3 @@ export interface RecursiveRendererProps {
   onSendMessage?: (message: string) => void;
   className?: string;
 }
-

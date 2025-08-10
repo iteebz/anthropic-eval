@@ -19,26 +19,32 @@ export interface UseAIPComponentResult {
   getBundleStats: () => any;
 }
 
-export const useAIPComponent = (componentName: string, options: UseAIPComponentOptions = {}): UseAIPComponentResult => {
+export const useAIPComponent = (
+  _componentName: string,
+  _options: UseAIPComponentOptions = {},
+): UseAIPComponentResult => {
   const [loading] = useState(false);
   const [error] = useState<string | null>(null);
-  
+
   return {
     component: null,
     loading,
     error,
     preload: async () => {},
-    getBundleStats: () => ({})
+    getBundleStats: () => ({}),
   };
 };
 
-export const useAIPComponents = (componentNames: string[], options: UseAIPComponentOptions = {}) => {
+export const useAIPComponents = (
+  _componentNames: string[],
+  _options: UseAIPComponentOptions = {},
+) => {
   return {
     components: {},
     loading: false,
     errors: {},
     preload: async () => {},
-    getBundleStats: () => ({})
+    getBundleStats: () => ({}),
   };
 };
 

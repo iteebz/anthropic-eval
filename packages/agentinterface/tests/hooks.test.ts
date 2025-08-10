@@ -11,19 +11,23 @@ describe('AgentInterface Hooks', () => {
   describe('useAgentResponseParser', () => {
     it('should parse valid agent responses', () => {
       const { result } = renderHook(() => useAgentResponseParser());
-      
+
       const response = JSON.stringify({
         type: 'timeline',
-        props: { 
+        props: {
           events: [
-            { date: '2024-01-01', title: 'Event 1', description: 'Description 1' }
-          ]
+            {
+              date: '2024-01-01',
+              title: 'Event 1',
+              description: 'Description 1',
+            },
+          ],
         },
-        content: 'Timeline content'
+        content: 'Timeline content',
       });
 
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('timeline');
       expect(parsed.data?.events).toHaveLength(1);
       expect(parsed.content).toBe('Timeline content');
@@ -31,10 +35,10 @@ describe('AgentInterface Hooks', () => {
 
     it('should fallback to markdown for invalid responses', () => {
       const { result } = renderHook(() => useAgentResponseParser());
-      
+
       const response = 'Plain text response';
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('markdown');
       expect(parsed.data).toBeUndefined();
       expect(parsed.content).toBe('Plain text response');
@@ -45,38 +49,38 @@ describe('AgentInterface Hooks', () => {
         warn: vi.fn(),
         error: vi.fn(),
         debug: vi.fn(),
-        info: vi.fn()
+        info: vi.fn(),
       };
 
-      const { result } = renderHook(() => 
-        useAgentResponseParser({ logger: mockLogger })
+      const { result } = renderHook(() =>
+        useAgentResponseParser({ logger: mockLogger }),
       );
-      
+
       const response = JSON.stringify({
         type: 'unknown-type',
         props: { data: 'test' },
-        content: 'Content'
+        content: 'Content',
       });
 
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('markdown');
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Unknown interface type: unknown-type')
+        expect.stringContaining('Unknown interface type: unknown-type'),
       );
     });
 
     it('should handle parsing errors gracefully', () => {
       const mockOnError = vi.fn();
-      
-      const { result } = renderHook(() => 
-        useAgentResponseParser({ onError: mockOnError })
+
+      const { result } = renderHook(() =>
+        useAgentResponseParser({ onError: mockOnError }),
       );
-      
+
       // parseAgentResponse handles malformed JSON gracefully, falling back to markdown
       const response = '{"type": "timeline", "malformed": }';
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('markdown');
       expect(parsed.content).toBe(response);
       // onError won't be called since parseAgentResponse handles this gracefully
@@ -87,30 +91,30 @@ describe('AgentInterface Hooks', () => {
         warn: vi.fn(),
         error: vi.fn(),
         debug: vi.fn(),
-        info: vi.fn()
+        info: vi.fn(),
       };
 
-      const { result } = renderHook(() => 
-        useAgentResponseParser({ 
+      const { result } = renderHook(() =>
+        useAgentResponseParser({
           enablePerformanceMonitoring: true,
-          logger: mockLogger
-        })
+          logger: mockLogger,
+        }),
       );
-      
+
       const response = JSON.stringify({
         type: 'timeline',
         props: { events: [] },
-        content: 'Test'
+        content: 'Test',
       });
 
       result.current.parseResponse(response);
-      
+
       expect(mockLogger.debug).toHaveBeenCalledWith(
         expect.stringContaining('Agent response parsed in'),
         expect.objectContaining({
           interfaceType: 'timeline',
-          parseTime: expect.any(Number)
-        })
+          parseTime: expect.any(Number),
+        }),
       );
     });
 
@@ -119,39 +123,39 @@ describe('AgentInterface Hooks', () => {
         warn: vi.fn(),
         error: vi.fn(),
         debug: vi.fn(),
-        info: vi.fn()
+        info: vi.fn(),
       };
 
-      const { result } = renderHook(() => 
-        useAgentResponseParser({ logger: mockLogger })
+      const { result } = renderHook(() =>
+        useAgentResponseParser({ logger: mockLogger }),
       );
-      
+
       const response = JSON.stringify({
         type: 'timeline',
-        props: { 
-          events: 'invalid-data-should-be-array'
+        props: {
+          events: 'invalid-data-should-be-array',
         },
-        content: 'Test'
+        content: 'Test',
       });
 
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('timeline');
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Interface data validation failed')
+        expect.stringContaining('Interface data validation failed'),
       );
     });
 
     it('should handle partial response data gracefully', () => {
       const { result } = renderHook(() => useAgentResponseParser());
-      
+
       const response = JSON.stringify({
-        type: 'markdown'
+        type: 'markdown',
         // Missing props and content
       });
 
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('markdown');
       expect(parsed.data).toBeUndefined();
       expect(parsed.content).toBe('');
@@ -159,7 +163,7 @@ describe('AgentInterface Hooks', () => {
 
     it('should parse card-grid interface successfully', () => {
       const { result } = renderHook(() => useAgentResponseParser());
-      
+
       const response = JSON.stringify({
         type: 'card-grid',
         props: {
@@ -169,17 +173,17 @@ describe('AgentInterface Hooks', () => {
               description: 'Description',
               tags: ['tag1'],
               links: [],
-              metadata: {}
-            }
+              metadata: {},
+            },
           ],
           layout: 'grid',
-          columns: 3
+          columns: 3,
         },
-        content: 'Card grid content'
+        content: 'Card grid content',
       });
 
       const parsed = result.current.parseResponse(response);
-      
+
       expect(parsed.type).toBe('card-grid');
       expect(parsed.data?.cards).toHaveLength(1);
       expect(parsed.data?.cards[0].title).toBe('Card 1');

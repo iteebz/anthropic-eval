@@ -46,12 +46,7 @@ export function DevAgentInterfaceRenderer({
     );
   }
 
-  const renderer = (
-    <AIPRenderer
-      agentResponse={agentResponse}
-      {...props}
-    />
-  );
+  const renderer = <AIPRenderer agentResponse={agentResponse} {...props} />;
 
   // In production, just return the renderer
   if (process.env.NODE_ENV === 'production') {
@@ -60,13 +55,11 @@ export function DevAgentInterfaceRenderer({
 
   // In development, wrap with hot reload and dev tools
   return (
-    <HotReloadProvider
-      enabled={config.enableHotReload}
-    >
+    <HotReloadProvider enabled={config.enableHotReload}>
       {renderer}
-      
+
       {config.enableHotReload && <HotReloadIndicator />}
-      
+
       {config.enableDevTools && (
         <AgentInterfaceDevTools position={config.devToolsPosition} />
       )}
@@ -84,7 +77,11 @@ export function useDevRegistry() {
 /**
  * Component for testing individual components
  */
-export function ComponentPlayground({ componentName }: { componentName: string }) {
+export function ComponentPlayground({
+  componentName,
+}: {
+  componentName: string;
+}) {
   const { registry, isLoading } = useDevRegistry();
   const [testProps, setTestProps] = useState<any>({});
 
@@ -106,11 +103,11 @@ export function ComponentPlayground({ componentName }: { componentName: string }
     <div className="p-4 border rounded-lg">
       <h3 className="font-semibold mb-2">{componentName}</h3>
       <p className="text-sm text-gray-600 mb-4">{componentInfo.description}</p>
-      
+
       <div className="border-t pt-4">
         <Component {...testProps} />
       </div>
-      
+
       <div className="mt-4 p-3 bg-gray-50 rounded">
         <h4 className="font-medium mb-2">Test Props</h4>
         <textarea

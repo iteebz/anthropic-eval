@@ -18,7 +18,8 @@ export interface TabsProps {
 export function Tabs({ items = [], defaultTab, className = '' }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || items[0]?.id || '');
 
-  const activeContent = items.find(item => item.id === activeTab)?.content || [];
+  const activeContent =
+    items.find((item) => item.id === activeTab)?.content || [];
 
   // Handle empty items array
   if (items.length === 0) {
@@ -31,13 +32,13 @@ export function Tabs({ items = [], defaultTab, className = '' }: TabsProps) {
 
   return (
     <div className={`aip-tabs ${className}`}>
-      <div className="aip-tabs-nav border-b aip-border-primary">
+      <div className="aip-tabs-nav aip-border-primary border-b">
         {items.map((item) => (
           <button
             key={item.id}
             className={`aip-tab-button aip-p-sm aip-px-md ${
-              activeTab === item.id 
-                ? 'aip-tab-active border-b-2 aip-border-accent aip-text-accent' 
+              activeTab === item.id
+                ? 'aip-tab-active aip-border-accent aip-text-accent border-b-2'
                 : 'aip-text-secondary hover:aip-text-primary'
             }`}
             onClick={() => setActiveTab(item.id)}
@@ -47,8 +48,8 @@ export function Tabs({ items = [], defaultTab, className = '' }: TabsProps) {
         ))}
       </div>
       <div className="aip-tabs-content aip-p-md">
-        {activeContent.map((block, index) => 
-          render(block, `${activeTab}-${index}`)
+        {activeContent.map((block, index) =>
+          render(block, `${activeTab}-${index}`),
         )}
       </div>
     </div>
@@ -72,37 +73,39 @@ export const metadata = {
           properties: {
             id: { type: 'string' },
             label: { type: 'string' },
-            content: { 
+            content: {
               type: 'array',
               items: { type: 'object' },
-              description: 'Array of AIP blocks to render in this tab'
-            }
+              description: 'Array of AIP blocks to render in this tab',
+            },
           },
-          required: ['id', 'label', 'content']
-        }
+          required: ['id', 'label', 'content'],
+        },
       },
       defaultTab: {
         type: 'string',
-        description: 'ID of the tab to show by default'
-      }
+        description: 'ID of the tab to show by default',
+      },
     },
-    required: ['type', 'items']
-  }
+    required: ['type', 'items'],
+  },
 } as const;
 
 const TabsValidator = z.object({
-  items: z.array(z.object({
-    id: z.string(),
-    label: z.string(),
-    content: z.array(z.any())
-  })),
+  items: z.array(
+    z.object({
+      id: z.string(),
+      label: z.string(),
+      content: z.array(z.any()),
+    }),
+  ),
   defaultTab: z.string().optional(),
-  className: z.string().optional()
+  className: z.string().optional(),
 });
 
 // Register with AIP registry
 register({
   type: 'tabs',
   schema: TabsValidator,
-  render: Tabs
+  render: Tabs,
 });

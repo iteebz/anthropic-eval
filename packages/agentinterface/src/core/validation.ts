@@ -1,8 +1,8 @@
 /**
  * Core validation utilities for AgentInterface data
  */
-import { z } from "zod";
-import { INTERFACE_SCHEMAS } from "./schemas";
+import { z } from 'zod';
+import { INTERFACE_SCHEMAS } from './schemas';
 
 export type InterfaceType = keyof typeof INTERFACE_SCHEMAS;
 
@@ -43,7 +43,7 @@ export function validateInterfaceData<T extends InterfaceType>(
   } catch (error) {
     const errorMessage =
       error instanceof z.ZodError
-        ? `Validation failed: ${error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ")}`
+        ? `Validation failed: ${error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ')}`
         : `Validation failed: ${String(error)}`;
 
     return {

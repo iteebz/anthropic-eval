@@ -34,6 +34,7 @@ export function ComponentName(props: ComponentProps) {
 ## Build-Time Discovery
 
 Components in this directory are automatically:
+
 1. Scanned during the build process
 2. Validated for proper metadata structure
 3. Included in the generated registry

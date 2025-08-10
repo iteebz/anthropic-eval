@@ -1,7 +1,7 @@
 /**
  * TypeScript type definitions for AgentInterface
  */
-import { z } from "zod";
+import { z } from 'zod';
 import {
   ExpandableSectionDataSchema,
   KeyInsightsDataSchema,
@@ -11,14 +11,16 @@ import {
   CardGridDataSchema,
   BlogPostDataSchema,
   CodeSnippetDataSchema,
-} from "../core/schemas";
-import { InlineComponentConfig } from "../core/inline-components";
+} from '../core/schemas';
+import { InlineComponentConfig } from '../core/inline-components';
 
 // Core data types
 export type ExpandableSectionData = z.infer<typeof ExpandableSectionDataSchema>;
 export type KeyInsightsData = z.infer<typeof KeyInsightsDataSchema>;
 export type TimelineData = z.infer<typeof TimelineDataSchema>;
-export type TimelineEvent = z.infer<typeof TimelineDataSchema.shape.events.element>;
+export type TimelineEvent = z.infer<
+  typeof TimelineDataSchema.shape.events.element
+>;
 export type MarkdownData = z.infer<typeof MarkdownDataSchema>;
 export type InlineReferencesData = z.infer<typeof InlineReferencesDataSchema>;
 export type CardGridData = z.infer<typeof CardGridDataSchema>;
@@ -37,7 +39,15 @@ export type InterfaceData =
   | CodeSnippetData;
 
 // Interface type
-export type InterfaceType = 'markdown' | 'card-grid' | 'expandable-section' | 'key-insights' | 'timeline' | 'inline-reference' | 'blog-post' | 'code-snippet';
+export type InterfaceType =
+  | 'markdown'
+  | 'card-grid'
+  | 'expandable-section'
+  | 'key-insights'
+  | 'timeline'
+  | 'inline-reference'
+  | 'blog-post'
+  | 'code-snippet';
 
 // Base props for all interface components
 export interface InterfaceComponentProps {
@@ -98,20 +108,39 @@ export type ComponentProps =
   | CodeSnippetProps;
 
 // Discriminated union for component configuration
-export type ComponentConfig = 
+export type ComponentConfig =
   | { type: 'card-grid'; data: CardGridData; config: InlineComponentConfig }
-  | { type: 'expandable-section'; data: ExpandableSectionData; config: InlineComponentConfig }
-  | { type: 'key-insights'; data: KeyInsightsData; config: InlineComponentConfig }
+  | {
+      type: 'expandable-section';
+      data: ExpandableSectionData;
+      config: InlineComponentConfig;
+    }
+  | {
+      type: 'key-insights';
+      data: KeyInsightsData;
+      config: InlineComponentConfig;
+    }
   | { type: 'timeline'; data: TimelineData; config: InlineComponentConfig }
   | { type: 'blog-post'; data: BlogPostData; config: InlineComponentConfig }
   | { type: 'markdown'; data: MarkdownData; config: InlineComponentConfig }
-  | { type: 'inline-reference'; data: InlineReferencesData; config: InlineComponentConfig }
-  | { type: 'code-snippet'; data: CodeSnippetData; config: InlineComponentConfig };
+  | {
+      type: 'inline-reference';
+      data: InlineReferencesData;
+      config: InlineComponentConfig;
+    }
+  | {
+      type: 'code-snippet';
+      data: CodeSnippetData;
+      config: InlineComponentConfig;
+    };
 
 // Enhanced interface props with inline component support
 export interface EnhancedInterfaceProps extends InterfaceProps {
   inlineComponents?: Map<string, ComponentConfig>;
-  componentResolver?: (type: InterfaceType, slug: string) => Promise<InterfaceData | null>;
+  componentResolver?: (
+    type: InterfaceType,
+    slug: string,
+  ) => Promise<InterfaceData | null>;
 }
 
 // Logger interface

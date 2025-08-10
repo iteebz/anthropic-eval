@@ -1,11 +1,11 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/browser.ts', 'src/registry/cli.ts'],
+  entry: ['src/index.ts'],
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
-  external: ['react', 'react-dom', 'tailwindcss', 'fs', 'path'],
+  external: ['react', 'react-dom', 'tailwindcss'],
   treeshake: true,
   splitting: false,
   minify: false,
@@ -14,7 +14,7 @@ export default defineConfig({
   outDir: 'dist',
   publicDir: 'src/styles',
   esbuildOptions: (options) => {
-    options.jsx = 'automatic'
-    options.jsxImportSource = 'react'
+    options.jsx = 'automatic';
+    options.jsxImportSource = 'react';
   },
-})
+});

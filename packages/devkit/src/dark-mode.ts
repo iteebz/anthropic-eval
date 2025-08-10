@@ -8,27 +8,27 @@ const DarkModeValidationSchema = z.object({
   contrastCompliance: z.object({
     darkMode: z.boolean(),
     lightMode: z.boolean(),
-    ratio: z.number()
+    ratio: z.number(),
   }),
   colorVariables: z.object({
     resolved: z.array(z.string()),
     missing: z.array(z.string()),
-    invalid: z.array(z.string())
+    invalid: z.array(z.string()),
   }),
   accessibility: z.object({
     wcagAA: z.boolean(),
     wcagAAA: z.boolean(),
     colorBlindness: z.boolean(),
-    highContrast: z.boolean()
+    highContrast: z.boolean(),
   }),
   performance: z.object({
     transitionTime: z.number(),
     renderTime: z.number(),
-    memoryUsage: z.number()
+    memoryUsage: z.number(),
   }),
   issues: z.array(z.string()),
   recommendations: z.array(z.string()),
-  passed: z.boolean()
+  passed: z.boolean(),
 });
 
 export type DarkModeValidation = z.infer<typeof DarkModeValidationSchema>;
@@ -59,14 +59,14 @@ export class DarkModeValidator {
       validateTransitions: true,
       testColorBlindness: true,
       customValidators: {},
-      ...config
+      ...config,
     };
 
     this.tester = new ThemeIntegrationTester({
       themes: ['light', 'dark'],
       components: this.config.components,
       contrastRatio: this.config.contrastThreshold,
-      testColorBlindness: this.config.testColorBlindness
+      testColorBlindness: this.config.testColorBlindness,
     });
   }
 
@@ -75,7 +75,7 @@ export class DarkModeValidator {
    */
   async validateAllComponents(): Promise<DarkModeValidation[]> {
     const components = await this.discoverComponents();
-    
+
     for (const component of components) {
       const validation = await this.validateComponent(component);
       this.results.push(validation);
@@ -93,7 +93,10 @@ export class DarkModeValidator {
 
     try {
       // Test both light and dark modes
-      const lightResult = await this.tester.testComponent(componentName, 'light');
+      const lightResult = await this.tester.testComponent(
+        componentName,
+        'light',
+      );
       const darkResult = await this.tester.testComponent(componentName, 'dark');
 
       // Calculate scores
@@ -101,7 +104,8 @@ export class DarkModeValidator {
       const darkScore = this.calculateModeScore(darkResult);
 
       // Test contrast compliance
-      const contrastCompliance = await this.validateContrastCompliance(componentName);
+      const contrastCompliance =
+        await this.validateContrastCompliance(componentName);
 
       // Test color variables
       const colorVariables = await this.validateColorVariables(componentName);
@@ -110,7 +114,7 @@ export class DarkModeValidator {
       const accessibility = await this.validateAccessibility(componentName);
 
       // Test performance if enabled
-      const performance = this.config.includePerformanceMetrics 
+      const performance = this.config.includePerformanceMetrics
         ? await this.validatePerformance(componentName)
         : { transitionTime: 0, renderTime: 0, memoryUsage: 0 };
 
@@ -130,25 +134,29 @@ export class DarkModeValidator {
         performance,
         issues,
         recommendations,
-        passed: issues.length === 0 && darkScore >= 90 && lightScore >= 90
+        passed: issues.length === 0 && darkScore >= 90 && lightScore >= 90,
       };
 
       return DarkModeValidationSchema.parse(validation);
-
     } catch (error) {
       issues.push(`Validation failed: ${error.message}`);
-      
+
       return {
         component: componentName,
         darkModeScore: 0,
         lightModeScore: 0,
         contrastCompliance: { darkMode: false, lightMode: false, ratio: 0 },
         colorVariables: { resolved: [], missing: [], invalid: [] },
-        accessibility: { wcagAA: false, wcagAAA: false, colorBlindness: false, highContrast: false },
+        accessibility: {
+          wcagAA: false,
+          wcagAAA: false,
+          colorBlindness: false,
+          highContrast: false,
+        },
         performance: { transitionTime: 0, renderTime: 0, memoryUsage: 0 },
         issues,
         recommendations,
-        passed: false
+        passed: false,
       };
     }
   }
@@ -184,8 +192,13 @@ export class DarkModeValidator {
   /**
    * Validate contrast compliance across modes
    */
-  private async validateContrastCompliance(componentName: string): Promise<DarkModeValidation['contrastCompliance']> {
-    const lightContainer = await this.createTestContainer(componentName, 'light');
+  private async validateContrastCompliance(
+    componentName: string,
+  ): Promise<DarkModeValidation['contrastCompliance']> {
+    const lightContainer = await this.createTestContainer(
+      componentName,
+      'light',
+    );
     const darkContainer = await this.createTestContainer(componentName, 'dark');
 
     const lightContrast = await this.calculateContrastRatio(lightContainer);
@@ -201,14 +214,16 @@ export class DarkModeValidator {
     return {
       darkMode: darkContrast >= this.config.contrastThreshold,
       lightMode: lightContrast >= this.config.contrastThreshold,
-      ratio: avgRatio
+      ratio: avgRatio,
     };
   }
 
   /**
    * Validate color variables are properly resolved
    */
-  private async validateColorVariables(componentName: string): Promise<DarkModeValidation['colorVariables']> {
+  private async validateColorVariables(
+    componentName: string,
+  ): Promise<DarkModeValidation['colorVariables']> {
     const resolved: string[] = [];
     const missing: string[] = [];
     const invalid: string[] = [];
@@ -225,7 +240,7 @@ export class DarkModeValidator {
       '--aip-error',
       '--aip-warning',
       '--aip-success',
-      '--aip-shadow'
+      '--aip-shadow',
     ];
 
     for (const theme of ['light', 'dark']) {
@@ -234,10 +249,14 @@ export class DarkModeValidator {
 
       for (const variable of expectedVariables) {
         const value = computedStyle.getPropertyValue(variable);
-        
+
         if (!value || !value.trim()) {
           missing.push(`${variable} (${theme})`);
-        } else if (value.includes('var(') || value === 'initial' || value === 'inherit') {
+        } else if (
+          value.includes('var(') ||
+          value === 'initial' ||
+          value === 'inherit'
+        ) {
           invalid.push(`${variable} (${theme}): ${value}`);
         } else {
           resolved.push(`${variable} (${theme})`);
@@ -253,7 +272,9 @@ export class DarkModeValidator {
   /**
    * Validate accessibility across both modes
    */
-  private async validateAccessibility(componentName: string): Promise<DarkModeValidation['accessibility']> {
+  private async validateAccessibility(
+    componentName: string,
+  ): Promise<DarkModeValidation['accessibility']> {
     const lightResult = await this.tester.testComponent(componentName, 'light');
     const darkResult = await this.tester.testComponent(componentName, 'dark');
 
@@ -261,23 +282,29 @@ export class DarkModeValidator {
     const darkAccessibility = darkResult.accessibility;
 
     return {
-      wcagAA: lightAccessibility.contrast >= 4.5 && darkAccessibility.contrast >= 4.5,
-      wcagAAA: lightAccessibility.contrast >= 7 && darkAccessibility.contrast >= 7,
-      colorBlindness: lightAccessibility.colorBlindness && darkAccessibility.colorBlindness,
-      highContrast: lightAccessibility.highContrast && darkAccessibility.highContrast
+      wcagAA:
+        lightAccessibility.contrast >= 4.5 && darkAccessibility.contrast >= 4.5,
+      wcagAAA:
+        lightAccessibility.contrast >= 7 && darkAccessibility.contrast >= 7,
+      colorBlindness:
+        lightAccessibility.colorBlindness && darkAccessibility.colorBlindness,
+      highContrast:
+        lightAccessibility.highContrast && darkAccessibility.highContrast,
     };
   }
 
   /**
    * Validate theme transition performance
    */
-  private async validatePerformance(componentName: string): Promise<DarkModeValidation['performance']> {
+  private async validatePerformance(
+    componentName: string,
+  ): Promise<DarkModeValidation['performance']> {
     const container = await this.createTestContainer(componentName, 'light');
-    
+
     // Measure transition time
     const transitionStart = performance.now();
     container.setAttribute('data-theme', 'dark');
-    await new Promise(resolve => setTimeout(resolve, 50)); // Wait for transition
+    await new Promise((resolve) => setTimeout(resolve, 50)); // Wait for transition
     const transitionTime = performance.now() - transitionStart;
 
     // Measure render time
@@ -293,7 +320,7 @@ export class DarkModeValidator {
     return {
       transitionTime,
       renderTime,
-      memoryUsage
+      memoryUsage,
     };
   }
 
@@ -303,11 +330,13 @@ export class DarkModeValidator {
   private async runCustomValidators(
     componentName: string,
     issues: string[],
-    recommendations: string[]
+    recommendations: string[],
   ): Promise<void> {
     const container = await this.createTestContainer(componentName, 'dark');
 
-    for (const [name, validator] of Object.entries(this.config.customValidators)) {
+    for (const [name, validator] of Object.entries(
+      this.config.customValidators,
+    )) {
       try {
         const result = validator(container);
         if (!result) {
@@ -329,16 +358,20 @@ export class DarkModeValidator {
     lightResult: ThemeTestResult,
     darkResult: ThemeTestResult,
     issues: string[],
-    recommendations: string[]
+    recommendations: string[],
   ): void {
     // Compare theme consistency
     if (lightResult.cssVariables.length !== darkResult.cssVariables.length) {
       issues.push('Inconsistent CSS variables between light and dark modes');
-      recommendations.push('Ensure all theme variables are defined for both modes');
+      recommendations.push(
+        'Ensure all theme variables are defined for both modes',
+      );
     }
 
     // Check for common dark mode issues
-    if (darkResult.accessibility.contrast < lightResult.accessibility.contrast) {
+    if (
+      darkResult.accessibility.contrast < lightResult.accessibility.contrast
+    ) {
       issues.push('Dark mode has lower contrast than light mode');
       recommendations.push('Increase contrast in dark mode colors');
     }
@@ -357,11 +390,14 @@ export class DarkModeValidator {
   /**
    * Create test container for component
    */
-  private async createTestContainer(componentName: string, theme: 'light' | 'dark'): Promise<HTMLElement> {
+  private async createTestContainer(
+    componentName: string,
+    theme: 'light' | 'dark',
+  ): Promise<HTMLElement> {
     const container = document.createElement('div');
     container.className = `aip-theme-test-${theme}`;
     container.setAttribute('data-theme', theme);
-    
+
     // Apply theme variables
     const themeConfig = await this.getThemeConfig(theme);
     Object.entries(themeConfig.colors).forEach(([key, value]) => {
@@ -370,20 +406,24 @@ export class DarkModeValidator {
 
     // Mount component
     try {
-      const module = await import(`../components/interface/${this.kebabCase(componentName)}.tsx`);
+      const module = await import(
+        `../components/interface/${this.kebabCase(componentName)}.tsx`
+      );
       const Component = module.default || module[componentName];
-      
+
       if (Component) {
         const { createRoot } = await import('react-dom/client');
         const { createElement } = await import('react');
-        
+
         const root = createRoot(container);
-        root.render(createElement(Component, {
-          content: 'Test content',
-          interfaceData: { test: true }
-        }));
-        
-        await new Promise(resolve => setTimeout(resolve, 100));
+        root.render(
+          createElement(Component, {
+            content: 'Test content',
+            interfaceData: { test: true },
+          }),
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
       }
     } catch (error) {
       // Component may not exist, continue with basic container
@@ -396,14 +436,16 @@ export class DarkModeValidator {
   /**
    * Calculate contrast ratio for container
    */
-  private async calculateContrastRatio(container: HTMLElement): Promise<number> {
+  private async calculateContrastRatio(
+    container: HTMLElement,
+  ): Promise<number> {
     const styles = getComputedStyle(container);
     const bgColor = styles.backgroundColor;
     const textColor = styles.color;
-    
+
     const bg = this.parseColor(bgColor);
     const text = this.parseColor(textColor);
-    
+
     return this.getContrastRatio(bg, text);
   }
 
@@ -415,13 +457,16 @@ export class DarkModeValidator {
       return this.config.components;
     }
 
-    const modules = import.meta.glob('../components/interface/*.tsx', { eager: true });
-    
-    return Object.keys(modules).map(path => {
+    const modules = import.meta.glob('../components/interface/*.tsx', {
+      eager: true,
+    });
+
+    return Object.keys(modules).map((path) => {
       const fileName = path.split('/').pop()?.replace('.tsx', '') || '';
-      return fileName.split('-').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-      ).join('');
+      return fileName
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join('');
     });
   }
 
@@ -431,7 +476,7 @@ export class DarkModeValidator {
   private async getThemeConfig(theme: 'light' | 'dark'): Promise<any> {
     const themeModule = await import('../hooks/useTheme');
     const { getThemeConfig } = themeModule;
-    
+
     return getThemeConfig(theme);
   }
 
@@ -441,7 +486,7 @@ export class DarkModeValidator {
   private estimateMemoryUsage(container: HTMLElement): number {
     const elements = container.querySelectorAll('*');
     const styles = container.querySelectorAll('style');
-    
+
     // Rough estimation: elements + styles + computed styles
     return elements.length * 50 + styles.length * 200 + 1000;
   }
@@ -461,13 +506,16 @@ export class DarkModeValidator {
     return [0, 0, 0];
   }
 
-  private getContrastRatio(bg: [number, number, number], text: [number, number, number]): number {
+  private getContrastRatio(
+    bg: [number, number, number],
+    text: [number, number, number],
+  ): number {
     const luminance1 = this.getLuminance(bg);
     const luminance2 = this.getLuminance(text);
-    
+
     const brightest = Math.max(luminance1, luminance2);
     const darkest = Math.min(luminance1, luminance2);
-    
+
     return (brightest + 0.05) / (darkest + 0.05);
   }
 
@@ -475,11 +523,11 @@ export class DarkModeValidator {
     const rs = r / 255;
     const gs = g / 255;
     const bs = b / 255;
-    
+
     const rg = rs <= 0.03928 ? rs / 12.92 : Math.pow((rs + 0.055) / 1.055, 2.4);
     const gg = gs <= 0.03928 ? gs / 12.92 : Math.pow((gs + 0.055) / 1.055, 2.4);
     const bg = bs <= 0.03928 ? bs / 12.92 : Math.pow((bs + 0.055) / 1.055, 2.4);
-    
+
     return 0.2126 * rg + 0.7152 * gg + 0.0722 * bg;
   }
 
@@ -487,10 +535,12 @@ export class DarkModeValidator {
    * Generate validation report
    */
   generateReport(): string {
-    const passed = this.results.filter(r => r.passed).length;
+    const passed = this.results.filter((r) => r.passed).length;
     const total = this.results.length;
-    const avgDarkScore = this.results.reduce((acc, r) => acc + r.darkModeScore, 0) / total;
-    const avgLightScore = this.results.reduce((acc, r) => acc + r.lightModeScore, 0) / total;
+    const avgDarkScore =
+      this.results.reduce((acc, r) => acc + r.darkModeScore, 0) / total;
+    const avgLightScore =
+      this.results.reduce((acc, r) => acc + r.lightModeScore, 0) / total;
 
     let report = `# Dark Mode Validation Report\n\n`;
     report += `**Overall: ${passed}/${total} components passed**\n`;
@@ -498,28 +548,28 @@ export class DarkModeValidator {
     report += `**Average Light Mode Score: ${avgLightScore.toFixed(1)}/100**\n\n`;
 
     // Component breakdown
-    this.results.forEach(result => {
+    this.results.forEach((result) => {
       const status = result.passed ? '✅' : '❌';
       report += `## ${status} ${result.component}\n`;
       report += `- Dark Mode: ${result.darkModeScore}/100\n`;
       report += `- Light Mode: ${result.lightModeScore}/100\n`;
       report += `- WCAG AA: ${result.accessibility.wcagAA ? '✅' : '❌'}\n`;
       report += `- Color Blindness: ${result.accessibility.colorBlindness ? '✅' : '❌'}\n`;
-      
+
       if (result.issues.length > 0) {
         report += `\n**Issues:**\n`;
-        result.issues.forEach(issue => {
+        result.issues.forEach((issue) => {
           report += `- ${issue}\n`;
         });
       }
-      
+
       if (result.recommendations.length > 0) {
         report += `\n**Recommendations:**\n`;
-        result.recommendations.forEach(rec => {
+        result.recommendations.forEach((rec) => {
           report += `- ${rec}\n`;
         });
       }
-      
+
       report += '\n';
     });
 
@@ -538,29 +588,43 @@ export class DarkModeValidator {
     criticalIssues: number;
     recommendations: number;
   } {
-    const passed = this.results.filter(r => r.passed).length;
-    const criticalIssues = this.results.reduce((acc, r) => acc + r.issues.length, 0);
-    const recommendations = this.results.reduce((acc, r) => acc + r.recommendations.length, 0);
+    const passed = this.results.filter((r) => r.passed).length;
+    const criticalIssues = this.results.reduce(
+      (acc, r) => acc + r.issues.length,
+      0,
+    );
+    const recommendations = this.results.reduce(
+      (acc, r) => acc + r.recommendations.length,
+      0,
+    );
 
     return {
       totalComponents: this.results.length,
       passed,
       failed: this.results.length - passed,
-      avgDarkScore: this.results.reduce((acc, r) => acc + r.darkModeScore, 0) / this.results.length,
-      avgLightScore: this.results.reduce((acc, r) => acc + r.lightModeScore, 0) / this.results.length,
+      avgDarkScore:
+        this.results.reduce((acc, r) => acc + r.darkModeScore, 0) /
+        this.results.length,
+      avgLightScore:
+        this.results.reduce((acc, r) => acc + r.lightModeScore, 0) /
+        this.results.length,
       criticalIssues,
-      recommendations
+      recommendations,
     };
   }
 }
 
 // Factory function
-export function createDarkModeValidator(config?: Partial<DarkModeValidatorConfig>): DarkModeValidator {
+export function createDarkModeValidator(
+  config?: Partial<DarkModeValidatorConfig>,
+): DarkModeValidator {
   return new DarkModeValidator(config);
 }
 
 // Utility function for quick validation
-export async function validateDarkMode(components: string[] = []): Promise<DarkModeValidation[]> {
+export async function validateDarkMode(
+  components: string[] = [],
+): Promise<DarkModeValidation[]> {
   const validator = createDarkModeValidator({ components });
   return await validator.validateAllComponents();
 }

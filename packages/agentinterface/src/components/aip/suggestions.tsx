@@ -1,66 +1,75 @@
 import React from 'react';
 import { z } from 'zod';
 import { register } from '../../registry';
-import { Badge } from '../ui/badge';
 
 export const SuggestionsSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     suggestions: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          text: { type: "string" },
-          id: { type: "string" },
-          context: { type: "string" },
-          priority: { type: "string", enum: ["high", "medium", "low"] }
+          text: { type: 'string' },
+          id: { type: 'string' },
+          context: { type: 'string' },
+          priority: { type: 'string', enum: ['high', 'medium', 'low'] },
         },
-        required: ["text"]
-      }
+        required: ['text'],
+      },
     },
-    title: { type: "string" },
-    className: { type: "string" },
-    onSendMessage: { type: "object" }
+    title: { type: 'string' },
+    className: { type: 'string' },
+    onSendMessage: { type: 'object' },
   },
-  required: ["suggestions"]
+  required: ['suggestions'],
 } as const;
 
 export const metadata = {
-  type: "suggestions",
-  description: "Interactive suggestion buttons for continuing conversations with MCP callback support",
+  type: 'suggestions',
+  description:
+    'Interactive suggestion buttons for continuing conversations with MCP callback support',
   schema: SuggestionsSchema,
-  category: "interface",
-  tags: ["suggestions", "interactive", "conversation"]
+  category: 'interface',
+  tags: ['suggestions', 'interactive', 'conversation'],
 } as const;
 
 const SuggestionValidator = z.object({
   text: z.string(),
   id: z.string().optional(),
   context: z.string().optional(),
-  priority: z.enum(['high', 'medium', 'low']).optional()
+  priority: z.enum(['high', 'medium', 'low']).optional(),
 });
 
 const SuggestionsValidator = z.object({
   suggestions: z.array(SuggestionValidator),
   title: z.string().optional(),
   className: z.string().optional(),
-  onSendMessage: z.any().optional()
+  onSendMessage: z.any().optional(),
 });
 
 type SuggestionsData = z.infer<typeof SuggestionsValidator>;
 
 export function Suggestions(props: SuggestionsData) {
-  const { suggestions, title = "Continue the conversation", className, onSendMessage } = props;
+  const {
+    suggestions,
+    title = 'Continue the conversation',
+    className,
+    onSendMessage,
+  } = props;
 
-  const handleSuggestionClick = (suggestion: z.infer<typeof SuggestionValidator>) => {
-    onSendMessage?.(JSON.stringify({
-      type: 'suggestion-selected',
-      suggestion: suggestion.text,
-      suggestionId: suggestion.id,
-      context: suggestion.context,
-      priority: suggestion.priority
-    }));
+  const handleSuggestionClick = (
+    suggestion: z.infer<typeof SuggestionValidator>,
+  ) => {
+    onSendMessage?.(
+      JSON.stringify({
+        type: 'suggestion-selected',
+        suggestion: suggestion.text,
+        suggestionId: suggestion.id,
+        context: suggestion.context,
+        priority: suggestion.priority,
+      }),
+    );
   };
 
   if (!suggestions.length) return null;
@@ -68,18 +77,20 @@ export function Suggestions(props: SuggestionsData) {
   return (
     <div className={className}>
       {title && (
-        <h4 className="text-sm font-medium text-muted-foreground mb-3">{title}</h4>
+        <h4 className="text-muted-foreground mb-3 text-sm font-medium">
+          {title}
+        </h4>
       )}
       <div className="flex flex-wrap gap-2">
         {suggestions.map((suggestion, i) => (
           <button
             key={suggestion.id || i}
             onClick={() => handleSuggestionClick(suggestion)}
-            className="inline-flex items-center px-3 py-1.5 text-sm bg-muted hover:bg-muted/80 border border-border rounded-full transition-colors duration-200 hover:shadow-sm"
+            className="bg-muted hover:bg-muted/80 border-border inline-flex items-center rounded-full border px-3 py-1.5 text-sm transition-colors duration-200 hover:shadow-sm"
           >
             {suggestion.text}
             {suggestion.priority === 'high' && (
-              <span className="ml-1.5 w-1.5 h-1.5 bg-primary rounded-full" />
+              <span className="bg-primary ml-1.5 size-1.5 rounded-full" />
             )}
           </button>
         ))}
@@ -91,5 +102,5 @@ export function Suggestions(props: SuggestionsData) {
 register({
   type: 'suggestions',
   schema: SuggestionsValidator,
-  render: Suggestions
+  render: Suggestions,
 });

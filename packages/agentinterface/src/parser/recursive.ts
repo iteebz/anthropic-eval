@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { InterfaceType } from '../types';
 
 // Zod schemas for type-safe parsing
-const ComponentTokenSchema = z.object({
+const _ComponentTokenSchema = z.object({
   type: z.string(),
   data: z.record(z.any()).optional(),
   content: z.string().optional(),
@@ -14,7 +13,7 @@ const InterfaceComponentSchema = z.object({
   data: z.record(z.any()).default({}),
   content: z.string().default(''),
   children: z.array(z.any()).default([]),
-  raw: z.string()
+  raw: z.string(),
 });
 
 export type InterfaceComponent = z.infer<typeof InterfaceComponentSchema>;
@@ -42,14 +41,14 @@ export class RecursiveComponentParser {
   /**
    * Parse component syntax: {{component:data|nested={{other:data}}}}
    */
-  parse(input: string, depth: number = 0): InterfaceComponent[] {
+  parse(input: string, depth = 0): InterfaceComponent[] {
     if (depth >= this.maxDepth) {
       throw new Error(`Maximum parsing depth of ${this.maxDepth} exceeded`);
     }
 
     const components: InterfaceComponent[] = [];
     const tokens = this.tokenize(input);
-    
+
     for (const token of tokens) {
       if (token.type === 'text') {
         if (token.content.trim()) {
@@ -75,8 +74,10 @@ export class RecursiveComponentParser {
   /**
    * Tokenize input handling nested braces properly
    */
-  private tokenize(input: string): Array<{type: 'text' | 'component', content: string}> {
-    const tokens: Array<{type: 'text' | 'component', content: string}> = [];
+  private tokenize(
+    input: string,
+  ): { type: 'text' | 'component'; content: string }[] {
+    const tokens: { type: 'text' | 'component'; content: string }[] = [];
     let i = 0;
     let currentText = '';
 
@@ -141,7 +142,7 @@ export class RecursiveComponentParser {
     const colonIndex = componentDef.indexOf(':');
     let type: string;
     let dataStr: string | undefined;
-    
+
     if (colonIndex === -1) {
       type = componentDef;
       dataStr = undefined;
@@ -149,7 +150,7 @@ export class RecursiveComponentParser {
       type = componentDef.substring(0, colonIndex);
       dataStr = componentDef.substring(colonIndex + 1);
     }
-    
+
     if (!type) {
       throw new Error('Component type is required');
     }
@@ -186,7 +187,7 @@ export class RecursiveComponentParser {
       data,
       content: '', // Will be populated by children
       children,
-      raw: `{{${tokenContent}}}`
+      raw: `{{${tokenContent}}}`,
     };
 
     // Validate with Zod schema
@@ -199,26 +200,34 @@ export class RecursiveComponentParser {
       data: {},
       content: text,
       children: [],
-      raw: text
+      raw: text,
     };
   }
 
   /**
    * Advanced parsing with slot composition
    */
-  parseWithSlots(input: string, slots: Record<string, any> = {}): InterfaceComponent[] {
+  parseWithSlots(
+    input: string,
+    slots: Record<string, any> = {},
+  ): InterfaceComponent[] {
     const components = this.parse(input);
     return this.processSlots(components, slots);
   }
 
-  private processSlots(components: InterfaceComponent[], slots: Record<string, any>): InterfaceComponent[] {
-    return components.map(component => {
+  private processSlots(
+    components: InterfaceComponent[],
+    slots: Record<string, any>,
+  ): InterfaceComponent[] {
+    return components.map((component) => {
       if (component.type === 'slot' && component.data.name) {
         const slotName = component.data.name;
         if (slots[slotName]) {
           return {
             ...component,
-            children: Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
+            children: Array.isArray(slots[slotName])
+              ? slots[slotName]
+              : [slots[slotName]],
           };
         }
       }
@@ -227,7 +236,7 @@ export class RecursiveComponentParser {
       if (component.children.length > 0) {
         return {
           ...component,
-          children: this.processSlots(component.children, slots)
+          children: this.processSlots(component.children, slots),
         };
       }
 
@@ -239,37 +248,44 @@ export class RecursiveComponentParser {
    * Serialize parsed components back to string
    */
   serialize(components: InterfaceComponent[]): string {
-    return components.map(component => {
-      if (component.type === 'text') {
-        return component.content;
-      }
+    return components
+      .map((component) => {
+        if (component.type === 'text') {
+          return component.content;
+        }
 
-      let token = `{{${component.type}`;
-      
-      if (Object.keys(component.data).length > 0) {
-        token += `:${JSON.stringify(component.data)}`;
-      }
+        let token = `{{${component.type}`;
 
-      if (component.children.length > 0) {
-        token += `|${this.serialize(component.children)}`;
-      }
+        if (Object.keys(component.data).length > 0) {
+          token += `:${JSON.stringify(component.data)}`;
+        }
 
-      token += '}}';
-      return token;
-    }).join('');
+        if (component.children.length > 0) {
+          token += `|${this.serialize(component.children)}`;
+        }
+
+        token += '}}';
+        return token;
+      })
+      .join('');
   }
 
   /**
    * Validate component structure
    */
-  validate(components: InterfaceComponent[]): { valid: boolean; errors: string[] } {
+  validate(components: InterfaceComponent[]): {
+    valid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
-    const validateComponent = (component: InterfaceComponent, path: string = '') => {
+    const validateComponent = (component: InterfaceComponent, path = '') => {
       try {
         InterfaceComponentSchema.parse(component);
       } catch (error) {
-        errors.push(`Invalid component at ${path}: ${(error as Error).message}`);
+        errors.push(
+          `Invalid component at ${path}: ${(error as Error).message}`,
+        );
         return;
       }
 
@@ -288,23 +304,31 @@ export class RecursiveComponentParser {
 }
 
 // Factory function for common use cases
-export function createParser(options: ParserOptions = {}): RecursiveComponentParser {
+export function createParser(
+  options: ParserOptions = {},
+): RecursiveComponentParser {
   return new RecursiveComponentParser(options);
 }
 
 // Utility functions
-export function parseComponent(input: string, options: ParserOptions = {}): InterfaceComponent[] {
+export function parseComponent(
+  input: string,
+  options: ParserOptions = {},
+): InterfaceComponent[] {
   const parser = createParser(options);
   return parser.parse(input);
 }
 
-export function parseWithValidation(input: string, options: ParserOptions = {}): {
+export function parseWithValidation(
+  input: string,
+  options: ParserOptions = {},
+): {
   components: InterfaceComponent[];
   validation: { valid: boolean; errors: string[] };
 } {
   const parser = createParser(options);
   const components = parser.parse(input);
   const validation = parser.validate(components);
-  
+
   return { components, validation };
 }

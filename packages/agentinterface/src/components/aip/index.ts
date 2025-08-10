@@ -1,14 +1,14 @@
 /**
  * AIP Components Index
- * 
+ *
  * This directory contains AgentInterface Protocol (AIP) components that follow
  * the standardized metadata pattern for build-time discovery and registry generation.
- * 
+ *
  * Each component in this directory should:
  * 1. Export a metadata object with type, description, schema, and category
  * 2. Follow the standardized naming convention
  * 3. Include proper JSON Schema for validation
- * 
+ *
  * Components are automatically discovered during build time and included
  * in the generated registry for Python consumption.
  */

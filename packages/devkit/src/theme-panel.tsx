@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createThemeIntegrationTester, ThemeTestResult } from './theme-integration';
+import {
+  createThemeIntegrationTester,
+  ThemeTestResult,
+} from './theme-integration';
 import { ThemeMode } from '../hooks/useTheme';
 import { useAIP } from '../registry/magic';
 
@@ -12,7 +15,7 @@ interface ThemeTestingPanelProps {
 export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
   components = [],
   themes = ['light', 'dark'],
-  onTestComplete
+  onTestComplete,
 }) => {
   const [results, setResults] = useState<ThemeTestResult[]>([]);
   const [testing, setTesting] = useState(false);
@@ -29,19 +32,19 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
   const runTests = async () => {
     setTesting(true);
     setResults([]);
-    
+
     try {
       const tester = createThemeIntegrationTester({
         components: components.length > 0 ? components : undefined,
         themes,
         contrastRatio: 4.5,
         testColorBlindness: true,
-        testHighContrast: true
+        testHighContrast: true,
       });
-      
+
       const testResults = await tester.testAllComponents();
       setResults(testResults);
-      
+
       tester.cleanup();
     } catch (error) {
       console.error('Theme testing failed:', error);
@@ -52,21 +55,23 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
 
   const runSingleTest = async (component: string, theme: ThemeMode) => {
     setTesting(true);
-    
+
     try {
       const tester = createThemeIntegrationTester({
         components: [component],
-        themes: [theme]
+        themes: [theme],
       });
-      
+
       const testResults = await tester.testAllComponents();
-      
+
       // Update results by replacing existing result for this component/theme
-      setResults(prev => {
-        const filtered = prev.filter(r => !(r.component === component && r.themes[0] === theme));
+      setResults((prev) => {
+        const filtered = prev.filter(
+          (r) => !(r.component === component && r.themes[0] === theme),
+        );
         return [...filtered, ...testResults];
       });
-      
+
       tester.cleanup();
     } catch (error) {
       console.error(`Failed to test ${component} with ${theme} theme:`, error);
@@ -75,14 +80,23 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
     }
   };
 
-  const getResultForComponent = (component: string, theme: ThemeMode): ThemeTestResult | undefined => {
-    return results.find(r => r.component === component && r.themes[0] === theme);
+  const getResultForComponent = (
+    component: string,
+    theme: ThemeMode,
+  ): ThemeTestResult | undefined => {
+    return results.find(
+      (r) => r.component === component && r.themes[0] === theme,
+    );
   };
 
   const getOverallStats = () => {
-    const passed = results.filter(r => r.passed).length;
+    const passed = results.filter((r) => r.passed).length;
     const total = results.length;
-    return { passed, total, percentage: total > 0 ? (passed / total) * 100 : 0 };
+    return {
+      passed,
+      total,
+      percentage: total > 0 ? (passed / total) * 100 : 0,
+    };
   };
 
   const stats = getOverallStats();
@@ -90,7 +104,9 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
   return (
     <div className="aip-theme-testing-panel p-6 bg-surface rounded-lg border border-border">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-text">Theme Integration Testing</h2>
+        <h2 className="text-2xl font-bold text-text">
+          Theme Integration Testing
+        </h2>
         <button
           onClick={runTests}
           disabled={testing}
@@ -124,18 +140,27 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
         <div className="space-y-2">
           <h3 className="text-lg font-semibold text-text">Components</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-            {aip.getComponentOptions().map(option => (
-              <div key={option.name} className="p-3 border border-border rounded-lg">
+            {aip.getComponentOptions().map((option) => (
+              <div
+                key={option.name}
+                className="p-3 border border-border rounded-lg"
+              >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-text">{option.name}</span>
-                  <span className="text-sm text-text-secondary">{option.description}</span>
+                  <span className="text-sm text-text-secondary">
+                    {option.description}
+                  </span>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-2">
-                  {themes.map(theme => {
+                  {themes.map((theme) => {
                     const result = getResultForComponent(option.name, theme);
-                    const status = result ? (result.passed ? '✅' : '❌') : '⏳';
-                    
+                    const status = result
+                      ? result.passed
+                        ? '✅'
+                        : '❌'
+                      : '⏳';
+
                     return (
                       <button
                         key={theme}
@@ -148,14 +173,17 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
                     );
                   })}
                 </div>
-                
+
                 {/* Test Results */}
-                {themes.map(theme => {
+                {themes.map((theme) => {
                   const result = getResultForComponent(option.name, theme);
                   if (!result) return null;
-                  
+
                   return (
-                    <div key={theme} className="mt-2 p-2 bg-surface/50 rounded text-xs">
+                    <div
+                      key={theme}
+                      className="mt-2 p-2 bg-surface/50 rounded text-xs"
+                    >
                       <div className="font-medium">{theme} Theme</div>
                       <div className="text-text-secondary">
                         Contrast: {result.accessibility.contrast.toFixed(2)}
@@ -182,14 +210,16 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
 
         {/* Test Configuration */}
         <div className="p-4 border border-border rounded-lg">
-          <h3 className="text-lg font-semibold text-text mb-3">Test Configuration</h3>
+          <h3 className="text-lg font-semibold text-text mb-3">
+            Test Configuration
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-text mb-1">
                 Test Themes
               </label>
               <div className="space-y-1">
-                {['light', 'dark', 'auto'].map(theme => (
+                {['light', 'dark', 'auto'].map((theme) => (
                   <label key={theme} className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -208,7 +238,7 @@ export const ThemeTestingPanel: React.FC<ThemeTestingPanelProps> = ({
                 ))}
               </div>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-text mb-1">
                 Accessibility Tests

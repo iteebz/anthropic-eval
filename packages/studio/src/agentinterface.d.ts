@@ -1,6 +1,6 @@
 declare module 'agentinterface' {
   import React from 'react';
-  
+
   export interface CardProps {
     header?: any[];
     body?: any[];
@@ -8,7 +8,7 @@ declare module 'agentinterface' {
     className?: string;
     variant?: 'default' | 'outlined' | 'elevated';
   }
-  
+
   export interface AccordionProps {
     sections: Array<{
       title: string;
@@ -18,7 +18,7 @@ declare module 'agentinterface' {
     content?: string;
     className?: string;
   }
-  
+
   export interface CardsProps {
     items: Array<{
       title?: string;
@@ -27,11 +27,14 @@ declare module 'agentinterface' {
     }>;
     className?: string;
   }
-  
+
   export const Card: React.FC<CardProps>;
   export const Accordion: React.FC<AccordionProps>;
   export const Cards: React.FC<CardsProps>;
-  
-  export function render(block: { type: string; [key: string]: any }, key?: string): React.ReactElement | null;
+
+  export function render(
+    block: { type: string; [key: string]: any },
+    key?: string,
+  ): React.ReactElement | null;
   export function getRegisteredTypes(): string[];
 }

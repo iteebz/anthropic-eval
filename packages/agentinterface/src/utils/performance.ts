@@ -10,10 +10,10 @@ export interface PerformanceMetrics {
 
 export function categorizePerformanceImpact(
   ms: number,
-): "low" | "medium" | "high" {
-  if (ms < 16) return "low"; // < 1 frame at 60fps
-  if (ms < 100) return "medium"; // < 100ms
-  return "high"; // > 100ms
+): 'low' | 'medium' | 'high' {
+  if (ms < 16) return 'low'; // < 1 frame at 60fps
+  if (ms < 100) return 'medium'; // < 100ms
+  return 'high'; // > 100ms
 }
 
 export function measurePerformance<T>(

@@ -27,7 +27,7 @@ async function runDarkModeValidation() {
       'Table',
       'List',
       'Navigation',
-      'Breadcrumb'
+      'Breadcrumb',
     ],
     strictMode: true,
     performanceThreshold: 100,
@@ -39,10 +39,15 @@ async function runDarkModeValidation() {
       'no-hardcoded-colors': (element) => {
         const styles = getComputedStyle(element);
         const props = ['backgroundColor', 'color', 'borderColor'];
-        
+
         for (const prop of props) {
           const value = styles.getPropertyValue(prop);
-          if (value && (value.includes('#') || value.includes('rgb(') || value.includes('hsl('))) {
+          if (
+            value &&
+            (value.includes('#') ||
+              value.includes('rgb(') ||
+              value.includes('hsl('))
+          ) {
             if (!value.includes('var(')) {
               return false;
             }
@@ -51,13 +56,19 @@ async function runDarkModeValidation() {
         return true;
       },
       'theme-class-present': (element) => {
-        return element.hasAttribute('data-theme') || 
-               element.closest('[data-theme]') !== null;
+        return (
+          element.hasAttribute('data-theme') ||
+          element.closest('[data-theme]') !== null
+        );
       },
       'css-variables-defined': (element) => {
-        const requiredVars = ['--aip-primary', '--aip-background', '--aip-text'];
+        const requiredVars = [
+          '--aip-primary',
+          '--aip-background',
+          '--aip-text',
+        ];
         const styles = getComputedStyle(element);
-        
+
         for (const varName of requiredVars) {
           const value = styles.getPropertyValue(varName);
           if (!value || value.trim() === '') {
@@ -65,14 +76,14 @@ async function runDarkModeValidation() {
           }
         }
         return true;
-      }
-    }
+      },
+    },
   });
 
   try {
     // Run validation
     const results = await validator.validateAllComponents();
-    
+
     // Generate report
     const report = validator.generateReport();
     const summary = validator.getSummary();
@@ -82,31 +93,41 @@ async function runDarkModeValidation() {
     console.log(`Total Components: ${summary.totalComponents}`);
     console.log(`Passed: ${summary.passed} ✅`);
     console.log(`Failed: ${summary.failed} ❌`);
-    console.log(`Average Dark Mode Score: ${summary.avgDarkScore.toFixed(1)}/100`);
-    console.log(`Average Light Mode Score: ${summary.avgLightScore.toFixed(1)}/100`);
+    console.log(
+      `Average Dark Mode Score: ${summary.avgDarkScore.toFixed(1)}/100`,
+    );
+    console.log(
+      `Average Light Mode Score: ${summary.avgLightScore.toFixed(1)}/100`,
+    );
     console.log(`Critical Issues: ${summary.criticalIssues}`);
     console.log(`Recommendations: ${summary.recommendations}\n`);
 
     // Show detailed results
     console.log('📋 Detailed Results:');
-    results.forEach(result => {
+    results.forEach((result) => {
       const status = result.passed ? '✅' : '❌';
       console.log(`${status} ${result.component}`);
-      console.log(`  Dark: ${result.darkModeScore}/100, Light: ${result.lightModeScore}/100`);
-      
+      console.log(
+        `  Dark: ${result.darkModeScore}/100, Light: ${result.lightModeScore}/100`,
+      );
+
       if (result.issues.length > 0) {
         console.log(`  Issues: ${result.issues.join(', ')}`);
       }
-      
+
       if (result.recommendations.length > 0) {
-        console.log(`  Recommendations: ${result.recommendations.slice(0, 2).join(', ')}`);
+        console.log(
+          `  Recommendations: ${result.recommendations.slice(0, 2).join(', ')}`,
+        );
       }
     });
 
     // Write detailed report to file
     const fs = await import('fs/promises');
     await fs.writeFile('dark-mode-validation-report.md', report);
-    console.log('\n📄 Detailed report saved to: dark-mode-validation-report.md');
+    console.log(
+      '\n📄 Detailed report saved to: dark-mode-validation-report.md',
+    );
 
     // Success/failure summary
     if (summary.passed === summary.totalComponents) {
@@ -114,7 +135,6 @@ async function runDarkModeValidation() {
     } else {
       console.log(`\n⚠️  ${summary.failed} components need attention`);
     }
-
   } catch (error) {
     console.error('❌ Validation failed:', error.message);
     process.exit(1);

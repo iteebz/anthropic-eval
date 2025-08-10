@@ -1,17 +1,17 @@
-import { z } from "zod";
-import { InterfaceData, InterfaceType } from "../types";
+import { z } from 'zod';
+import { InterfaceData, InterfaceType } from '../types';
 
 // Inline component syntax: {{type:slug|label=Custom|mode=expand}}
 export const InlineComponentConfigSchema = z.object({
   type: z.enum([
     'card-grid',
-    'expandable-section', 
+    'expandable-section',
     'key-insights',
     'timeline',
     'markdown',
     'inline-reference',
     'blog-post',
-    'code-snippet'
+    'code-snippet',
   ]),
   slug: z.string().min(1),
   label: z.string().optional(),
@@ -35,21 +35,23 @@ export interface ResolvedInlineComponent {
 // Component resolver function type
 export type ComponentResolver = (
   type: InterfaceType,
-  slug: string
+  slug: string,
 ) => Promise<InterfaceData | null>;
 
 // Parse inline component syntax
-export function parseInlineComponent(syntax: string): InlineComponentConfig | null {
+export function parseInlineComponent(
+  syntax: string,
+): InlineComponentConfig | null {
   // Match {{type:slug|label=Custom|mode=expand}}
   const match = syntax.match(/^\{\{([^:]+):([^|}]+)(?:\|([^}]+))?\}\}$/);
   if (!match) return null;
 
   const [, type, slug, params = ''] = match;
-  
+
   // Parse parameters
   const paramPairs = params.split('|').filter(Boolean);
   const parsed: Record<string, string> = {};
-  
+
   for (const pair of paramPairs) {
     const [key, value] = pair.split('=');
     if (key && value) {
@@ -73,11 +75,11 @@ export function parseInlineComponent(syntax: string): InlineComponentConfig | nu
 // Resolve inline component with fallback
 export async function resolveInlineComponent(
   config: InlineComponentConfig,
-  resolver: ComponentResolver
+  resolver: ComponentResolver,
 ): Promise<ResolvedInlineComponent> {
   try {
     const data = await resolver(config.type, config.slug);
-    
+
     if (!data) {
       return {
         config,
@@ -93,7 +95,7 @@ export async function resolveInlineComponent(
     return { config, data };
   } catch (error) {
     console.error('Failed to resolve inline component:', error);
-    
+
     return {
       config,
       data: null,
@@ -107,18 +109,21 @@ export async function resolveInlineComponent(
 
 // Create fallback content based on mode
 export function createFallbackContent(
-  resolved: ResolvedInlineComponent
+  resolved: ResolvedInlineComponent,
 ): string {
   const { config, fallback } = resolved;
-  
+
   if (!fallback) return config.label || config.slug;
-  
+
   switch (fallback.type) {
-    case 'link':
+    case 'link': {
       return `[${fallback.content}](${fallback.href})`;
-    case 'error':
+    }
+    case 'error': {
       return `⚠️ ${fallback.content}`;
-    default:
+    }
+    default: {
       return fallback.content;
+    }
   }
 }

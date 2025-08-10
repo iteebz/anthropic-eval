@@ -32,8 +32,7 @@ dependencies = [
 ]
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.0.0"
-isort = "^5.12.0"
+ruff = "^0.8.0"
 pytest = "^8.4.1"
 pytest-asyncio = "^0.21.0"
 pytest-cov = "^6.2.1"
@@ -41,27 +40,39 @@ pytest-cov = "^6.2.1"
 [tool.poetry]
 packages = [{ include = "agentinterface", from = "src" }]
 
-[tool.black]
-line-length = 88
-target-version = ['py39']
-
-[tool.isort]
-profile = "black"
-line_length = 88
-
-[tool.mypy]
-python_version = "3.9"
-strict = true
-warn_return_any = true
-warn_unused_configs = true
-
 [tool.ruff]
 line-length = 100
 target-version = "py39"
+exclude = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "N", "UP"]
-ignore = ["W293", "UP006", "UP035"]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear (common bugs)
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "W291",   # Trailing whitespace (handled by ruff format)
+    "W293",   # Blank line contains whitespace (handled by ruff format)
+    "UP006",  # non-pep585-annotation (allow typing.List vs list for compatibility)
+    "UP035",  # deprecated-import (allow typing imports for compatibility)
+    "SIM108", # if-else-block-instead-of-if-exp (ternary not always clearer)
+    "SIM117", # combine-multiple-isinstance (sometimes separate is clearer)
+    "E501",   # line-too-long (pragmatic choice for readable code)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["F401", "F811", "B017"]  # Allow test-specific patterns
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

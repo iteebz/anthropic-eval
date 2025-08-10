@@ -13,10 +13,6 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./browser": {
-      "import": "./dist/browser.js",
-      "types": "./dist/browser.d.ts"
-    },
     "./styles": "./dist/index.css",
     "./styles/theme.css": "./dist/theme.css"
   },
@@ -27,7 +23,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup && node dist/registry/cli.cjs",
+    "build": "tsup",
     "prepublishOnly": "npm run build",
     "dev": "tsc --watch",
     "test": "vitest",

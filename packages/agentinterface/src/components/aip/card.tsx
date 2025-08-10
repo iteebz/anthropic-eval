@@ -11,23 +11,23 @@ export interface CardProps {
   variant?: 'default' | 'outlined' | 'elevated';
 }
 
-export function Card({ 
+export function Card({
   header,
   body,
   footer,
   className = '',
-  variant = 'default'
+  variant = 'default',
 }: CardProps) {
   const variantClasses = {
     default: 'aip-card',
     outlined: 'aip-card aip-border',
-    elevated: 'aip-card aip-shadow-lg'
+    elevated: 'aip-card aip-shadow-lg',
   };
 
   return (
     <div className={`${variantClasses[variant]} ${className}`}>
       {header && (
-        <div className="aip-card-header border-b aip-border-primary aip-p-md">
+        <div className="aip-card-header aip-border-primary aip-p-md border-b">
           {header.map((block, index) => render(block, `header-${index}`))}
         </div>
       )}
@@ -37,7 +37,7 @@ export function Card({
         </div>
       )}
       {footer && (
-        <div className="aip-card-footer border-t aip-border-primary aip-p-md">
+        <div className="aip-card-footer aip-border-primary aip-p-md border-t">
           {footer.map((block, index) => render(block, `footer-${index}`))}
         </div>
       )}
@@ -45,11 +45,11 @@ export function Card({
   );
 }
 
-
 // AIP metadata for agent discovery
 export const metadata = {
   type: 'card',
-  description: 'Structured content container with header, body, and footer sections',
+  description:
+    'Structured content container with header, body, and footer sections',
   category: 'container',
   tags: ['container', 'layout', 'structured'],
   schema: {
@@ -59,39 +59,39 @@ export const metadata = {
       variant: {
         type: 'string',
         enum: ['default', 'outlined', 'elevated'],
-        default: 'default'
+        default: 'default',
       },
       header: {
         type: 'array',
         items: { type: 'object' },
-        description: 'Array of AIP blocks for card header'
+        description: 'Array of AIP blocks for card header',
       },
       body: {
         type: 'array',
         items: { type: 'object' },
-        description: 'Array of AIP blocks for card body'
+        description: 'Array of AIP blocks for card body',
       },
       footer: {
         type: 'array',
         items: { type: 'object' },
-        description: 'Array of AIP blocks for card footer'
-      }
+        description: 'Array of AIP blocks for card footer',
+      },
     },
-    required: ['type']
-  }
+    required: ['type'],
+  },
 } as const;
 
 const CardValidator = z.object({
   header: z.array(z.any()).optional(),
-  body: z.array(z.any()).optional(), 
+  body: z.array(z.any()).optional(),
   footer: z.array(z.any()).optional(),
   className: z.string().optional(),
-  variant: z.enum(['default', 'outlined', 'elevated']).optional()
+  variant: z.enum(['default', 'outlined', 'elevated']).optional(),
 });
 
 // Register with AIP registry
 register({
   type: 'card',
   schema: CardValidator,
-  render: Card
+  render: Card,
 });

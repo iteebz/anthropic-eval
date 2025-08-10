@@ -1,28 +1,28 @@
 import { z } from 'zod';
 import { register } from '../../registry';
-import { type CodeSnippetData } from "../../types";
-import { Prose } from "../prose";
+import { Prose } from '../prose';
 
 export const CodeSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    title: { type: "string" },
-    description: { type: "string" },
-    language: { type: "string" },
-    code: { type: "string" },
-    caption: { type: "string" },
-    content: { type: "string" },
-    className: { type: "string" }
+    title: { type: 'string' },
+    description: { type: 'string' },
+    language: { type: 'string' },
+    code: { type: 'string' },
+    caption: { type: 'string' },
+    content: { type: 'string' },
+    className: { type: 'string' },
   },
-  required: ["language", "code"]
+  required: ['language', 'code'],
 } as const;
 
 export const metadata = {
-  type: "code",
-  description: "Syntax-highlighted code snippets with optional titles and descriptions",
+  type: 'code',
+  description:
+    'Syntax-highlighted code snippets with optional titles and descriptions',
   schema: CodeSchema,
-  category: "interface",
-  tags: ["code", "syntax", "snippet"]
+  category: 'interface',
+  tags: ['code', 'syntax', 'snippet'],
 } as const;
 
 const CodeValidator = z.object({
@@ -32,7 +32,7 @@ const CodeValidator = z.object({
   code: z.string(),
   caption: z.string().optional(),
   content: z.string().optional(),
-  className: z.string().optional()
+  className: z.string().optional(),
 });
 
 type CodeData = z.infer<typeof CodeValidator>;
@@ -46,7 +46,6 @@ export function Code({
   content,
   className,
 }: CodeData) {
-
   return (
     <div className={className}>
       {content && (
@@ -56,21 +55,23 @@ export function Code({
       )}
 
       {code && (
-        <div className="border rounded-lg bg-muted/30 p-4">
-          {title && (
-            <div className="text-sm font-medium mb-2">{title}</div>
-          )}
+        <div className="bg-muted/30 rounded-lg border p-4">
+          {title && <div className="mb-2 text-sm font-medium">{title}</div>}
           {language && (
-            <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">{language}</div>
+            <div className="text-muted-foreground mb-2 text-xs uppercase tracking-wide">
+              {language}
+            </div>
           )}
-          <pre className="overflow-x-auto bg-background/50 rounded p-3 border">
-            <code className="text-sm font-mono">{code}</code>
+          <pre className="bg-background/50 overflow-x-auto rounded border p-3">
+            <code className="font-mono text-sm">{code}</code>
           </pre>
           {description && (
-            <div className="text-sm text-muted-foreground mt-2">{description}</div>
+            <div className="text-muted-foreground mt-2 text-sm">
+              {description}
+            </div>
           )}
           {caption && (
-            <div className="text-xs text-muted-foreground mt-2">{caption}</div>
+            <div className="text-muted-foreground mt-2 text-xs">{caption}</div>
           )}
         </div>
       )}
@@ -82,5 +83,5 @@ export function Code({
 register({
   type: 'code',
   schema: CodeValidator,
-  render: Code
+  render: Code,
 });

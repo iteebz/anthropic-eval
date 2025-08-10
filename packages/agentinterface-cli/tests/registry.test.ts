@@ -18,10 +18,14 @@ describe('Registry System', () => {
   describe('RegistryBuilder', () => {
     it('should scan components directory', async () => {
       const builder = new RegistryBuilder('test/components');
-      
+
       // Mock directory structure
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(['timeline.tsx', 'markdown.tsx', 'index.ts'] as any);
+      mockFs.readdirSync.mockReturnValue([
+        'timeline.tsx',
+        'markdown.tsx',
+        'index.ts',
+      ] as any);
       mockFs.readFileSync.mockReturnValue(`
         export const metadata = {
           type: "timeline",
@@ -43,7 +47,9 @@ describe('Registry System', () => {
       const builder = new RegistryBuilder('nonexistent');
       mockFs.existsSync.mockReturnValue(false);
 
-      await expect(builder.scanComponents()).rejects.toThrow('Components directory not found');
+      await expect(builder.scanComponents()).rejects.toThrow(
+        'Components directory not found',
+      );
     });
   });
 
@@ -57,9 +63,9 @@ describe('Registry System', () => {
           description: 'Display chronological events in timeline format',
           schema: { type: 'object', properties: {} },
           category: 'interface',
-          tags: ['chronological', 'events']
+          tags: ['chronological', 'events'],
         },
-        filePath: 'timeline.tsx'
+        filePath: 'timeline.tsx',
       };
 
       const errors = validator.validateMetadata(entry);
@@ -75,9 +81,9 @@ describe('Registry System', () => {
           description: 'Bad', // Too short
           schema: { type: 'object' },
           category: 'invalid-category' as any,
-          tags: []
+          tags: [],
         },
-        filePath: 'bad.tsx'
+        filePath: 'bad.tsx',
       };
 
       const errors = validator.validateMetadata(entry);
@@ -87,8 +93,11 @@ describe('Registry System', () => {
 
   describe('RegistryGenerator', () => {
     it('should generate registry with correct structure', async () => {
-      const generator = new RegistryGenerator('test/components', 'test/registry.json');
-      
+      const generator = new RegistryGenerator(
+        'test/components',
+        'test/registry.json',
+      );
+
       // Mock successful component scanning
       const mockBuilder = {
         scanComponents: vi.fn(),
@@ -100,21 +109,21 @@ describe('Registry System', () => {
               description: 'Display chronological events',
               schema: { type: 'object' },
               category: 'interface',
-              tags: ['chronological']
+              tags: ['chronological'],
             },
-            filePath: 'timeline.tsx'
-          }
-        ])
+            filePath: 'timeline.tsx',
+          },
+        ]),
       };
 
       // Mock validator
       const mockValidator = {
-        validateAll: vi.fn().mockReturnValue([])
+        validateAll: vi.fn().mockReturnValue([]),
       };
 
       // Mock sync
       const mockSync = {
-        autoSync: vi.fn()
+        autoSync: vi.fn(),
       };
 
       // Replace private properties (for testing)
@@ -139,11 +148,14 @@ describe('Registry System', () => {
     it('should sync registry files', async () => {
       const sync = new RegistrySync({
         jsRegistryPath: 'dist/registry.json',
-        pythonRegistryPath: 'python/registry.json'
+        pythonRegistryPath: 'python/registry.json',
       });
 
-      const registryContent = JSON.stringify({ version: '1.0.0', components: {} });
-      
+      const registryContent = JSON.stringify({
+        version: '1.0.0',
+        components: {},
+      });
+
       mockFs.existsSync.mockReturnValue(true);
       mockFs.readFileSync.mockReturnValue(registryContent);
       mockFs.writeFileSync.mockImplementation(() => {});
@@ -168,7 +180,9 @@ describe('Registry System', () => {
       const sync = new RegistrySync();
       mockFs.existsSync.mockReturnValue(false);
 
-      await expect(sync.syncRegistry()).rejects.toThrow('JS registry not found');
+      await expect(sync.syncRegistry()).rejects.toThrow(
+        'JS registry not found',
+      );
     });
   });
 
@@ -176,9 +190,9 @@ describe('Registry System', () => {
     it('should complete full registry generation and sync workflow', async () => {
       // This would be a more comprehensive integration test
       // Testing the full workflow from component scanning to Python sync
-      
+
       const generator = new RegistryGenerator();
-      
+
       // Mock the entire workflow
       mockFs.existsSync.mockReturnValue(true);
       mockFs.readdirSync.mockReturnValue(['timeline.tsx'] as any);
@@ -196,7 +210,7 @@ describe('Registry System', () => {
       mockFs.statSync.mockReturnValue({ size: 100, mtime: new Date() } as any);
 
       const summary = await generator.generateWithSummary();
-      
+
       expect(summary).toContain('Registry Generation Complete');
       expect(summary).toContain('Total Components: 1');
     });

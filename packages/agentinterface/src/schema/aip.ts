@@ -29,9 +29,9 @@ export interface ComponentMetadata {
 export const ATOMIC_SCHEMA = {
   type: 'object' as const,
   properties: {
-    type: { type: 'string' }
+    type: { type: 'string' },
   },
-  required: ['type']
+  required: ['type'],
 };
 
 export const CONTAINER_SCHEMA = {
@@ -40,10 +40,10 @@ export const CONTAINER_SCHEMA = {
     type: { type: 'string' },
     children: {
       type: 'array',
-      items: { type: 'object' }
-    }
+      items: { type: 'object' },
+    },
   },
-  required: ['type']
+  required: ['type'],
 };
 
 export const TABS_SCHEMA = {
@@ -57,13 +57,13 @@ export const TABS_SCHEMA = {
         properties: {
           id: { type: 'string' },
           label: { type: 'string' },
-          content: { type: 'array', items: { type: 'object' } }
+          content: { type: 'array', items: { type: 'object' } },
         },
-        required: ['id', 'label', 'content']
-      }
-    }
+        required: ['id', 'label', 'content'],
+      },
+    },
   },
-  required: ['type', 'items']
+  required: ['type', 'items'],
 };
 
 export const CARD_SCHEMA = {
@@ -73,7 +73,7 @@ export const CARD_SCHEMA = {
     variant: { type: 'string', enum: ['default', 'outlined', 'elevated'] },
     header: { type: 'array', items: { type: 'object' } },
     body: { type: 'array', items: { type: 'object' } },
-    footer: { type: 'array', items: { type: 'object' } }
+    footer: { type: 'array', items: { type: 'object' } },
   },
-  required: ['type']
+  required: ['type'],
 };
