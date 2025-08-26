@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { register } from '../../registry';
 import { Prose } from '../prose';
+import { ai } from '../../ai';
 
 export const CodeSchema = {
   type: 'object',
@@ -37,7 +38,7 @@ const CodeValidator = z.object({
 
 type CodeData = z.infer<typeof CodeValidator>;
 
-export function Code({
+function CodeComponent({
   title,
   description,
   language,
@@ -79,9 +80,9 @@ export function Code({
   );
 }
 
-// Register with unified registry
-register({
-  type: 'code',
-  schema: CodeValidator,
-  render: Code,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Code = ai(
+  'code',
+  'Syntax-highlighted code snippets with optional titles',
+  CodeComponent
+);

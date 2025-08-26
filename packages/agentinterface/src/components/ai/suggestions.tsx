@@ -1,6 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 
 export const SuggestionsSchema = {
   type: 'object',
@@ -50,7 +50,7 @@ const SuggestionsValidator = z.object({
 
 type SuggestionsData = z.infer<typeof SuggestionsValidator>;
 
-export function Suggestions(props: SuggestionsData) {
+function SuggestionsComponent(props: SuggestionsData) {
   const {
     suggestions,
     title = 'Continue the conversation',
@@ -99,8 +99,9 @@ export function Suggestions(props: SuggestionsData) {
   );
 }
 
-register({
-  type: 'suggestions',
-  schema: SuggestionsValidator,
-  render: Suggestions,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Suggestions = ai(
+  'suggestions',
+  'Interactive suggestion buttons for continuing conversations',
+  SuggestionsComponent
+);

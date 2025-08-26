@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { register } from '../../registry';
 import { Prose } from '../prose';
+import { ai } from '../../ai';
 
 export const MarkdownSchema = {
   type: 'object',
@@ -33,7 +34,7 @@ export interface InterfaceProps {
   onSendMessage?: (message: string) => void;
 }
 
-export function Markdown({
+function MarkdownComponent({
   content,
   className,
   onSendMessage,
@@ -47,9 +48,9 @@ export function Markdown({
   );
 }
 
-// Register with unified registry
-register({
-  type: 'markdown',
-  schema: MarkdownValidator,
-  render: Markdown,
-});
+// CANONICAL: AI() wrapper with auto-registration  
+export const Markdown = ai(
+  'markdown',
+  'Render markdown content with support for interactive elements',
+  MarkdownComponent
+);

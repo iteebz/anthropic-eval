@@ -40,14 +40,14 @@ export { processInlineComponents } from './core/component-resolver';
 export type { ComponentResolver } from './core/inline-components';
 
 // Built-in components that folio uses
-export { Insights } from './components/aip/insights';
-export { Accordion } from './components/aip/accordion';
-export { Cards } from './components/aip/cards';
-export { Code } from './components/aip/code';
-export { Table } from './components/aip/table';
-export { Suggestions } from './components/aip/suggestions';
-export { Tree } from './components/aip/tree';
-export { Gallery } from './components/aip/gallery';
-export { Reference } from './components/aip/reference';
-export { Timeline } from './components/aip/timeline';
-export { Markdown } from './components/aip/markdown';
+export { Insights } from './components/ai/insights';
+export { Accordion } from './components/ai/accordion';
+export { Cards } from './components/ai/cards';
+export { Code } from './components/ai/code';
+export { Table } from './components/ai/table';
+export { Suggestions } from './components/ai/suggestions';
+export { Tree } from './components/ai/tree';
+export { Gallery } from './components/ai/gallery';
+export { Reference } from './components/ai/reference';
+export { Timeline } from './components/ai/timeline';
+export { Markdown } from './components/ai/markdown';

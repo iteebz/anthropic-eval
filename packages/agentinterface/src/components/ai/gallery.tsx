@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 
 export const GallerySchema = {
   type: 'object',
@@ -46,7 +46,7 @@ const GalleryValidator = z.object({
 
 type GalleryData = z.infer<typeof GalleryValidator>;
 
-export function Gallery(props: GalleryData) {
+function GalleryComponent(props: GalleryData) {
   const { images, columns = 3, className } = props;
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
@@ -111,9 +111,9 @@ export function Gallery(props: GalleryData) {
   );
 }
 
-// Register with unified registry
-register({
-  type: 'gallery',
-  schema: GalleryValidator,
-  render: Gallery,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Gallery = ai(
+  'gallery',
+  'Display a grid of images with lightbox functionality',
+  GalleryComponent
+);

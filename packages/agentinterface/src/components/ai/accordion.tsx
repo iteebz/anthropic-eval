@@ -6,6 +6,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '../ui/collapsible';
+import { ai } from '../../ai';
 
 export const AccordionSchema = {
   type: 'object',
@@ -51,7 +52,7 @@ const AccordionValidator = z.object({
 
 type AccordionData = z.infer<typeof AccordionValidator>;
 
-export function Accordion({ sections, content, className }: AccordionData) {
+function AccordionComponent({ sections, content, className }: AccordionData) {
   return (
     <div className={className}>
       {content && (
@@ -82,9 +83,9 @@ export function Accordion({ sections, content, className }: AccordionData) {
   );
 }
 
-// Register with AIP registry
-register({
-  type: 'accordion',
-  schema: AccordionValidator,
-  render: Accordion,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Accordion = ai(
+  'accordion',
+  'Collapsible sections for organizing content',
+  AccordionComponent
+);

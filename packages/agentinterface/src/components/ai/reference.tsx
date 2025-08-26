@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 import { Prose } from '../prose';
 
 export const ReferenceSchema = {
@@ -53,7 +53,7 @@ const ReferenceValidator = z.object({
 
 type ReferenceData = z.infer<typeof ReferenceValidator>;
 
-export function Reference(props: ReferenceData) {
+function ReferenceComponent(props: ReferenceData) {
   const { references = [], content, className } = props;
   const [expandedRefs, setExpandedRefs] = useState<Set<string>>(new Set());
 
@@ -114,9 +114,9 @@ export function Reference(props: ReferenceData) {
   );
 }
 
-// Register with unified registry
-register({
-  type: 'reference',
-  schema: ReferenceValidator,
-  render: Reference,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Reference = ai(
+  'reference',
+  'Interactive inline references that expand to show detailed content',
+  ReferenceComponent
+);

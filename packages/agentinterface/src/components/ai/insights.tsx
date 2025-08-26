@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 import { Prose } from '../prose';
 
 export const InsightsSchema = {
@@ -46,7 +46,7 @@ const InsightsValidator = z.object({
 
 type InsightsData = z.infer<typeof InsightsValidator>;
 
-export function Insights({ insights, content, className }: InsightsData) {
+function InsightsComponent({ insights, content, className }: InsightsData) {
   return (
     <div className={className}>
       {content && (
@@ -79,9 +79,9 @@ export function Insights({ insights, content, className }: InsightsData) {
   );
 }
 
-// Register with unified registry
-register({
-  type: 'insights',
-  schema: InsightsValidator,
-  render: Insights,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Insights = ai(
+  'insights',
+  'Highlight key insights and important information with categorized callouts',
+  InsightsComponent
+);

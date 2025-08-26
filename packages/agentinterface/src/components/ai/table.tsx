@@ -1,6 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 
 export const TableSchema = {
   type: 'object',
@@ -65,7 +65,7 @@ const TableValidator = z.object({
 
 type TableData = z.infer<typeof TableValidator>;
 
-export function Table(props: TableData) {
+function TableComponent(props: TableData) {
   const { items, attributes, title, className } = props;
 
   return (
@@ -107,9 +107,9 @@ export function Table(props: TableData) {
   );
 }
 
-// Register with unified registry
-register({
-  type: 'table',
-  schema: TableValidator,
-  render: Table,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Table = ai(
+  'table',
+  'Display structured data in a comparison table format',
+  TableComponent
+);

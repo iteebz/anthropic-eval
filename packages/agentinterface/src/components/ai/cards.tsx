@@ -1,6 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 import { Prose } from '../prose';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -74,7 +74,7 @@ const CardsValidator = z.object({
 
 type CardsData = z.infer<typeof CardsValidator>;
 
-export function Cards(props: CardsData) {
+function CardsComponent(props: CardsData) {
   const { cards = [], content, className, onSendMessage } = props;
 
   return (
@@ -136,9 +136,9 @@ export function Cards(props: CardsData) {
   );
 }
 
-// Register with unified registry
-register({
-  type: 'cards',
-  schema: CardsValidator,
-  render: Cards,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Cards = ai(
+  'cards',
+  'Interactive card grid with actions and MCP callback support',
+  CardsComponent
+);

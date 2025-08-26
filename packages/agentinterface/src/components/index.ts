@@ -4,19 +4,19 @@
  * Components register themselves when imported
  */
 
-// Import all AIP components to trigger self-registration
-import './aip/accordion';
-import './aip/card';
-import './aip/cards';
-import './aip/code';
-import './aip/gallery';
-import './aip/insights';
-import './aip/markdown';
-import './aip/reference';
-import './aip/suggestions';
-import './aip/table';
-import './aip/tabs';
-import './aip/timeline';
-import './aip/tree';
+// Import all AI components to trigger self-registration
+import './ai/accordion';
+import './ai/card';
+import './ai/cards';
+import './ai/code';
+import './ai/gallery';
+import './ai/insights';
+import './ai/markdown';
+import './ai/reference';
+import './ai/suggestions';
+import './ai/table';
+import './ai/tabs';
+import './ai/timeline';
+import './ai/tree';
 
-console.log('✅ AgentInterface: All AIP components loaded and registered');
+console.log('✅ AgentInterface: All AI components loaded and registered');

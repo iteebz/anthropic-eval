@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { register } from '../../registry';
+import { ai } from '../../ai';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 export const TreeSchema = {
@@ -72,7 +72,7 @@ const TreeValidator = z.object({
 
 type TreeData = z.infer<typeof TreeValidator>;
 
-export function Tree(props: TreeData) {
+function TreeComponent(props: TreeData) {
   const { nodes, rootNodeId, title, className, onSendMessage } = props;
   const [currentNodeId, setCurrentNodeId] = useState(rootNodeId);
 
@@ -127,9 +127,9 @@ export function Tree(props: TreeData) {
   );
 }
 
-// Register with unified registry
-register({
-  type: 'tree',
-  schema: TreeValidator,
-  render: Tree,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Tree = ai(
+  'tree',
+  'Interactive decision tree with branching options',
+  TreeComponent
+);

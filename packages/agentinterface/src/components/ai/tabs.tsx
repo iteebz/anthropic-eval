@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { render, register } from '../../registry';
+import { render } from '../../registry';
+import { ai } from '../../ai';
 import type { AIPBlock } from '../../schema/aip';
 
 export interface TabItem {
@@ -15,7 +16,7 @@ export interface TabsProps {
   className?: string;
 }
 
-export function Tabs({ items = [], defaultTab, className = '' }: TabsProps) {
+function TabsComponent({ items = [], defaultTab, className = '' }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || items[0]?.id || '');
 
   const activeContent =
@@ -103,9 +104,9 @@ const TabsValidator = z.object({
   className: z.string().optional(),
 });
 
-// Register with AIP registry
-register({
-  type: 'tabs',
-  schema: TabsValidator,
-  render: Tabs,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Tabs = ai(
+  'tabs',
+  'Multi-view content container with tab navigation',
+  TabsComponent
+);

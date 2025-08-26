@@ -2,6 +2,7 @@ import React from 'react';
 import { z } from 'zod';
 import { render, register } from '../../registry';
 import type { AIPBlock } from '../../schema/aip';
+import { ai } from '../../ai';
 
 export interface CardProps {
   header?: AIPBlock[];
@@ -11,7 +12,7 @@ export interface CardProps {
   variant?: 'default' | 'outlined' | 'elevated';
 }
 
-export function Card({
+function CardComponent({
   header,
   body,
   footer,
@@ -89,9 +90,9 @@ const CardValidator = z.object({
   variant: z.enum(['default', 'outlined', 'elevated']).optional(),
 });
 
-// Register with AIP registry
-register({
-  type: 'card',
-  schema: CardValidator,
-  render: Card,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Card = ai(
+  'card',
+  'Structured content container with header, body, and footer sections',
+  CardComponent
+);

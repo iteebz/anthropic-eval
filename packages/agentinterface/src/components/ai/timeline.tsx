@@ -6,6 +6,7 @@ import {
   type InterfaceProps,
 } from '../../types';
 import { Prose } from '../prose';
+import { ai } from '../../ai';
 
 export const TimelineSchema = {
   type: 'object',
@@ -51,7 +52,7 @@ const TimelineValidator = z.object({
   className: z.string().optional(),
 });
 
-export function Timeline({
+function TimelineComponent({
   content,
   interfaceData,
   className,
@@ -90,9 +91,9 @@ export function Timeline({
   );
 }
 
-// Register with unified registry
-register({
-  type: 'timeline',
-  schema: TimelineValidator,
-  render: Timeline,
-});
+// CANONICAL: AI() wrapper with auto-registration
+export const Timeline = ai(
+  'timeline',
+  'Display chronological events in a vertical timeline format',
+  TimelineComponent
+);
