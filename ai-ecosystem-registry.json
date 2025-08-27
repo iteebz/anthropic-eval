@@ -1,0 +1,101 @@
+{
+  "generated_at": "2025-08-27T00:44:16.420Z",
+  "total_components": 13,
+  "sources": {
+    "local": [
+      "accordion",
+      "card",
+      "cards",
+      "code",
+      "gallery",
+      "insights",
+      "markdown",
+      "reference",
+      "suggestions",
+      "table",
+      "tabs",
+      "timeline",
+      "tree"
+    ]
+  },
+  "components": {
+    "accordion": {
+      "description": "Collapsible sections for organizing content",
+      "componentName": "AccordionComponent",
+      "file": "packages/agentinterface/src/components/ai/accordion.tsx",
+      "source": "local"
+    },
+    "card": {
+      "description": "Structured content container with header, body, and footer sections",
+      "componentName": "CardComponent",
+      "file": "packages/agentinterface/src/components/ai/card.tsx",
+      "source": "local"
+    },
+    "cards": {
+      "description": "Interactive card grid with actions and MCP callback support",
+      "componentName": "CardsComponent",
+      "file": "packages/agentinterface/src/components/ai/cards.tsx",
+      "source": "local"
+    },
+    "code": {
+      "description": "Syntax-highlighted code snippets with optional titles",
+      "componentName": "CodeComponent",
+      "file": "packages/agentinterface/src/components/ai/code.tsx",
+      "source": "local"
+    },
+    "gallery": {
+      "description": "Display a grid of images with lightbox functionality",
+      "componentName": "GalleryComponent",
+      "file": "packages/agentinterface/src/components/ai/gallery.tsx",
+      "source": "local"
+    },
+    "insights": {
+      "description": "Highlight key insights and important information with categorized callouts",
+      "componentName": "InsightsComponent",
+      "file": "packages/agentinterface/src/components/ai/insights.tsx",
+      "source": "local"
+    },
+    "markdown": {
+      "description": "Render markdown content with support for interactive elements",
+      "componentName": "MarkdownComponent",
+      "file": "packages/agentinterface/src/components/ai/markdown.tsx",
+      "source": "local"
+    },
+    "reference": {
+      "description": "Interactive inline references that expand to show detailed content",
+      "componentName": "ReferenceComponent",
+      "file": "packages/agentinterface/src/components/ai/reference.tsx",
+      "source": "local"
+    },
+    "suggestions": {
+      "description": "Interactive suggestion buttons for continuing conversations",
+      "componentName": "SuggestionsComponent",
+      "file": "packages/agentinterface/src/components/ai/suggestions.tsx",
+      "source": "local"
+    },
+    "table": {
+      "description": "Display structured data in a comparison table format",
+      "componentName": "TableComponent",
+      "file": "packages/agentinterface/src/components/ai/table.tsx",
+      "source": "local"
+    },
+    "tabs": {
+      "description": "Multi-view content container with tab navigation",
+      "componentName": "TabsComponent",
+      "file": "packages/agentinterface/src/components/ai/tabs.tsx",
+      "source": "local"
+    },
+    "timeline": {
+      "description": "Display chronological events in a vertical timeline format",
+      "componentName": "TimelineComponent",
+      "file": "packages/agentinterface/src/components/ai/timeline.tsx",
+      "source": "local"
+    },
+    "tree": {
+      "description": "Interactive decision tree with branching options",
+      "componentName": "TreeComponent",
+      "file": "packages/agentinterface/src/components/ai/tree.tsx",
+      "source": "local"
+    }
+  }
+}

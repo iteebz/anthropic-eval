@@ -19,10 +19,15 @@ from .aip import ai_block
 
 
 def _load_component_registry() -> Dict[str, Dict[str, str]]:
-    """Load component registry from React autodiscovery"""
+    """Load component registry from ecosystem autodiscovery"""
     registry_paths = [
-        # Try React package registry first
+        # Try ecosystem registry first (most comprehensive)
+        Path(__file__).parent.parent.parent.parent / "ai-ecosystem-registry.json",
+        # Try React package registry  
         Path(__file__).parent.parent.parent.parent / "packages/agentinterface/src/ai-registry.json",
+        # Try current directory (for external packages)
+        Path.cwd() / "ai-ecosystem-registry.json",
+        Path.cwd() / "ai-registry.json",
         # Fallback to local registry 
         Path(__file__).parent / "ai-registry.json"
     ]
@@ -31,11 +36,15 @@ def _load_component_registry() -> Dict[str, Dict[str, str]]:
         if registry_path.exists():
             try:
                 data = json.loads(registry_path.read_text())
-                return data.get("components", {})
-            except:
+                components = data.get("components", {})
+                if components:
+                    print(f"✓ Loaded {len(components)} components from {registry_path.name}")
+                    return components
+            except Exception as e:
                 continue
     
     # Fallback to empty registry
+    print("⚠️  No component registry found - using fallback")
     return {}
 
 
@@ -88,6 +97,20 @@ class AIInterface:
             comp_type: comp_data.get("description", "No description")
             for comp_type, comp_data in self._registry.items()
         }
+    
+    def sources(self) -> Dict[str, List[str]]:
+        """Get components grouped by source (for ecosystem analysis)"""
+        sources = {}
+        for comp_type, comp_data in self._registry.items():
+            source = comp_data.get("source", "unknown")
+            if source not in sources:
+                sources[source] = []
+            sources[source].append(comp_type)
+        return sources
+    
+    def refresh(self) -> None:
+        """Refresh component registry (re-scan ecosystem)"""
+        self._registry = _load_component_registry()
 
 
 # Create singleton instance

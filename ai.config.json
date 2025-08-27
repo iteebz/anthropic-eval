@@ -1,0 +1,12 @@
+{
+  "registries": [],
+  "discovery": {
+    "scanNodeModules": true,
+    "scanDirs": ["src/components", "packages/*/src/components"],
+    "maxDepth": 3
+  },
+  "output": {
+    "registry": "ai-ecosystem-registry.json",
+    "format": "unified"
+  }
+}
