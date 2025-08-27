@@ -1,1 +1,0 @@
-export { Studio, StudioApp } from './studio';

@@ -1,18 +1,48 @@
 {
-  "name": "agentinterface-workspace",
-  "private": true,
-  "description": "Monorepo for agentinterface packages",
+  "name": "agentinterface",
+  "version": "0.1.0",
+  "description": "AI agents choose UI components with zero ceremony.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "python"
+  ],
   "scripts": {
-    "build": "pnpm --filter '*' run build",
-    "dev": "pnpm --filter agentinterface run dev",
-    "test": "pnpm --filter '*' run test",
-    "format": "pnpm --filter '*' run format",
-    "lint": "pnpm --filter '*' run lint",
-    "clean": "rm -rf packages/*/dist packages/*/node_modules"
+    "dev": "echo 'Just import the fucking components'",
+    "format": "prettier --write 'src/**/*.{ts,tsx}'",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "15.5.0",
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
-    "pnpm": "^10.12.1"
+    "@eslint/js": "^9.30.0",
+    "@types/react": "^19.0.8",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "eslint": "^9.30.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.7.2"
   },
-  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac",
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "keywords": [
+    "react", "ai", "agents", "interface", "ui", "components"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iteebz/agentinterface"
+  },
   "license": "MIT"
 }
