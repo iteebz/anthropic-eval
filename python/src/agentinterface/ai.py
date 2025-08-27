@@ -21,11 +21,13 @@ from .aip import ai_block
 def _load_component_registry() -> Dict[str, Dict[str, str]]:
     """Load component registry from ecosystem autodiscovery"""
     registry_paths = [
-        # Try ecosystem registry first (most comprehensive)
+        # Try ai.json first (canonical masterplay)
+        Path(__file__).parent.parent.parent.parent / "ai.json",
+        # Legacy support
         Path(__file__).parent.parent.parent.parent / "ai-ecosystem-registry.json",
-        # Try React package registry  
         Path(__file__).parent.parent.parent.parent / "packages/agentinterface/src/ai-registry.json",
-        # Try current directory (for external packages)
+        # Try current directory
+        Path.cwd() / "ai.json",
         Path.cwd() / "ai-ecosystem-registry.json",
         Path.cwd() / "ai-registry.json",
         # Fallback to local registry 
@@ -111,6 +113,14 @@ class AIInterface:
     def refresh(self) -> None:
         """Refresh component registry (re-scan ecosystem)"""
         self._registry = _load_component_registry()
+    
+    def protocol(self) -> str:
+        """Generate LLM format instructions from registry"""
+        if not self._registry:
+            return "No components available"
+        
+        component_types = sorted(self._registry.keys())
+        return f"Use ```aip blocks with these components: {', '.join(component_types)}"
 
 
 # Create singleton instance
