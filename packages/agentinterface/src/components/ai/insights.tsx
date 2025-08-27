@@ -1,87 +1,32 @@
-import { z } from 'zod';
-import { ai } from '../../ai';
-import { Prose } from '../prose';
+import React from 'react';
 
-export const InsightsSchema = {
-  type: 'object',
-  properties: {
-    insights: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          title: { type: 'string' },
-          description: { type: 'string' },
-          category: { type: 'string' },
-        },
-        required: ['title', 'description'],
-      },
-    },
-    content: { type: 'string' },
-    className: { type: 'string' },
-  },
-  required: ['insights'],
-} as const;
+export interface Insight {
+  title: string;
+  description: string;
+  category?: string;
+}
 
-export const metadata = {
-  type: 'insights',
-  description:
-    'Highlight key insights and important information with categorized callouts',
-  schema: InsightsSchema,
-  category: 'interface',
-  tags: ['highlights', 'callouts', 'important'],
-} as const;
+export interface InsightsProps {
+  insights: Insight[];
+  className?: string;
+}
 
-const InsightsValidator = z.object({
-  insights: z.array(
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      category: z.string().optional(),
-    }),
-  ),
-  content: z.string().optional(),
-  className: z.string().optional(),
-});
-
-type InsightsData = z.infer<typeof InsightsValidator>;
-
-function InsightsComponent({ insights, content, className }: InsightsData) {
+function InsightsComponent({ insights, className }: InsightsProps) {
   return (
     <div className={className}>
-      {content && (
-        <div className="mb-4">
-          <Prose content={content} />
-        </div>
-      )}
-
-      {insights && insights.length > 0 && (
-        <div className="space-y-3">
-          {insights.map((insight, index) => (
-            <div
-              key={index}
-              className="border-primary/30 bg-muted/20 rounded-r border-l-4 py-2 pl-4"
-            >
-              <div className="mb-1 font-medium">{insight.title}</div>
-              {insight.category && (
-                <div className="text-muted-foreground mb-1 text-xs">
-                  {insight.category}
-                </div>
-              )}
-              <div className="text-muted-foreground text-sm">
-                {insight.description}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        {insights.map((insight, index) => (
+          <div key={index} className="border-l-4 border-blue-500 bg-blue-50 p-3 rounded-r">
+            <div className="font-medium mb-1">{insight.title}</div>
+            {insight.category && (
+              <div className="text-xs text-gray-600 mb-1">{insight.category}</div>
+            )}
+            <div className="text-sm text-gray-700">{insight.description}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-// CANONICAL: AI() wrapper with auto-registration
-export const Insights = ai(
-  'insights',
-  'Highlight key insights and important information with categorized callouts',
-  InsightsComponent
-);
+export const Insights = InsightsComponent;

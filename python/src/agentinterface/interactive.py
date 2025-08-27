@@ -1,4 +1,4 @@
-"""Interactive Agent Foundation - HTTP callback system"""
+"""Two-way agent communication via HTTP callbacks"""
 
 import asyncio
 import json
@@ -15,7 +15,7 @@ except ImportError:
 
 
 class Interactive:
-    """Agent with HTTP callback support"""
+    """Agent + UI callbacks"""
     
     def __init__(self, agent: Any, llm: Any = None, port: int = 8787):
         self.agent = agent
@@ -26,7 +26,7 @@ class Interactive:
         self._start_callback_server()
     
     def _start_callback_server(self):
-        """Start tiny HTTP server for callbacks"""
+        """HTTP callback server"""
         if not FastAPI:
             raise ImportError("pip install fastapi uvicorn for interactive agents")
             
@@ -44,7 +44,6 @@ class Interactive:
         
         self._server = Thread(target=run_server, daemon=True)
         self._server.start()
-        print(f"✓ Callback server running on port {self.port}")
     
     def resolve_callback(self, callback_id: str, action: str, data: Any):
         """Resolve pending callback"""
@@ -52,7 +51,7 @@ class Interactive:
             self._pending_callbacks[callback_id].set_result({"action": action, "data": data})
     
     async def stream(self, query: str, **context) -> AsyncGenerator[Dict, None]:
-        """Stream with interactive components and HTTP callbacks"""
+        """Stream agent responses with UI callbacks"""
         
         # Get agent response  
         response = await self._get_agent_response(query)
@@ -92,7 +91,7 @@ class Interactive:
             yield {"type": "text", "content": response}
     
     async def _get_agent_response(self, query: str) -> str:
-        """Get response from any agent library"""
+        """Get agent response"""
         if hasattr(self.agent, 'run') and asyncio.iscoroutinefunction(self.agent.run):
             return await self.agent.run(query)
         elif hasattr(self.agent, 'run'):
@@ -103,7 +102,7 @@ class Interactive:
             raise ValueError("Agent must have .run() method or be callable")
     
     async def _try_shape(self, response: str, query: str, context: Dict) -> Dict:
-        """Try to shape response into component"""
+        """Shape text → component"""
         from .shaper import shape
         
         shaped = await shape(response, {"query": query, **context}, self.llm)

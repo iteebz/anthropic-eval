@@ -1,52 +1,18 @@
 import React, { useState } from 'react';
-import { z } from 'zod';
-import { ai } from '../../ai';
 
-export const GallerySchema = {
-  type: 'object',
-  properties: {
-    images: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          src: { type: 'string' },
-          alt: { type: 'string' },
-          title: { type: 'string' },
-        },
-        required: ['src', 'alt'],
-      },
-    },
-    columns: { type: 'number', minimum: 1, maximum: 4 },
-    className: { type: 'string' },
-  },
-  required: ['images'],
-} as const;
+export interface GalleryImage {
+  src: string;
+  alt: string;
+  title?: string;
+}
 
-export const metadata = {
-  type: 'gallery',
-  description:
-    'Display a grid of images with lightbox functionality and customizable layout',
-  schema: GallerySchema,
-  category: 'interface',
-  tags: ['images', 'visual', 'grid'],
-} as const;
+export interface GalleryProps {
+  images: GalleryImage[];
+  columns?: number;
+  className?: string;
+}
 
-const GalleryValidator = z.object({
-  images: z.array(
-    z.object({
-      src: z.string(),
-      alt: z.string(),
-      title: z.string().optional(),
-    }),
-  ),
-  columns: z.number().optional(),
-  className: z.string().optional(),
-});
-
-type GalleryData = z.infer<typeof GalleryValidator>;
-
-function GalleryComponent(props: GalleryData) {
+function GalleryComponent(props: GalleryProps) {
   const { images, columns = 3, className } = props;
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
@@ -111,9 +77,4 @@ function GalleryComponent(props: GalleryData) {
   );
 }
 
-// CANONICAL: AI() wrapper with auto-registration
-export const Gallery = ai(
-  'gallery',
-  'Display a grid of images with lightbox functionality',
-  GalleryComponent
-);
+export const Gallery = GalleryComponent;

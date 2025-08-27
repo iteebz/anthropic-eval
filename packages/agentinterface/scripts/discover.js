@@ -125,7 +125,7 @@ function main() {
   const registry = generateRegistry(components);
   
   // Write to output file
-  const outputPath = path.join(__dirname, '../src/ai-registry.json');
+  const outputPath = path.join(__dirname, '../src/ai.json');
   fs.writeFileSync(outputPath, JSON.stringify(registry, null, 2));
   
   console.log(`\n✅ AUTODISCOVERY COMPLETE`);

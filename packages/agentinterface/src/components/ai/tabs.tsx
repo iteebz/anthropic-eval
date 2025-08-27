@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { z } from 'zod';
-import { render } from '../../registry';
-import { ai } from '../../ai';
-import type { AIPBlock } from '../../schema/aip';
 
 export interface TabItem {
   id: string;
   label: string;
-  content: AIPBlock[];
+  content: string;
 }
 
 export interface TabsProps {
@@ -20,7 +16,7 @@ function TabsComponent({ items = [], defaultTab, className = '' }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || items[0]?.id || '');
 
   const activeContent =
-    items.find((item) => item.id === activeTab)?.content || [];
+    items.find((item) => item.id === activeTab)?.content || '';
 
   // Handle empty items array
   if (items.length === 0) {
@@ -49,64 +45,10 @@ function TabsComponent({ items = [], defaultTab, className = '' }: TabsProps) {
         ))}
       </div>
       <div className="aip-tabs-content aip-p-md">
-        {activeContent.map((block, index) =>
-          render(block, `${activeTab}-${index}`),
-        )}
+        <div>{activeContent}</div>
       </div>
     </div>
   );
 }
 
-// AIP metadata for agent discovery
-export const metadata = {
-  type: 'tabs',
-  description: 'Multi-view content container with tab navigation',
-  category: 'container',
-  tags: ['navigation', 'container', 'multi-view'],
-  schema: {
-    type: 'object',
-    properties: {
-      type: { type: 'string', enum: ['tabs'] },
-      items: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-            label: { type: 'string' },
-            content: {
-              type: 'array',
-              items: { type: 'object' },
-              description: 'Array of AIP blocks to render in this tab',
-            },
-          },
-          required: ['id', 'label', 'content'],
-        },
-      },
-      defaultTab: {
-        type: 'string',
-        description: 'ID of the tab to show by default',
-      },
-    },
-    required: ['type', 'items'],
-  },
-} as const;
-
-const TabsValidator = z.object({
-  items: z.array(
-    z.object({
-      id: z.string(),
-      label: z.string(),
-      content: z.array(z.any()),
-    }),
-  ),
-  defaultTab: z.string().optional(),
-  className: z.string().optional(),
-});
-
-// CANONICAL: AI() wrapper with auto-registration
-export const Tabs = ai(
-  'tabs',
-  'Multi-view content container with tab navigation',
-  TabsComponent
-);
+export const Tabs = TabsComponent;

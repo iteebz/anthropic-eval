@@ -1,80 +1,31 @@
 import React from 'react';
-import { z } from 'zod';
-import { ai } from '../../ai';
 
-export const TableSchema = {
-  type: 'object',
-  properties: {
-    items: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          name: { type: 'string' },
-          attributes: { type: 'object' },
-        },
-        required: ['id', 'name', 'attributes'],
-      },
-    },
-    attributes: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          key: { type: 'string' },
-          label: { type: 'string' },
-          type: { type: 'string', enum: ['text', 'number', 'boolean'] },
-        },
-        required: ['key', 'label'],
-      },
-    },
-    title: { type: 'string' },
-    className: { type: 'string' },
-  },
-  required: ['items', 'attributes'],
-} as const;
+export interface TableItem {
+  id: string;
+  name: string;
+  attributes: Record<string, any>;
+}
 
-export const metadata = {
-  type: 'table',
-  description:
-    'Display structured data in a comparison table format with customizable columns and attributes',
-  schema: TableSchema,
-  category: 'interface',
-  tags: ['data', 'comparison', 'structured'],
-} as const;
+export interface TableAttribute {
+  key: string;
+  label: string;
+}
 
-const TableValidator = z.object({
-  items: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      attributes: z.record(z.any()),
-    }),
-  ),
-  attributes: z.array(
-    z.object({
-      key: z.string(),
-      label: z.string(),
-      type: z.enum(['text', 'number', 'boolean']).optional(),
-    }),
-  ),
-  title: z.string().optional(),
-  className: z.string().optional(),
-});
+export interface TableProps {
+  items: TableItem[];
+  attributes: TableAttribute[];
+  title?: string;
+  className?: string;
+}
 
-type TableData = z.infer<typeof TableValidator>;
-
-function TableComponent(props: TableData) {
-  const { items, attributes, title, className } = props;
-
+function TableComponent({ items, attributes, title, className }: TableProps) {
   return (
     <div className={className}>
       {title && <h2 className="mb-4 text-xl font-bold">{title}</h2>}
-      <div className="overflow-x-auto rounded-lg border">
+      <div className="overflow-x-auto rounded border">
         <table className="w-full">
           <thead>
-            <tr className="bg-muted/50 border-b">
+            <tr className="bg-gray-50 border-b">
               <th className="px-4 py-3 text-left font-medium">Name</th>
               {attributes.map((attr) => (
                 <th key={attr.key} className="px-4 py-3 text-left font-medium">
@@ -85,16 +36,10 @@ function TableComponent(props: TableData) {
           </thead>
           <tbody>
             {items.map((item) => (
-              <tr
-                key={item.id}
-                className="hover:bg-muted/25 border-b last:border-0"
-              >
+              <tr key={item.id} className="hover:bg-gray-50 border-b">
                 <td className="px-4 py-3 font-medium">{item.name}</td>
                 {attributes.map((attr) => (
-                  <td
-                    key={attr.key}
-                    className="text-muted-foreground px-4 py-3"
-                  >
+                  <td key={attr.key} className="px-4 py-3 text-gray-600">
                     {String(item.attributes[attr.key] || '—')}
                   </td>
                 ))}
@@ -107,9 +52,4 @@ function TableComponent(props: TableData) {
   );
 }
 
-// CANONICAL: AI() wrapper with auto-registration
-export const Table = ai(
-  'table',
-  'Display structured data in a comparison table format',
-  TableComponent
-);
+export const Table = TableComponent;

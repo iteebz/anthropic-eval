@@ -1,53 +1,20 @@
 /**
- * @agentic/react - AI-native UI components that just work
+ * AgentInterface - Agent JSON → React components
  */
 
-// Types that folio needs
-export type { InterfaceType, InterfaceData } from './types';
-export type { RendererComponentProps } from './utils/componentProps';
+// Main renderer - converts agent JSON to React components
+export { AIPRenderer, render } from './components/renderer';
 
-// Main AIP renderer - the one true renderer
-export { AIPRenderer } from './components/renderer';
-export type { AIPRendererProps } from './components/renderer';
-
-// Registry system
-export {
-  register,
-  render,
-  getRegisteredTypes,
-  getAllMetadata,
-  extendRegistry,
-  isRegistered,
-  selectiveRegistry,
-  resetRegistry,
-} from './registry';
-export type { ComponentMetadata, ComponentRegistration } from './registry';
-
-// Note: Framework integrations moved to agentinterface-cli package
-
-// Auto-register core components by importing
-import './components';
-
-// Import styles to make them available
-import './styles/theme.css';
-
-// Error boundary for folio chat
-export { InterfaceErrorBoundary } from './core/InterfaceErrorBoundary';
-export type { InterfaceErrorBoundaryProps } from './core/InterfaceErrorBoundary';
-
-// Component resolver for SSR and inline components
-export { processInlineComponents } from './core/component-resolver';
-export type { ComponentResolver } from './core/inline-components';
-
-// Built-in components that folio uses
-export { Insights } from './components/ai/insights';
-export { Accordion } from './components/ai/accordion';
-export { Cards } from './components/ai/cards';
-export { Code } from './components/ai/code';
-export { Table } from './components/ai/table';
-export { Suggestions } from './components/ai/suggestions';
-export { Tree } from './components/ai/tree';
-export { Gallery } from './components/ai/gallery';
-export { Reference } from './components/ai/reference';
+// All AI components
+export { Card } from './components/ai/card';
 export { Timeline } from './components/ai/timeline';
 export { Markdown } from './components/ai/markdown';
+export { Accordion } from './components/ai/accordion';
+export { Code } from './components/ai/code';
+export { Gallery } from './components/ai/gallery';
+export { Insights } from './components/ai/insights';
+export { Reference } from './components/ai/reference';
+export { Suggestions } from './components/ai/suggestions';
+export { Table } from './components/ai/table';
+export { Tabs } from './components/ai/tabs';
+export { Tree } from './components/ai/tree';
