@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 
-def _load() -> Dict[str, Dict[str, str]]:
+def _load_registry() -> Dict[str, Dict[str, str]]:
     """Load component registry"""
     registry_paths = [
         Path(__file__).parent.parent.parent.parent / "ai.json",
@@ -20,38 +20,37 @@ def _load() -> Dict[str, Dict[str, str]]:
                 components = data.get("components", {})
                 if components:
                     return components
-            except Exception as e:
+            except Exception:
                 continue
     
     return {}
 
 
-class AIInterface:
-    """AI component factory"""
+def protocol(components: Optional[List[str]] = None) -> str:
+    """LLM format instructions"""
+    if not components:
+        # Built-in component types
+        components = ['card', 'timeline', 'accordion', 'code', 'gallery', 'insights', 'reference', 'suggestions', 'table', 'tabs', 'tree', 'markdown']
+    elif 'markdown' not in components:
+        # Always ensure markdown fallback
+        components = components + ['markdown']
     
-    def __init__(self):
-        self._registry = _load()
-    
-    
-    def protocol(self) -> str:
-        """LLM format instructions"""
-        if not self._registry:
-            return "No components available"
-        
-        types = sorted(self._registry.keys())
-        return f"Use ```aip blocks: {', '.join(types)}"
-    
-    async def shape(self, response: str, context: dict = None, llm = None) -> str:
-        """Transform text → components"""
-        from .shaper import shape
-        return await shape(response, context, llm)
-    
-    def interactive(self, agent, llm = None):
-        """Two-way UI communication"""
-        from .interactive import Interactive
-        return Interactive(agent, llm)
+    return f"Available components: {', '.join(sorted(components))}\n\nSupports arrays for composition: [comp1, [comp2, comp3], comp4] = vertical stack with horizontal row"
 
 
-ai = AIInterface()
+async def shape(response: str, context: dict = None, llm = None) -> str:
+    """Transform text → components"""
+    if not llm:
+        from .providers import create_llm
+        llm = await create_llm()
+    from .shaper import shape
+    return await shape(response, context, llm)
 
-__all__ = ['ai']
+
+def ai(agent, llm = None, components: Optional[List[str]] = None, port: int = 8228):
+    """Universal agent wrapper - THE CANONICAL INTERFACE"""
+    from .interactive import Interactive
+    return Interactive(agent, llm, components, port)
+
+
+__all__ = ['ai', 'protocol', 'shape']

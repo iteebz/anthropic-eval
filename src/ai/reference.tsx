@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export interface Reference {
+interface ReferenceItem {
   id: string;
   title: string;
   type: string;
@@ -9,12 +9,13 @@ export interface Reference {
   url?: string;
 }
 
-export interface ReferenceProps {
-  references: Reference[];
+interface ReferenceProps {
+  references: ReferenceItem[];
   className?: string;
 }
 
-function ReferenceComponent({ references, className }: ReferenceProps) {
+function ReferenceComponent(props: ReferenceProps) {
+  const { references, className } = props;
   const [expandedRefs, setExpandedRefs] = useState<Set<string>>(new Set());
 
   const toggleExpanded = (refId: string) => {

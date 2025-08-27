@@ -56,10 +56,40 @@ const COMPONENTS = {
   tree: Tree,
 };
 
-export function render(agentJSON: string): React.ReactNode {
-  const { type, data } = JSON.parse(agentJSON);
+function renderItem(item: any, key: number): React.ReactNode {
+  if (Array.isArray(item)) {
+    // Horizontal stack
+    return (
+      <div key={key} className="flex gap-4">
+        {item.map((subItem, i) => renderItem(subItem, i))}
+      </div>
+    );
+  }
+  
+  // Single component
+  const { type, data } = item;
   const Component = COMPONENTS[type as keyof typeof COMPONENTS];
-  return Component ? <Component {...data} /> : <div>Unknown: {type}</div>;
+  return Component ? (
+    <Component key={key} {...data} />
+  ) : (
+    <div key={key}>Unknown: {type}</div>
+  );
+}
+
+export function render(agentJSON: string): React.ReactNode {
+  const parsed = JSON.parse(agentJSON);
+  
+  if (Array.isArray(parsed)) {
+    // Vertical stack
+    return (
+      <div className="flex flex-col gap-4">
+        {parsed.map((item, i) => renderItem(item, i))}
+      </div>
+    );
+  }
+  
+  // Single component (backwards compatible)
+  return renderItem(parsed, 0);
 }
 
 export function AIPRenderer({ agentResponse }: { agentResponse: string }) {

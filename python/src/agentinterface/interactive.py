@@ -4,7 +4,7 @@ import asyncio
 import json
 import uuid
 from threading import Thread
-from typing import Any, AsyncGenerator, Dict
+from typing import Any, AsyncGenerator, Dict, List, Optional
 
 try:
     from fastapi import FastAPI
@@ -17,9 +17,10 @@ except ImportError:
 class Interactive:
     """Agent + UI callbacks"""
     
-    def __init__(self, agent: Any, llm: Any = None, port: int = 8787):
+    def __init__(self, agent: Any, llm: Any = None, components: Optional[List[str]] = None, port: int = 8228):
         self.agent = agent
         self.llm = llm
+        self.components = components
         self.port = port
         self._pending_callbacks = {}  # {callback_id: Future}
         self._server = None
@@ -58,7 +59,7 @@ class Interactive:
         
         # Try to shape into interactive component
         if self.llm:
-            shaped = await self._try_shape(response, query, context)
+            shaped = await self._try_shape(response, query, {**context, "components": self.components})
             if shaped:
                 # Add callback info
                 callback_id = str(uuid.uuid4())
