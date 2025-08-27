@@ -121,6 +121,11 @@ class AIInterface:
         
         component_types = sorted(self._registry.keys())
         return f"Use ```aip blocks with these components: {', '.join(component_types)}"
+    
+    async def shape(self, response: str, context: dict = None, llm = None) -> str:
+        """Transform agent response into UI components"""
+        from .shaper import shape
+        return await shape(response, context, llm)
 
 
 # Create singleton instance

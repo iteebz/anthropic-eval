@@ -33,6 +33,9 @@ from .registry.core import get_available_components
 # 🎯 CANONICAL API - Clean .register() method
 from .registry.core import register
 
+# 🎯 RESPONSE SHAPING - Transform agent text into UI components
+from .shaper import shape
+
 
 __all__ = [
     # 🔥 CANONICAL AI INTERFACE - The one true way
@@ -55,4 +58,6 @@ __all__ = [
     "ResolvedComponent",
     # Protocol Interface
     "get_format_instructions",
+    # Response Shaping
+    "shape",
 ]
