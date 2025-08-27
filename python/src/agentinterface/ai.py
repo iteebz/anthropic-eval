@@ -126,6 +126,11 @@ class AIInterface:
         """Transform agent response into UI components"""
         from .shaper import shape
         return await shape(response, context, llm)
+    
+    def interactive(self, agent, llm = None):
+        """Make any agent interactive with UI callbacks"""
+        from .interactive import Interactive
+        return Interactive(agent, llm)
 
 
 # Create singleton instance
