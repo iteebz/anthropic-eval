@@ -1,228 +1,201 @@
-# AIP Architecture
+# AgentInterface Architecture
 
-## Overview
-
-The Agent Interface Protocol (AIP) enables direct agent-to-component communication through structured JSON, allowing AI agents to reason about optimal UI presentation without interpretation layers.
-
-## Core Architecture
-
-### Protocol Flow
-```
-Agent Analysis → Component Selection → Structured Data → Direct Rendering
-```
-
-### Key Components
-1. **Core Primitives** - Universal UI patterns
-2. **Extension System** - Domain-specific components
-3. **Validation Layer** - Schema validation and error handling
-4. **Rendering Engine** - Component instantiation and rendering
-
-## Package Structure
-
-```
-agentinterface/
-├── docs/                    # Architecture documentation
-│   ├── README.md
-│   ├── architecture.md
-│   └── primitives-vs-extensions.md
-├── js/                      # JavaScript/TypeScript implementation
-│   ├── src/
-│   │   ├── components/      # Core primitive components
-│   │   ├── core/           # Schemas and validation
-│   │   ├── protocol/       # Protocol definitions
-│   │   └── react/          # React renderer
-│   └── package.json
-├── python/                  # Python implementation
-│   ├── src/
-│   │   └── agentinterface/  # Python package
-│   └── package.json
-└── examples/               # Usage examples
-```
+**The canonical pipeline for AI agents → UI components.**
 
 ## Design Principles
 
-### 1. Primitive-First Design
-- Focus on universal UI patterns
-- Clear separation between core and extensions
-- Composable architecture
+### Separation of Concerns
+- **Agent Reasoning** ≠ **UI Formatting**
+- Agents think, reason, use tools → AgentInterface handles UI
+- Zero pollution of agent logic with UI concerns
 
-### 2. Agent-Centric
-- Designed for AI agent reasoning
-- Clear selection criteria for each component
-- Structured data output for reliable parsing
+### Zero Integration Friction  
+- No system prompt modification required
+- No agent framework changes needed
+- Universal compatibility via clean wrapper pattern
 
-### 3. Framework Agnostic
-- Core protocol independent of UI framework
-- React implementation as reference
-- Extensible to other frameworks
+### Protocol Decoupling
+- Shaper LLM handles UI decisions independently
+- Agent stays focused on domain reasoning
+- UI formatting happens post-reasoning
 
-### 4. Graceful Degradation
-- Fallback to markdown for invalid data
-- Error boundaries for component failures
-- Progressive enhancement approach
+## The Flow
 
-## Integration Points
+1. **Frontend Components** → React components exist (`<Card>`, `<Timeline>`, etc.)
 
-### With Cogency
-- Skills can use AIP for presentation decisions
-- `visualize()` skill consumes AIP component registry
-- Clear separation between cognitive and presentation layers
+2. **Autodiscovery** → `discover.js` scans TypeScript files → `ai.json` registry
 
-### With Host Applications
-- Extensions define domain-specific components
-- Host applications register extension packs
-- Core primitives remain stable across domains
+3. **Protocol Generation** → `ai.protocol()` reads registry → LLM instructions
 
-## Implementation Architecture
+4. **Agent Response** → Agent generates natural text: "Here are 3 insights about AI..."
 
-### Component Registration System
+5. **Post-Processing** → `ai.shape(text, context, llm)` transforms text → `{"type": "insights", "data": {...}}`
 
-**Build-Time Discovery**: Components discovered through configuration, ensuring SSR-safe extensibility.
+6. **Frontend Rendering** → Renderer takes JSON → `<InsightsComponent>`
 
-```typescript
-// src/components/aip/timeline.tsx
+7. **User Interaction** → User clicks button → `ai.interactive()` sends callback to agent
 
-// JSON Schema - directly serializable
-export const TimelineSchema = {
-  type: "object",
-  properties: {
-    events: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          date: { type: "string" },
-          title: { type: "string" },
-          description: { type: "string" }
-        },
-        required: ["date", "title"]
-      }
-    }
-  },
-  required: ["events"]
-} as const;
+## Integration Pattern
 
-// Discoverable metadata export
-export const metadata = {
-  type: "timeline",
-  description: "Chronological events with rich details",
-  schema: TimelineSchema,
-  category: "interface",
-  tags: ["chronological", "events"]
-} as const;
-
-export function Timeline({ events }) {
-  return <div className="timeline">...</div>
-}
-```
-
-### Build-Time Registry Generation
-
-**Component Discovery** (Build-time scanning):
-```javascript
-// agentinterface build script
-async function buildRegistry(config) {
-  const registry = { version: "0.1.0", components: {} };
-  
-  // Scan all configured component paths
-  for (const pattern of config.components) {
-    const files = await glob(pattern);
-    
-    for (const file of files) {
-      const content = await readFile(file, 'utf8');
-      
-      // Extract metadata export
-      const metadataMatch = content.match(/export const metadata = ({[\s\S]*?}) as const/);
-      if (metadataMatch) {
-        const metadata = eval(`(${metadataMatch[1]})`);
-        registry.components[metadata.type] = metadata;
-      }
-    }
-  }
-  
-  await writeFile('./agentinterface-registry.json', JSON.stringify(registry, null, 2));
-}
-```
-
-### Python Protocol Integration
-
-**Static Registry Loading**:
+### Universal Agent Wrapper
 ```python
-# python/src/agentinterface/registry/core.py
-def _load_core_registry(self):
-    """Load core components from package registry"""
-    registry_file = Path(__file__).parent / "registry.json"
-    
-    if registry_file.exists():
-        with open(registry_file, 'r') as f:
-            registry_data = json.load(f)
-            
-        for component_type, component_data in registry_data["components"].items():
-            spec = ComponentSpec.from_dict(component_data)
-            self._components[component_type] = spec
+# User keeps their agent pure - any framework
+agent = LangchainAgent() | AutogenAgent() | CustomAgent()
 
-def register_component(component_type: str, description: str, **kwargs):
-    """Register custom components at runtime"""
-    get_registry().register(component_type, description, **kwargs)
+# We wrap with UI capabilities
+ui_agent = ai.interactive(agent)
+
+# Everything just works
+response = await ui_agent.run("Analyze data")
+# → Agent thinks normally (unchanged)
+# → Shaper LLM picks components  
+# → Beautiful UI rendered
 ```
 
-## Agent Interface Protocol (AIP) v0.1.0
+### Developer Experience
+```python
+# Debugging/verification
+print(ai.protocol())  # See available components
 
-### Message Format
+# Component filtering  
+ai.enable_only(['card', 'timeline'])  # Custom selection
 
-**Success Response**:
+# Custom components
+# Add your .tsx files → autodiscovery finds them automatically
+```
+
+## The Components
+
+### Python SDK
+- `ai.protocol()` → LLM format instructions from component registry (debugging)
+- `ai.shape(text, context, llm)` → Transform agent text into component JSON (post-processing)
+- `ai.interactive(agent)` → Universal agent wrapper with UI capabilities
+
+### TypeScript SDK  
+- `<Card>`, `<Timeline>` → Direct component usage (shadcn style)
+- `<AIPRenderer>` → JSON to React component rendering for chat UIs
+- `discover.js` → Autodiscovery script that generates `ai.json`
+
+### Registry System
+- `ai.json` → Cross-language component registry
+- Generated by TypeScript autodiscovery
+- Consumed by Python for protocol generation
+- Consumed by TypeScript for rendering
+
+## The Ultimate Wrapper Vision
+
+### Single Universal Interface
+```python
+# Any existing agent - zero changes required
+agent = LangchainAgent() | CogencyAgent() | AutogenAgent()
+
+# Single wrapper handles everything
+ui_agent = ai.interactive(agent)
+
+# Everything just works
+response = await ui_agent.run("Analyze this")
+# → Agent reasons (unchanged)
+# → Shaper LLM transforms output to JSON
+# → Frontend renders components  
+# → User clicks → Callbacks to agent
+```
+
+### Developer Control
+```python
+# Debugging - see what components are available
+print(ai.protocol())
+
+# Component filtering - enable only what you want
+ai.enable_only(['card', 'timeline', 'insights'])
+
+# Custom components - just add .tsx files, autodiscovery finds them
+```
+
+### LLM Strategy
+**Separate Shaper LLM** (canonical choice)
+- Agent LLM → Context/reasoning (domain logic)
+- Shaper LLM → Context → AIP JSON (UI formatting)
+- **PRO**: Perfect separation, universal compatibility, agent stays clean
+- **CON**: Extra LLM call (acceptable for perfect decoupling)
+
+### Agent Role Evolution
+**Traditional Agent**: Question → Response (end-to-end)
+**Wrapped Agent**: Question → Context/Data (reasoning only)
+**Shaper**: Context → AIP JSON (presentation only)
+
+The inner agent becomes a **context compiler** - gathering, reasoning, retrieving data. The wrapper handles response formatting.
+
+## Zero Integration Friction
+
+No system prompt changes. No agent modifications. No protocol injection.
+
+**Universal wrapper + Separate formatting = Support for any agent framework.**
+
+## The Distinction
+
+**Interactive Wrapper**: Universal agent interface
+- Input: User clicks/interactions → Agent messages  
+- Output: Agent responses → Shaper → JSON components
+
+**Protocol**: Debugging/verification tool
+- Purpose: See available components, enable custom filtering
+- Not injected into agent reasoning cycle
+
+**Canonical. Universal. Zero ceremony.**
+
+## Critical Design Decisions
+
+### Function Naming: ai() vs aip()
+**Decision: `ai()`** - Claim the agent interface namespace
+- Library is `agentinterface` → `from agentinterface import ai` is canonical
+- Following shadcn pattern: they claimed `components/ui`, we claim `components/ai`  
+- Bold but justified: if we become defacto standard, prophetic genius
+- `ai()` is the system, AIP is the internal protocol
+
+### Wrapper Architecture  
+```python
+# Canonical wrapper function
+ui_agent = ai(
+    agent=my_langchain_agent,    # Any existing agent
+    llm=my_openai_model,         # For shaping LLM  
+    components=['card', 'timeline']  # Optional filtering
+)
+```
+
+### Agent Role Evolution
+**Traditional**: Agent generates complete responses
+**Context Compiler Pattern**: Agent generates context/data, wrapper handles presentation
+- Agent → Context compiler (reasoning, data gathering)
+- Wrapper → Presentation layer (UI formatting)
+- Perfect separation of concerns
+
+### Callback Protocol Design
+**Agent→UI Protocol**: AIP JSON format
 ```json
-{
-  "type": "component-type",
-  "data": {
-    // Component-specific data
-  }
-}
+{"type": "card", "data": {"title": "...", "content": "..."}}
 ```
 
-**Error Response**:
-```json
-{
-  "type": "error",
-  "data": {
-    "code": "unknown_component",
-    "message": "Component type 'invalid-type' is not registered",
-    "available_types": ["markdown", "timeline", "card-grid"]
-  }
-}
-```
+**UI→Agent Protocol**: TBD - Two options:
+- **Raw text**: `"Tell me more about item 3"` (simple)
+- **Structured**: `{"action": "expand", "target": "item_3", "context": {...}}` (powerful)
 
-### Validation Strategy
+### Zero Integration Friction Philosophy
+- No system prompt modification required
+- No agent framework changes needed  
+- No protocol injection into reasoning cycle
+- Universal wrapper pattern supports any agent framework
+- Separate shaper LLM maintains clean separation
 
-- **Build-time**: Schema validation during registry generation
-- **Runtime**: Component props validated against JSON Schema before rendering
+### Registry Strategy
+- **Autodiscovery**: `discover.js` scans TypeScript → generates `ai.json`
+- **Cross-language**: Python reads `ai.json` for protocol, TypeScript reads for rendering
+- **No manual registration**: Components just export, autodiscovery finds them
+- **Component filtering**: Users choose which components to enable
 
-**Validation Error Response**:
-```json
-{
-  "type": "error",
-  "data": {
-    "code": "validation_error",
-    "message": "Invalid data for component 'timeline'",
-    "details": ["events is required", "events[0].date must be a string"]
-  }
-}
-```
+## The Vision
 
-### Environment Configuration
+**We're not building a library. We're defining how agent GUIs should work.**
 
-```bash
-# Set custom registry path
-export AGENTINTERFACE_REGISTRY=/path/to/registry.json
+Under 1,000 lines. Zero ceremony. Universal compatibility.
 
-# Default: ./node_modules/agentinterface/dist/registry.json
-```
-
-## Evolution Strategy
-
-1. **Phase 1**: Establish core primitives with build-time registry
-2. **Phase 2**: Create extension ecosystem with filesystem scanning
-3. **Phase 3**: Framework integrations with configurable loading
-4. **Phase 4**: Cognitive framework integration with AIP v0.1.0
-
-This architecture ensures clean separation of concerns while enabling rich, domain-specific functionality through composable primitives and robust build-time discovery.
+While others build enterprise solutions, we build the canonical standard.
