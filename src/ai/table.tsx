@@ -1,3 +1,6 @@
+/**
+ * Data table with sorting and filtering.
+ */
 import React from 'react';
 
 export interface TableItem {
@@ -53,3 +56,41 @@ function TableComponent({ items, attributes, title, className }: TableProps) {
 }
 
 export const Table = TableComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'table',
+  description: 'Structured data display with rows and columns',
+  schema: {
+    type: 'object',
+    properties: {
+      items: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            attributes: { type: 'object' }
+          },
+          required: ['id', 'name', 'attributes']
+        }
+      },
+      attributes: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            key: { type: 'string' },
+            label: { type: 'string' }
+          },
+          required: ['key', 'label']
+        }
+      },
+      title: { type: 'string', optional: true },
+      className: { type: 'string', optional: true }
+    },
+    required: ['items', 'attributes']
+  },
+  category: 'data'
+};

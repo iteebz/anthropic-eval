@@ -78,3 +78,30 @@ function GalleryComponent(props: GalleryProps) {
 }
 
 export const Gallery = GalleryComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'gallery',
+  description: 'Image gallery with lightbox view',
+  schema: {
+    type: 'object',
+    properties: {
+      images: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            src: { type: 'string' },
+            alt: { type: 'string' },
+            title: { type: 'string', optional: true }
+          },
+          required: ['src', 'alt']
+        }
+      },
+      columns: { type: 'number', optional: true },
+      className: { type: 'string', optional: true }
+    },
+    required: ['images']
+  },
+  category: 'media'
+};

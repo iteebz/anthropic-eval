@@ -67,3 +67,32 @@ function ReferenceComponent(props: ReferenceProps) {
 }
 
 export const Reference = ReferenceComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'reference',
+  description: 'Citations and references with expandable content',
+  schema: {
+    type: 'object',
+    properties: {
+      references: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' },
+            type: { type: 'string' },
+            excerpt: { type: 'string' },
+            content: { type: 'string' },
+            url: { type: 'string', optional: true }
+          },
+          required: ['id', 'title', 'type', 'excerpt', 'content']
+        }
+      },
+      className: { type: 'string', optional: true }
+    },
+    required: ['references']
+  },
+  category: 'content'
+};

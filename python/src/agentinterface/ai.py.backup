@@ -1,4 +1,4 @@
-"""Agent UI component generation."""
+"""Agent JSON → React components"""
 
 import asyncio
 import json
@@ -6,7 +6,7 @@ import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 from threading import Thread
-from typing import Dict, List, Optional
+from typing import AsyncGenerator, Dict, List, Optional
 
 from .logger import logger
 
@@ -35,6 +35,7 @@ def _load_registry() -> Dict[str, Dict[str, str]]:
 def protocol(components: Optional[List[str]] = None) -> str:
     """LLM format instructions"""
     if not components:
+        # Built-in component types
         components = [
             "card",
             "timeline",
@@ -49,6 +50,7 @@ def protocol(components: Optional[List[str]] = None) -> str:
             "markdown",
         ]
     elif "markdown" not in components:
+        # Always ensure markdown fallback
         components = components + ["markdown"]
 
     return f"Available components: {', '.join(sorted(components))}\n\nSupports arrays for composition: [comp1, [comp2, comp3], comp4] = vertical stack with horizontal row"
@@ -109,14 +111,16 @@ class CallbackServer:
         try:
             yield self.callbacks[callback_id]
         finally:
+            # Clean up callback on exit
             self.callbacks.pop(callback_id, None)
 
 
+# Global server instance (singleton pattern)
 _callback_server = CallbackServer()
 
 
 async def _get_agent_response(agent, query: str) -> str:
-    """Get response from agent"""
+    """Get response from agent using universal interface"""
     if callable(agent):
         return await agent(query) if asyncio.iscoroutinefunction(agent) else agent(query)
     elif hasattr(agent, "run"):
@@ -127,126 +131,57 @@ async def _get_agent_response(agent, query: str) -> str:
         raise ValueError("Agent must be callable or have .run() method")
 
 
-def _extract_text(event) -> str:
-    """Extract text from any event format - zero coupling."""
-    if isinstance(event, str):
-        return event
+async def ai(
+    agent, query: str, llm=None, components: Optional[List[str]] = None, port: int = 8228
+) -> AsyncGenerator[Dict, None]:
+    """Transform any agent into UI-native interaction
 
-    if isinstance(event, dict):
-        for key in ["content", "text", "message", "output", "data"]:
-            if key in event and event[key]:
-                return str(event[key])
-
-    for attr in ["content", "text", "message", "output"]:
-        if hasattr(event, attr):
-            value = getattr(event, attr)
-            if value:
-                return str(value)
-
-    str_value = str(event)
-    if str_value and str_value not in ["None", "<object>", "{}"]:
-        return str_value
-
-    return ""
-
-
-def ai(agent, llm, components: Optional[List[str]] = None, port: int = 8228):
-    """Agent → UI components"""
-
-    def agent_fn(*agent_args, **agent_kwargs):
-        agent_output = agent(*agent_args, **agent_kwargs)
-
-        if hasattr(agent_output, "__aiter__"):
-            return _stream(agent, agent_output, llm, components, port, agent_args)
-
-        elif asyncio.iscoroutine(agent_output):
-            return _async(agent, agent_output, llm, components, port, agent_args)
-
-        else:
-            return _sync(agent, agent_output, llm, components, port, agent_args)
-
-    return agent_fn
-
-
-async def _stream(agent, stream, llm, components, port, agent_args):
-    """Streaming: Passthrough + Collect + Tack-on"""
+    Agent generates response, shaper LLM selects optimal UI components,
+    renderer creates interactive interface with bidirectional communication.
+    """
     global _callback_server
     _callback_server.port = port
-    _callback_server.start_server()
 
-    collected_text = ""
+    # Only start server if we need interactive features (LLM provided)
+    if llm:
+        _callback_server.start_server()
 
-    async for event in stream:
-        yield event
+    # Get agent response
+    response = await _get_agent_response(agent, query)
 
-        text = _extract_text(event)
-        if text:
-            collected_text += text + " "
-
-    if collected_text.strip():
+    # Shape into components if LLM provided
+    if llm:
+        shaped = await shape(response, {"query": query, "components": components}, llm)
         try:
-            query_context = str(agent_args[0]) if agent_args else "User request"
-
-            shaped = await shape(
-                collected_text.strip(), {"query": query_context, "components": components}, llm
-            )
             component_array = json.loads(shaped)
             callback_id = str(uuid.uuid4())
-
+            
+            # Wrap component array in proper structure
             component_data = {
                 "components": component_array,
                 "callback_id": callback_id,
-                "callback_url": f"http://localhost:{port}/callback/{callback_id}",
+                "callback_url": f"http://localhost:{port}/callback/{callback_id}"
             }
 
+            # Use context manager for clean callback handling
             async with _callback_server.callback_context(callback_id) as callback_future:
                 yield {"type": "component", "data": component_data}
 
+                # Wait for user interaction
                 try:
                     user_event = await asyncio.wait_for(callback_future, timeout=300)
-                    continuation_query = f"{query_context}\n\nUser selected: {user_event['data']}"
-                    continuation_agent = ai(agent, llm, components, port)
-                    async for event in continuation_agent(continuation_query, *agent_args[1:]):
+                    # Continue conversation with user selection
+                    continuation = f"{query}\n\nUser selected: {user_event['data']}"
+                    async for event in ai(agent, continuation, llm, components, port):
                         yield event
                 except asyncio.TimeoutError:
                     logger.warning("User interaction timed out")
-
+                    yield {"type": "text", "content": "Interaction timed out"}
         except json.JSONDecodeError as e:
             logger.error(f"JSON decode error: {e}")
-        except Exception as e:
-            logger.error(f"Component generation failed: {e}")
-
-
-async def _async(agent, coroutine, llm, components, port, agent_args):
-    """Async - always returns (text, components) tuple"""
-    response = await coroutine
-
-    try:
-        query_context = str(agent_args[0]) if agent_args else "User request"
-        shaped = await shape(str(response), {"query": query_context, "components": components}, llm)
-        component_array = json.loads(shaped)
-        return (response, component_array)
-    except Exception as e:
-        logger.error(f"Component generation failed: {e}")
-        return (response, [])
-
-
-def _sync(agent, response, llm, components, port, agent_args):
-    """Sync - always returns coroutine that resolves to (text, components) tuple"""
-
-    async def _async_shape():
-        try:
-            query_context = str(agent_args[0]) if agent_args else "User request"
-            shaped = await shape(
-                str(response), {"query": query_context, "components": components}, llm
-            )
-            component_array = json.loads(shaped)
-            return (response, component_array)
-        except Exception as e:
-            logger.error(f"Component generation failed: {e}")
-            return (response, [])
-
-    return _async_shape()
+            yield {"type": "text", "content": response}
+    else:
+        yield {"type": "text", "content": response}
 
 
 __all__ = ["ai", "protocol", "shape"]

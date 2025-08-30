@@ -1,3 +1,6 @@
+/**
+ * Tabbed interface component.
+ */
 import React, { useState } from 'react';
 
 export interface TabItem {
@@ -7,7 +10,7 @@ export interface TabItem {
 }
 
 export interface TabsProps {
-  items: TabItem[];
+  items?: TabItem[];
   defaultTab?: string;
   className?: string;
 }
@@ -52,3 +55,30 @@ function TabsComponent({ items = [], defaultTab, className = '' }: TabsProps) {
 }
 
 export const Tabs = TabsComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'tabs',
+  description: 'Tabbed content organization',
+  schema: {
+    type: 'object',
+    properties: {
+      items: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            label: { type: 'string' },
+            content: { type: 'string' }
+          },
+          required: ['id', 'label', 'content']
+        }
+      },
+      defaultTab: { type: 'string', optional: true },
+      className: { type: 'string', optional: true }
+    },
+    required: ['items']
+  },
+  category: 'layout'
+};

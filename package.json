@@ -1,16 +1,22 @@
 {
   "name": "agentinterface",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "AI agents choose UI components with zero ceremony.",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "bin": {
+    "agentinterface": "./cli/index.js"
+  },
   "files": [
     "src",
-    "python"
+    "python",
+    "cli",
+    "scripts"
   ],
   "scripts": {
     "dev": "echo 'Just import the fucking components'",
+    "test": "node tests/autodiscovery.test.js",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
     "lint": "eslint src/"
   },

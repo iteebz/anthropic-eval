@@ -1,3 +1,6 @@
+/**
+ * Collapsible content sections.
+ */
 import React, { useState } from 'react';
 
 export interface AccordionSection {
@@ -7,11 +10,11 @@ export interface AccordionSection {
 }
 
 export interface AccordionProps {
-  sections: AccordionSection[];
+  sections?: AccordionSection[];
   className?: string;
 }
 
-function AccordionComponent({ sections, className }: AccordionProps) {
+function AccordionComponent({ sections = [], className }: AccordionProps) {
   const [openSections, setOpenSections] = useState<Set<number>>(
     new Set(sections.map((section, index) => section.defaultExpanded ? index : -1).filter(i => i >= 0))
   );
@@ -46,3 +49,29 @@ function AccordionComponent({ sections, className }: AccordionProps) {
 }
 
 export const Accordion = AccordionComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'accordion',
+  description: 'Collapsible sections with expandable content',
+  schema: {
+    type: 'object',
+    properties: {
+      sections: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            content: { type: 'string' },
+            defaultExpanded: { type: 'boolean', optional: true }
+          },
+          required: ['title', 'content']
+        }
+      },
+      className: { type: 'string', optional: true }
+    },
+    required: ['sections']
+  },
+  category: 'layout'
+};

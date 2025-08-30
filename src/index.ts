@@ -2,19 +2,19 @@
  * AgentInterface - Agent JSON → React components
  */
 
+
 // Main renderer - converts agent JSON to React components
-export { AIPRenderer, render } from './components/renderer';
+export { render } from './renderer';
 
 // All AI components
-export { Card } from './components/ai/card';
-export { Timeline } from './components/ai/timeline';
-export { Markdown } from './components/ai/markdown';
-export { Accordion } from './components/ai/accordion';
-export { Code } from './components/ai/code';
-export { Gallery } from './components/ai/gallery';
-export { Insights } from './components/ai/insights';
-export { Reference } from './components/ai/reference';
-export { Suggestions } from './components/ai/suggestions';
-export { Table } from './components/ai/table';
-export { Tabs } from './components/ai/tabs';
-export { Tree } from './components/ai/tree';
+export { Card } from './ai/card';
+export { Timeline } from './ai/timeline';
+export { Markdown } from './ai/markdown';
+export { Accordion } from './ai/accordion';
+export { Code } from './ai/code';
+export { Gallery } from './ai/gallery';
+export { Reference } from './ai/reference';
+export { Suggestions } from './ai/suggestions';
+export { Table } from './ai/table';
+export { Tabs } from './ai/tabs';
+export { Tree } from './ai/tree';

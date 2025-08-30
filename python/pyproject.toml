@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "agentinterface"
-version = "0.1.0"
+version = "1.0.0"
 description = "AI agents choose UI components with zero ceremony."
 authors = [{ name = "Tyson Chan", email = "tyson.chan@proton.me" }]
 readme = "README.md"
@@ -13,7 +13,7 @@ homepage = "https://agentinterface.dev"
 repository = "https://github.com/iteebz/agentinterface"
 keywords = ["ai", "agents", "interface", "ui", "components", "protocol", "selection", "rendering", "react", "conversational", "aip", "magic"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: User Interfaces",
@@ -27,15 +27,22 @@ classifiers = [
 ]
 requires-python = ">=3.9,<4.0"
 dependencies = [
-    "pydantic>=2.0",
     "typing-extensions>=4.0",
 ]
+
+[project.optional-dependencies]
+openai = ["openai>=1.0"]
+gemini = ["google-genai>=1.29.0"]
+anthropic = ["anthropic>=0.20.0"]
+all = ["openai>=1.0", "google-genai>=1.29.0", "anthropic>=0.20.0"]
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.0"
 pytest = "^8.4.1"
 pytest-asyncio = "^0.21.0"
 pytest-cov = "^6.2.1"
+fastapi = "^0.116.1"
+uvicorn = "^0.35.0"
 
 [tool.poetry]
 packages = [{ include = "agentinterface", from = "src" }]

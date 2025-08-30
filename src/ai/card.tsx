@@ -1,9 +1,12 @@
+/**
+ * Generic card layout component.
+ */
 import React from 'react';
 
 export interface CardProps {
   title?: string;
   content?: string;
-  actions?: string[];
+  actions?: any[];
   className?: string;
   variant?: 'default' | 'outlined' | 'elevated';
 }
@@ -29,3 +32,21 @@ function CardComponent({
 }
 
 export const Card = CardComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'card',
+  description: 'Generic card with title, content and actions',
+  schema: {
+    type: 'object',
+    properties: {
+      title: { type: 'string', optional: true },
+      content: { type: 'string', optional: true },
+      actions: { type: 'array', items: { type: 'string' }, optional: true },
+      variant: { type: 'string', enum: ['default', 'outlined', 'elevated'], optional: true },
+      className: { type: 'string', optional: true }
+    },
+    required: []
+  },
+  category: 'layout'
+};

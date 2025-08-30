@@ -1,3 +1,6 @@
+/**
+ * Chronological event timeline.
+ */
 import React from 'react';
 
 export interface TimelineEvent {
@@ -7,11 +10,11 @@ export interface TimelineEvent {
 }
 
 export interface TimelineProps {
-  events: TimelineEvent[];
+  events?: TimelineEvent[];
   className?: string;
 }
 
-function TimelineComponent({ events, className }: TimelineProps) {
+function TimelineComponent({ events = [], className }: TimelineProps) {
   return (
     <div className={className}>
       <div className="space-y-4">
@@ -29,3 +32,29 @@ function TimelineComponent({ events, className }: TimelineProps) {
 }
 
 export const Timeline = TimelineComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'timeline',
+  description: 'Sequential events display with dates',
+  schema: {
+    type: 'object',
+    properties: {
+      events: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            date: { type: 'string' },
+            title: { type: 'string' },
+            description: { type: 'string' }
+          },
+          required: ['date', 'title', 'description']
+        }
+      },
+      className: { type: 'string', optional: true }
+    },
+    required: ['events']
+  },
+  category: 'data'
+};

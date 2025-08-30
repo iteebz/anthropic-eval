@@ -13,17 +13,13 @@
  * in the generated registry for Python consumption.
  */
 
-// Core AIP Components
+// Core AIP Components - All with metadata exports
 export { Timeline, metadata as TimelineMetadata } from './timeline';
 export { Markdown, metadata as MarkdownMetadata } from './markdown';
 export { Table, metadata as TableMetadata } from './table';
 export { Reference, metadata as ReferenceMetadata } from './reference';
-export { Insights, metadata as InsightsMetadata } from './insights';
 export { Gallery, metadata as GalleryMetadata } from './gallery';
 export { Accordion, metadata as AccordionMetadata } from './accordion';
-
-// Additional AIP Components
-export { Cards, metadata as CardsMetadata } from './cards';
 export { Tree, metadata as TreeMetadata } from './tree';
 export { Suggestions, metadata as SuggestionsMetadata } from './suggestions';
 export { Code, metadata as CodeMetadata } from './code';

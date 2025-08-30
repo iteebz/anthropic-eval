@@ -1,3 +1,6 @@
+/**
+ * Interactive suggestion buttons.
+ */
 import React from 'react';
 
 export interface Suggestion {
@@ -50,3 +53,31 @@ function SuggestionsComponent({
 }
 
 export const Suggestions = SuggestionsComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'suggestions',
+  description: 'Interactive follow-up prompts for conversation',
+  schema: {
+    type: 'object',
+    properties: {
+      suggestions: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            text: { type: 'string' },
+            id: { type: 'string', optional: true },
+            context: { type: 'string', optional: true },
+            priority: { type: 'string', enum: ['high', 'medium', 'low'], optional: true }
+          },
+          required: ['text']
+        }
+      },
+      title: { type: 'string', optional: true },
+      className: { type: 'string', optional: true }
+    },
+    required: ['suggestions']
+  },
+  category: 'interactive'
+};

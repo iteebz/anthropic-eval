@@ -1,3 +1,6 @@
+/**
+ * Hierarchical tree data display.
+ */
 import React, { useState } from 'react';
 
 export interface TreeOption {
@@ -84,3 +87,44 @@ function TreeComponent({
 }
 
 export const Tree = TreeComponent;
+
+// AIP Metadata - autodiscovery pattern
+export const metadata = {
+  type: 'tree',
+  description: 'Interactive decision tree or flow',
+  schema: {
+    type: 'object',
+    properties: {
+      nodes: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' },
+            content: { type: 'string' },
+            options: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  label: { type: 'string' },
+                  nextNodeId: { type: 'string', optional: true }
+                },
+                required: ['id', 'label']
+              },
+              optional: true
+            }
+          },
+          required: ['id', 'title', 'content']
+        }
+      },
+      rootNodeId: { type: 'string' },
+      title: { type: 'string', optional: true },
+      className: { type: 'string', optional: true }
+    },
+    required: ['nodes', 'rootNodeId']
+  },
+  category: 'interactive'
+};
