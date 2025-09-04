@@ -81,10 +81,10 @@ async def close(self, session) -> bool
 
 ## Performance Characteristics
 
-**Token efficiency** (theoretical):
-- Resume: Constant context size
-- Replay: Linear context growth
-- Estimated 6x improvement for multi-step tasks
+**Token efficiency** (mathematical):
+- Resume: O(n) linear scaling
+- Replay: O(n²) quadratic scaling
+- 5.2x improvement at 8 turns, 9.3x at 16 turns (see docs/proof.md)
 
 **Latency:**
 - Resume: Sub-second tool injection
